@@ -4,27 +4,7 @@
 > Build a REST API progressively with validation, service-layer design, JPA,
 > H2, PostgreSQL, testing, profiles, error handling, and outbound HTTP.
 
-## Presentation
-
-- **Hosted slides:** <https://neilghosh.github.io/springboot-workshop/>
-- **Editable source:** [`PRESENTATION.md`](./PRESENTATION.md)
-
-To edit the presentation manually:
-
-1. Open `PRESENTATION.md`; it uses [Marp](https://marp.app/) Markdown.
-2. Edit normal Markdown content. A line containing `---` separates slides.
-3. In VS Code, install the recommended **Marp for VS Code** extension and use
-   **Marp: Open Preview to the Side**.
-4. Commit and push the source to `main`. The
-   [GitHub Pages workflow](./.github/workflows/pages.yml) rebuilds and deploys
-   the hosted presentation automatically.
-
-Do not edit generated `docs/index.html` manually because the deployment workflow
-replaces it. For a local browser preview without VS Code, run:
-
-```bash
-npx @marp-team/marp-cli PRESENTATION.md --preview
-```
+Instructor materials are kept separately in [`docs/`](./docs/README.md).
 
 ## Workshop path
 
