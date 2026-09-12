@@ -50,26 +50,48 @@ After switching checkpoints, run **Dev Containers: Rebuild and Reopen in
 Container** when VS Code prompts you. The Dev Container supplies Java 17, Maven,
 and Copilot CLI; later stages also include PostgreSQL 16 and its matching client.
 
-From the VS Code terminal, start Spring Boot with:
-
-```bash
-./mvnw spring-boot:run
-```
-
 The default profile is local development with H2. Press `Ctrl+C` before moving
-to another checkpoint.
+to another checkpoint so the next stage can use port 8080.
 
 ## Step 0 — Starter
 
-```bash
-git switch --detach step-0-starter
+**Goal:** Understand the minimum structure needed to start Spring Boot.
+
+**Flow:**
+
+```text
+EcommerceApplication.main()
+  -> SpringApplication.run()
+  -> embedded Tomcat starts on port 8080
 ```
 
-This stage contains only `EcommerceApplication` and Spring Web MVC. Run the
-application and identify the generated startup behavior, embedded server, and
-application entry point. Product endpoints are intentionally not present yet.
+**Do:**
+
+```bash
+git switch --detach step-0-starter
+./mvnw spring-boot:run
+```
+
+**Expect:** The application starts successfully and logs that Tomcat is
+listening on port 8080. A request to `/api/products` returns `404` because no
+controller exists yet.
 
 ## Step 1 — REST and DTO validation
+
+**Goal:** Accept JSON requests, validate them, and return product responses
+without introducing a database.
+
+**Flow:**
+
+```text
+curl JSON
+  -> ProductController
+  -> ProductRequestDTO validation
+  -> in-memory Java list
+  -> ProductResponseDTO JSON
+```
+
+**Do:**
 
 ```bash
 git switch --detach step-1-rest-dto
@@ -86,17 +108,31 @@ curl -X POST http://localhost:8080/api/products \
 curl http://localhost:8080/api/products
 ```
 
-Try removing `name` or using a negative `price` to observe DTO validation.
+**Expect:** `POST` returns `201 Created` with an assigned ID, and `GET` returns
+the product from the in-memory list. Removing `name` or using a negative `price`
+returns `400 Bad Request`. Data disappears when the application stops.
 
 ## Step 2 — Service, JPA, and H2
+
+**Goal:** Separate HTTP handling from business logic and replace the Java list
+with database persistence.
+
+**Flow:**
+
+```text
+ProductController
+  -> ProductService
+  -> ProductRepository
+  -> Hibernate/JPA
+  -> H2 in-memory database
+```
+
+**Do:**
 
 ```bash
 git switch --detach step-2-service-db
 ./mvnw spring-boot:run
 ```
-
-This stage introduces the controller → service → repository flow and persists
-products with Spring Data JPA.
 
 Open <http://localhost:8080/h2-console>:
 
@@ -106,9 +142,31 @@ Open <http://localhost:8080/h2-console>:
 | User Name | `sa` |
 | Password | Leave blank |
 
-H2 data is cleared when the application stops.
+Create a product using the Step 1 `POST`, then run this query in the H2 Console:
+
+```sql
+SELECT * FROM products;
+```
+
+**Expect:** The API response remains the same, but the row is now stored in the
+`products` table. Hibernate creates the table automatically. H2 data is still
+cleared when the application stops.
 
 ## Step 3 — Production profile and tests
+
+**Goal:** Keep H2 convenient for local work while adding explicit PostgreSQL
+configuration, persistent data, error handling, and automated tests.
+
+**Flow:**
+
+```text
+SPRING_PROFILES_ACTIVE=production
+  -> application-production.properties
+  -> JDBC connection to database:5432
+  -> PostgreSQL products table
+```
+
+**Do:**
 
 ```bash
 git switch --detach step-3-production
@@ -151,10 +209,17 @@ Run the tests:
 ./mvnw clean test
 ```
 
-The suite contains Mockito service tests and MockMvc controller integration
-tests.
+**Expect:** The startup log reports the `production` profile, PostgreSQL JDBC
+driver, and PostgreSQL 16. In `psql`, `\dt` lists the `products` table and data
+survives application restarts. Tests finish with `BUILD SUCCESS` using Mockito
+service tests and MockMvc controller integration tests.
 
 ## Step 4 — Outbound enrichment
+
+**Goal:** Compose local product data with a price obtained through an outbound
+HTTP call.
+
+**Do:**
 
 ```bash
 git switch --detach step-4-outbound-enrichment
@@ -162,20 +227,78 @@ cp .env.example .env
 ```
 
 This stage adds `RestTemplate`, proxy-ready client configuration, and a composed
-product summary. The external response fixture is served locally, so no external
-account or mock server is required.
+product summary. To keep the workshop offline, `/external-product.json`
+simulates a third-party product API. In a real integration,
+`external.product-url` would point to another service.
 
-Start the application, create a product, then request its enriched summary:
+**Flow:**
+
+```text
+curl GET /api/products/{id}/summary
+  -> ProductController
+  -> ProductService loads the requested product from PostgreSQL
+  -> ExternalProductClient
+  -> RestTemplate GET /external-product.json
+  <- external live price
+  -> ProductService combines both responses
+```
+
+**Run and observe:**
+
+Stop any application started before switching tags, then start Step 4 so the JVM
+loads the outbound client code:
 
 ```bash
 SPRING_PROFILES_ACTIVE=production ./mvnw spring-boot:run
+```
 
+In another terminal, first inspect the simulated external response:
+
+```bash
+curl http://localhost:8080/external-product.json
+```
+
+Create a local product with a different price:
+
+```bash
 curl -X POST http://localhost:8080/api/products \
   -H "Content-Type: application/json" \
-  -d '{"name":"Mechanical Keyboard","description":"RGB Wireless","price":79.99,"stockQuantity":50,"category":"Electronics"}'
-
-curl http://localhost:8080/api/products/1/summary
+  -d '{"name":"Mechanical Keyboard","description":"RGB Wireless","price":89.99,"stockQuantity":50,"category":"Electronics"}'
 ```
+
+Copy the `id` from the POST response. PostgreSQL data persists across restarts,
+so the new product is not always ID `1`. Request the composed response with the
+returned ID:
+
+```bash
+PRODUCT_ID=2 # replace with the ID returned by POST
+curl "http://localhost:8080/api/products/$PRODUCT_ID/summary"
+```
+
+The response makes the external value explicit:
+
+```json
+{
+  "product": {
+    "price": 89.99
+  },
+  "livePrice": 79.99,
+  "priceDifference": 10.0,
+  "externalSource": "local external-product.json fixture",
+  "externalUrl": "http://localhost:8080/external-product.json"
+}
+```
+
+Open `externalUrl` directly to inspect the payload used as the live price. The
+application log also shows the outbound request:
+
+```text
+Calling external product API: http://localhost:8080/external-product.json
+```
+
+**Expect:** The response contains the stored product, `livePrice` from the
+outbound JSON, the calculated `priceDifference`, and the URL of the external
+payload.
 
 ## API from Step 2 onward
 
