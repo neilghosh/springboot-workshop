@@ -23,6 +23,7 @@ public class ProductController {
         return products;
     }
 
+    // @Valid enforces the DTO constraints before invalid input reaches storage.
     @PostMapping
     public ResponseEntity<ProductResponseDTO> createProduct(@Valid @RequestBody ProductRequestDTO request) {
         ProductResponseDTO product = new ProductResponseDTO();
