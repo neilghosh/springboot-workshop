@@ -9,7 +9,7 @@ services:
       - ..:/workspaces/springboot-workshop:cached
     command: sleep infinity
     environment:
-      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-production}
+      SPRING_PROFILES_ACTIVE: default
     depends_on:
       database:
         condition: service_healthy
