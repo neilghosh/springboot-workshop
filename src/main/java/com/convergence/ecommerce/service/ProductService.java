@@ -9,6 +9,8 @@ import com.convergence.ecommerce.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,7 +47,7 @@ public class ProductService {
         ProductSummaryDTO summary = new ProductSummaryDTO();
         summary.setProduct(product);
         summary.setLivePrice(external.price());
-        summary.setPriceDifference(product.getPrice() - external.price());
+        summary.setPriceDifference(calculatePriceDifference(product.getPrice(), external.price()));
         summary.setExternalSource("local external-product.json fixture");
         summary.setExternalUrl(externalProductClient.getExternalProductUrl());
         return summary;
@@ -97,5 +99,12 @@ public class ProductService {
         dto.setCategory(entity.getCategory());
         dto.setCreatedAt(entity.getCreatedAt());
         return dto;
+    }
+
+    private Double calculatePriceDifference(Double productPrice, Double livePrice) {
+        return BigDecimal.valueOf(productPrice)
+                .subtract(BigDecimal.valueOf(livePrice))
+                .setScale(2, RoundingMode.HALF_UP)
+                .doubleValue();
     }
 }

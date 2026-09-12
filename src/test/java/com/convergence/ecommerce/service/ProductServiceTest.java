@@ -78,7 +78,7 @@ class ProductServiceTest {
         entity.setId(1L);
         entity.setName("Mechanical Keyboard");
         entity.setDescription("RGB Wireless");
-        entity.setPrice(89.99);
+        entity.setPrice(49.99);
         entity.setStockQuantity(50);
         entity.setCategory("Electronics");
         entity.setCreatedAt(LocalDateTime.now());
@@ -99,9 +99,9 @@ class ProductServiceTest {
 
         ProductSummaryDTO summary = productService.getProductSummary(1L);
 
-        assertEquals(89.99, summary.getProduct().getPrice());
+        assertEquals(49.99, summary.getProduct().getPrice());
         assertEquals(79.99, summary.getLivePrice());
-        assertEquals(10.0, summary.getPriceDifference(), 0.001);
+        assertEquals(-30.0, summary.getPriceDifference(), 0.001);
         assertEquals(
                 "http://localhost:8080/external-product.json",
                 summary.getExternalUrl());
