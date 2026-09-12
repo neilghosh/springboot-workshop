@@ -1,7 +1,9 @@
 package com.convergence.ecommerce.service;
 
+import com.convergence.ecommerce.client.ExternalProductClient;
 import com.convergence.ecommerce.dto.ProductRequestDTO;
 import com.convergence.ecommerce.dto.ProductResponseDTO;
+import com.convergence.ecommerce.dto.ProductSummaryDTO;
 import com.convergence.ecommerce.model.ProductEntity;
 import com.convergence.ecommerce.repository.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,6 +23,9 @@ class ProductServiceTest {
 
     @Mock
     private ProductRepository productRepository;
+
+    @Mock
+    private ExternalProductClient externalProductClient;
 
     @InjectMocks
     private ProductService productService;
@@ -65,5 +70,36 @@ class ProductServiceTest {
         assertThrows(RuntimeException.class, () -> {
             productService.getProductById(99L);
         });
+    }
+
+    @Test
+    void testGetProductSummaryUsesLivePrice() {
+        ProductEntity entity = new ProductEntity();
+        entity.setId(1L);
+        entity.setName("Mechanical Keyboard");
+        entity.setDescription("RGB Wireless");
+        entity.setPrice(89.99);
+        entity.setStockQuantity(50);
+        entity.setCategory("Electronics");
+        entity.setCreatedAt(LocalDateTime.now());
+
+        ExternalProductClient.ExternalProductResponse external =
+                new ExternalProductClient.ExternalProductResponse(
+                        1L,
+                        "Mechanical Keyboard",
+                        "RGB wireless mechanical keyboard",
+                        79.99,
+                        "electronics",
+                        50);
+
+        when(productRepository.findById(1L)).thenReturn(Optional.of(entity));
+        when(externalProductClient.getProduct()).thenReturn(external);
+
+        ProductSummaryDTO summary = productService.getProductSummary(1L);
+
+        assertEquals(89.99, summary.getProduct().getPrice());
+        assertEquals(79.99, summary.getLivePrice());
+        assertEquals(10.0, summary.getPriceDifference(), 0.001);
+        verify(externalProductClient).getProduct();
     }
 }

@@ -3,7 +3,7 @@ package com.convergence.ecommerce.dto;
 public class ProductSummaryDTO {
 
     private ProductResponseDTO product;
-    private Double referencePrice;
+    private Double livePrice;
     private Double priceDifference;
     private String externalSource;
 
@@ -15,12 +15,12 @@ public class ProductSummaryDTO {
         this.product = product;
     }
 
-    public Double getReferencePrice() {
-        return referencePrice;
+    public Double getLivePrice() {
+        return livePrice;
     }
 
-    public void setReferencePrice(Double referencePrice) {
-        this.referencePrice = referencePrice;
+    public void setLivePrice(Double livePrice) {
+        this.livePrice = livePrice;
     }
 
     public Double getPriceDifference() {

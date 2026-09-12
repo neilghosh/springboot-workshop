@@ -172,7 +172,7 @@ curl GET /api/products/{id}/summary
   -> ProductService loads the requested product from PostgreSQL
   -> ExternalProductClient
   -> RestTemplate GET /external-product.json
-  <- external reference price
+  <- external live price
   -> ProductService combines both responses
 ```
 
@@ -206,8 +206,20 @@ PRODUCT_ID=2 # replace with the ID returned by POST
 curl "http://localhost:8080/api/products/$PRODUCT_ID/summary"
 ```
 
-The service returns the local product price (`89.99`), external reference price
-(`79.99`), and calculated difference (`10.0`). The application log also shows:
+The response makes the external value explicit:
+
+```json
+{
+  "product": {
+    "price": 89.99
+  },
+  "livePrice": 79.99,
+  "priceDifference": 10.0,
+  "externalSource": "local external-product.json fixture"
+}
+```
+
+The application log also shows the outbound request:
 
 ```text
 Calling external product API: http://localhost:8080/external-product.json

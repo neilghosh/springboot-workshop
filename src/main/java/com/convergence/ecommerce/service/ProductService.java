@@ -44,7 +44,7 @@ public class ProductService {
 
         ProductSummaryDTO summary = new ProductSummaryDTO();
         summary.setProduct(product);
-        summary.setReferencePrice(external.price());
+        summary.setLivePrice(external.price());
         summary.setPriceDifference(product.getPrice() - external.price());
         summary.setExternalSource("local external-product.json fixture");
         return summary;
