@@ -26,6 +26,10 @@ public class ExternalProductClient {
         return restTemplate.getForObject(externalProductUrl, ExternalProductResponse.class);
     }
 
+    public String getExternalProductUrl() {
+        return externalProductUrl;
+    }
+
     public record ExternalProductResponse(
             Long id,
             String title,

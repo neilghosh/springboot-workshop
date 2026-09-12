@@ -94,12 +94,17 @@ class ProductServiceTest {
 
         when(productRepository.findById(1L)).thenReturn(Optional.of(entity));
         when(externalProductClient.getProduct()).thenReturn(external);
+        when(externalProductClient.getExternalProductUrl())
+                .thenReturn("http://localhost:8080/external-product.json");
 
         ProductSummaryDTO summary = productService.getProductSummary(1L);
 
         assertEquals(89.99, summary.getProduct().getPrice());
         assertEquals(79.99, summary.getLivePrice());
         assertEquals(10.0, summary.getPriceDifference(), 0.001);
+        assertEquals(
+                "http://localhost:8080/external-product.json",
+                summary.getExternalUrl());
         verify(externalProductClient).getProduct();
     }
 }

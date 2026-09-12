@@ -215,11 +215,13 @@ The response makes the external value explicit:
   },
   "livePrice": 79.99,
   "priceDifference": 10.0,
-  "externalSource": "local external-product.json fixture"
+  "externalSource": "local external-product.json fixture",
+  "externalUrl": "http://localhost:8080/external-product.json"
 }
 ```
 
-The application log also shows the outbound request:
+Open `externalUrl` directly to inspect the payload used as the live price. The
+application log also shows the outbound request:
 
 ```text
 Calling external product API: http://localhost:8080/external-product.json

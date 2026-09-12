@@ -6,6 +6,7 @@ public class ProductSummaryDTO {
     private Double livePrice;
     private Double priceDifference;
     private String externalSource;
+    private String externalUrl;
 
     public ProductResponseDTO getProduct() {
         return product;
@@ -37,5 +38,13 @@ public class ProductSummaryDTO {
 
     public void setExternalSource(String externalSource) {
         this.externalSource = externalSource;
+    }
+
+    public String getExternalUrl() {
+        return externalUrl;
+    }
+
+    public void setExternalUrl(String externalUrl) {
+        this.externalUrl = externalUrl;
     }
 }
