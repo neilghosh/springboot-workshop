@@ -1,11 +1,11 @@
-package com.convergence.ecommerce.service;
+package com.example.ecommerce.service;
 
-import com.convergence.ecommerce.client.ExternalProductClient;
-import com.convergence.ecommerce.dto.ProductRequestDTO;
-import com.convergence.ecommerce.dto.ProductResponseDTO;
-import com.convergence.ecommerce.dto.ProductSummaryDTO;
-import com.convergence.ecommerce.model.ProductEntity;
-import com.convergence.ecommerce.repository.ProductRepository;
+import com.example.ecommerce.client.ExternalProductClient;
+import com.example.ecommerce.dto.ProductRequestDTO;
+import com.example.ecommerce.dto.ProductResponseDTO;
+import com.example.ecommerce.dto.ProductSummaryDTO;
+import com.example.ecommerce.model.ProductEntity;
+import com.example.ecommerce.repository.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

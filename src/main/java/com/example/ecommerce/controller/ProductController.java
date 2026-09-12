@@ -1,9 +1,9 @@
-package com.convergence.ecommerce.controller;
+package com.example.ecommerce.controller;
 
-import com.convergence.ecommerce.dto.ProductRequestDTO;
-import com.convergence.ecommerce.dto.ProductResponseDTO;
-import com.convergence.ecommerce.dto.ProductSummaryDTO;
-import com.convergence.ecommerce.service.ProductService;
+import com.example.ecommerce.dto.ProductRequestDTO;
+import com.example.ecommerce.dto.ProductResponseDTO;
+import com.example.ecommerce.dto.ProductSummaryDTO;
+import com.example.ecommerce.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

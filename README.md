@@ -1,4 +1,4 @@
-# Convergence 2026 — Spring Boot 4 E-Commerce API Workshop
+# Spring Boot 4 E-Commerce API Workshop
 
 > **Format:** 3 hours · **Audience:** 2nd–4th year engineering students
 > Build a REST API progressively with validation, service-layer design, JPA,
