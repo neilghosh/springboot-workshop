@@ -162,19 +162,51 @@ cp .env.example .env
 ```
 
 This stage adds `RestTemplate`, proxy-ready client configuration, and a composed
-product summary. The external response fixture is served locally, so no external
-account or mock server is required.
+product summary. To keep the workshop offline, `/external-product.json`
+simulates a third-party product API. In a real integration,
+`external.product-url` would point to another service.
 
-Start the application, create a product, then request its enriched summary:
+```text
+curl GET /api/products/1/summary
+  -> ProductController
+  -> ProductService loads product 1 from PostgreSQL
+  -> ExternalProductClient
+  -> RestTemplate GET /external-product.json
+  <- external reference price
+  -> ProductService combines both responses
+```
+
+Start the application:
 
 ```bash
 SPRING_PROFILES_ACTIVE=production ./mvnw spring-boot:run
+```
 
+In another terminal, first inspect the simulated external response:
+
+```bash
+curl http://localhost:8080/external-product.json
+```
+
+Create a local product with a different price:
+
+```bash
 curl -X POST http://localhost:8080/api/products \
   -H "Content-Type: application/json" \
-  -d '{"name":"Mechanical Keyboard","description":"RGB Wireless","price":79.99,"stockQuantity":50,"category":"Electronics"}'
+  -d '{"name":"Mechanical Keyboard","description":"RGB Wireless","price":89.99,"stockQuantity":50,"category":"Electronics"}'
+```
 
+Request the composed response:
+
+```bash
 curl http://localhost:8080/api/products/1/summary
+```
+
+The service returns the local product price (`89.99`), external reference price
+(`79.99`), and calculated difference (`10.0`). The application log also shows:
+
+```text
+Calling external product API: http://localhost:8080/external-product.json
 ```
 
 ## API from Step 2 onward

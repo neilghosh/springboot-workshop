@@ -46,7 +46,7 @@ public class ProductService {
         summary.setProduct(product);
         summary.setReferencePrice(external.price());
         summary.setPriceDifference(product.getPrice() - external.price());
-        summary.setExternalSource("aligned local JSON fixture");
+        summary.setExternalSource("local external-product.json fixture");
         return summary;
     }
 
