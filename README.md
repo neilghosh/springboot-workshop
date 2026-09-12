@@ -188,11 +188,6 @@ curl http://localhost:8080/api/products/1/summary
 | `DELETE` | `/api/products/{id}` | Delete a product |
 | `GET` | `/api/products/{id}/summary` | Enriched response; Step 4 only |
 
-From Step 3 onward, generated API documentation is available at:
-
-- Swagger UI: <http://localhost:8080/swagger-ui/index.html>
-- OpenAPI JSON: <http://localhost:8080/v3/api-docs>
-
 ## Debug
 
 Press `F5` and select **Debug Spring Boot App**. A breakpoint in

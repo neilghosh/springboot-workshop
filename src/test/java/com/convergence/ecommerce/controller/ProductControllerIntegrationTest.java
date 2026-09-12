@@ -57,12 +57,4 @@ class ProductControllerIntegrationTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error").value("Validation Failed"));
     }
-
-    @Test
-    void testOpenApiDocumentation() throws Exception {
-        mockMvc.perform(get("/v3/api-docs"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.info.title").value("E-Commerce Product API"))
-                .andExpect(jsonPath("$.paths['/api/products']").exists());
-    }
 }
