@@ -113,6 +113,23 @@ Not required for the workshop
 
 ---
 
+### Briefing Requirements — Covered
+
+| Requested module | Workshop implementation |
+|---|---|
+| Spring Boot fundamentals | Boot, auto-configuration, IoC/DI, profiles |
+| REST controllers + CRUD | `ProductController` from Step 1 onward |
+| Service layer | `ProductService` introduced with persistence |
+| DTO validation | Jakarta constraints + `@Valid` + `400` demo |
+| Database integration | H2 default; PostgreSQL production profile |
+| API testing | `curl` primary; Bruno optional; Postman compatible |
+| Framework conventions | Layer boundaries, DTO/entity separation, transactions |
+| Developer etiquette | Tests, small diffs, useful errors, no secrets, code review |
+
+> Intentional substitution: teach portable HTTP testing, not one proprietary client.
+
+---
+
 <!-- _class: lead -->
 
 ## From `main()` + JDBC
@@ -517,7 +534,15 @@ The service method states the all-or-nothing boundary.
 
 </div>
 
-No second entity required. Use Order + Inventory later for a multi-entity case.
+**Important:** `@Transactional` defines commit/rollback scope. It does not
+automatically lock a row or prevent two requests from overwriting each other.
+
+* A `sleep` does not prove transaction safety.
+* Blocking needs explicit pessimistic locking.
+* Lost-update detection typically needs optimistic locking with `@Version`.
+
+No second entity or artificial slow endpoint is required for this workshop.
+Use Order + Inventory later for an advanced multi-entity example.
 
 ---
 
