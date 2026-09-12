@@ -167,16 +167,17 @@ simulates a third-party product API. In a real integration,
 `external.product-url` would point to another service.
 
 ```text
-curl GET /api/products/1/summary
+curl GET /api/products/{id}/summary
   -> ProductController
-  -> ProductService loads product 1 from PostgreSQL
+  -> ProductService loads the requested product from PostgreSQL
   -> ExternalProductClient
   -> RestTemplate GET /external-product.json
   <- external reference price
   -> ProductService combines both responses
 ```
 
-Start the application:
+Stop any application started before switching tags, then start Step 4 so the JVM
+loads the outbound client code:
 
 ```bash
 SPRING_PROFILES_ACTIVE=production ./mvnw spring-boot:run
@@ -196,10 +197,13 @@ curl -X POST http://localhost:8080/api/products \
   -d '{"name":"Mechanical Keyboard","description":"RGB Wireless","price":89.99,"stockQuantity":50,"category":"Electronics"}'
 ```
 
-Request the composed response:
+Copy the `id` from the POST response. PostgreSQL data persists across restarts,
+so the new product is not always ID `1`. Request the composed response with the
+returned ID:
 
 ```bash
-curl http://localhost:8080/api/products/1/summary
+PRODUCT_ID=2 # replace with the ID returned by POST
+curl "http://localhost:8080/api/products/$PRODUCT_ID/summary"
 ```
 
 The service returns the local product price (`89.99`), external reference price
