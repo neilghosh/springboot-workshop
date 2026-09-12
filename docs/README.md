@@ -24,3 +24,8 @@ hosted presentation automatically.
 
 Do not edit generated `docs/index.html` manually because the deployment workflow
 replaces it.
+
+## Future annexures
+
+See [`TODO.md`](./TODO.md) for optional advanced modules covering observability,
+data integrity, caching, OpenAPI documentation, security, and migrations.
