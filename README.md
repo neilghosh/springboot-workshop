@@ -126,16 +126,16 @@ Compose starts:
 VS Code enters `app` because `devcontainer.json` specifies `"service": "app"`.
 The PostgreSQL hostname inside the Compose network is `database`.
 
-Local H2 remains the default:
-
-```bash
-./mvnw spring-boot:run
-```
-
-Activate PostgreSQL explicitly:
+Run this stage with PostgreSQL:
 
 ```bash
 SPRING_PROFILES_ACTIVE=production ./mvnw spring-boot:run
+```
+
+To use local H2 instead, omit the production profile:
+
+```bash
+./mvnw spring-boot:run
 ```
 
 The production profile disables the H2 Console. Connect to PostgreSQL from
@@ -168,7 +168,7 @@ account or mock server is required.
 Start the application, create a product, then request its enriched summary:
 
 ```bash
-./mvnw spring-boot:run
+SPRING_PROFILES_ACTIVE=production ./mvnw spring-boot:run
 
 curl -X POST http://localhost:8080/api/products \
   -H "Content-Type: application/json" \
