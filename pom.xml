@@ -11,7 +11,7 @@
         <relativePath/>
     </parent>
 
-    <groupId>com.convergence</groupId>
+    <groupId>com.example</groupId>
     <artifactId>ecommerce-api</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>ecommerce-api</name>

@@ -5,7 +5,7 @@
       "type": "java",
       "name": "Debug Spring Boot App",
       "request": "launch",
-      "mainClass": "com.convergence.ecommerce.EcommerceApplication",
+      "mainClass": "com.example.ecommerce.EcommerceApplication",
       "projectName": "ecommerce-api",
       "args": "",
       "env": {}

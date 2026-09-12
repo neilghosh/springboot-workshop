@@ -1,16 +1,22 @@
-package com.convergence.ecommerce.dto;
+package com.example.ecommerce.model;
 
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
-public class ProductResponseDTO {
-
+@Entity
+@Table(name = "products")
+public class ProductEntity {
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
-    private String description;
-    private Double price;
-    private Integer stockQuantity;
-    private String category;
-    private LocalDateTime createdAt;
+    @Column(nullable = false) private String name;
+    @Column(nullable = false, length = 1000) private String description;
+    @Column(nullable = false) private Double price;
+    @Column(nullable = false) private Integer stockQuantity;
+    @Column(nullable = false) private String category;
+    @Column(nullable = false, updatable = false) private LocalDateTime createdAt;
+
+    @PrePersist
+    protected void onCreate() { createdAt = LocalDateTime.now(); }
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -25,5 +31,4 @@ public class ProductResponseDTO {
     public String getCategory() { return category; }
     public void setCategory(String category) { this.category = category; }
     public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 }
