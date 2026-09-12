@@ -20,7 +20,7 @@ reduce line count.
 ## Sources of Truth
 
 - `README.md`: participant journey, commands, endpoints, and expected results.
-- `PRESENTATION.md`: instructor narrative and live-coding sequence.
+- `docs/PRESENTATION.md`: instructor narrative and live-coding sequence.
 - `pom.xml`: Java, Spring Boot, and dependency versions.
 - `src/main/resources/application*.properties`: profile behavior.
 - `.env.example`: documented environment variables without real credentials.
@@ -51,7 +51,8 @@ earlier stage just because it is cleaner or more production-like.
 
 1. Identify the earliest stage whose behavior or teaching material is affected.
 2. Determine every later stage that inherits the changed concept.
-3. Read the corresponding sections of `README.md` and `PRESENTATION.md`.
+3. Read the corresponding sections of `README.md` and
+   `docs/PRESENTATION.md`.
 4. Inspect related code, tests, configuration, environment templates, and
    Dev Container files.
 5. Decide whether the request changes only `main` or also requires publishing
