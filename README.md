@@ -91,6 +91,13 @@ curl JSON
   -> ProductResponseDTO JSON
 ```
 
+APIs introduced in this step:
+
+| Method | Endpoint | Behavior |
+|---|---|---|
+| `GET` | `/api/products` | List products held in memory |
+| `POST` | `/api/products` | Validate and create an in-memory product |
+
 **Do:**
 
 ```bash
@@ -126,6 +133,16 @@ ProductController
   -> Hibernate/JPA
   -> H2 in-memory database
 ```
+
+The same REST contract now uses H2, with additional CRUD operations:
+
+| Method | Endpoint | H2 operation |
+|---|---|---|
+| `GET` | `/api/products` | Select all products |
+| `GET` | `/api/products/{id}` | Select one product by ID |
+| `POST` | `/api/products` | Insert a product |
+| `PUT` | `/api/products/{id}` | Update a product |
+| `DELETE` | `/api/products/{id}` | Delete a product |
 
 **Do:**
 
@@ -219,6 +236,12 @@ service tests and MockMvc controller integration tests.
 **Goal:** Compose local product data with a price obtained through an outbound
 HTTP call.
 
+New API in this step:
+
+| Method | Endpoint | Behavior |
+|---|---|---|
+| `GET` | `/api/products/{id}/summary` | Combine the stored product with an external live price |
+
 **Do:**
 
 ```bash
@@ -299,17 +322,6 @@ Calling external product API: http://localhost:8080/external-product.json
 **Expect:** The response contains the stored product, `livePrice` from the
 outbound JSON, the calculated `priceDifference`, and the URL of the external
 payload.
-
-## API from Step 2 onward
-
-| Method | Endpoint | Description |
-|---|---|---|
-| `GET` | `/api/products` | List products |
-| `GET` | `/api/products/{id}` | Get a product |
-| `POST` | `/api/products` | Create a product |
-| `PUT` | `/api/products/{id}` | Update a product |
-| `DELETE` | `/api/products/{id}` | Delete a product |
-| `GET` | `/api/products/{id}/summary` | Enriched response; Step 4 only |
 
 ## Debug
 
