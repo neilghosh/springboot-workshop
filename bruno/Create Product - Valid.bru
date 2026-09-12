@@ -1,0 +1,25 @@
+meta {
+  name: Create Product - Valid
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:8080/api/products
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "name": "Mechanical Keyboard",
+    "description": "RGB Wireless",
+    "price": 79.99,
+    "stockQuantity": 50,
+    "category": "Electronics"
+  }
+}
