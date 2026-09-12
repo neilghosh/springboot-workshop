@@ -2,8 +2,8 @@
 marp: true
 theme: gaia
 paginate: true
-header: "Convergence 2026 — Spring Boot Workshop"
-footer: "GDGC VNR VJIET · neilghosh/springboot-workshop"
+header: "Spring Boot Workshop"
+footer: "neilghosh/springboot-workshop"
 size: 16:9
 style: |
   section { padding: 30px 42px; font-size: 23px; }
@@ -27,7 +27,7 @@ style: |
 
 ## E-Commerce API Workshop
 
-**Convergence 2026 · GDGC VNR VJIET**
+**A reusable hands-on backend development workshop**
 
 `@RestController` → `@Service` → `JpaRepository` → **H2 / Postgres**
 
@@ -43,16 +43,16 @@ style: |
 
 <div class="card">
 
-#### ⏱️ 10 min — Setup
+#### ⏱️ 15 min — Setup
 
 `java -version`  
-`.\mvnw.cmd spring-boot:run` → `[]`
+Run app → first API request
 
 </div>
 
 <div class="card" style="border-color:#43a047; background:#f6fdf6;">
 
-#### 🎯 45 min — Concepts
+#### 🎯 30 min — Concepts
 
 Why Boot · IoC/DI · Profiles
 
@@ -60,9 +60,9 @@ Why Boot · IoC/DI · Profiles
 
 <div class="card" style="border-color:#ef6c00; background:#fff8f0;">
 
-#### 🛠️ 105 min — Code
+#### 🛠️ 120 min — Code
 
-`step-0` → `step-3` live
+`step-0` → `step-4` live
 
 </div>
 
@@ -70,7 +70,63 @@ Why Boot · IoC/DI · Profiles
 
 <br>
 
-<div class="pill">Q&A 20 min — curl · Postgres · debug + agent review</div>
+<div class="pill">Q&A 15 min — API clients · Postgres · debug · conventions</div>
+
+---
+
+### Workshop Toolset
+
+<div class="columns3">
+
+<div class="card">
+
+#### ✅ `curl` — Primary
+
+All README examples<br>
+Zero account · scriptable<br>
+Works in every terminal
+
+</div>
+
+<div class="card" style="background:#e8f5e9; border-color:#43a047;">
+
+#### 🟢 Bruno — Optional
+
+Open-source GUI client<br>
+Open the `bruno/` collection<br>
+Requests stay with the code
+
+</div>
+
+<div class="card">
+
+#### Postman — Compatible
+
+Can send the same requests<br>
+Not required for the workshop
+
+</div>
+
+</div>
+
+> Learn HTTP requests and responses—not dependence on one API-client product.
+
+---
+
+### Workshop Learning Outcomes
+
+| Learning objective | Workshop implementation |
+|---|---|
+| Spring Boot fundamentals | Boot, auto-configuration, IoC/DI, profiles |
+| REST controllers + CRUD | `ProductController` from Step 1 onward |
+| Service layer | `ProductService` introduced with persistence |
+| DTO validation | Jakarta constraints + `@Valid` + `400` demo |
+| Database integration | H2 default; PostgreSQL production profile |
+| API testing | `curl` primary; Bruno optional; Postman compatible |
+| Framework conventions | Layer boundaries, DTO/entity separation, transactions |
+| Developer etiquette | Tests, small diffs, useful errors, no secrets, code review |
+
+> Teach portable HTTP testing rather than dependence on one client product.
 
 ---
 
@@ -291,7 +347,7 @@ class ProductService {
 
 <div class="card" style="text-align:center; margin-top:0.5em;">
 
-`ApplicationContext` : **scan** `com.convergence.ecommerce` → **instantiate** → **inject** → **singleton** → destroy
+`ApplicationContext` : **scan** `com.example.ecommerce` → **instantiate** → **inject** → **singleton** → destroy
 
 You never `new` a Service — *Boot does* (`ProductController.java:14`)
 
@@ -401,6 +457,111 @@ Logic · `@Transactional` · DTO↔Entity
 
 ---
 
+### Slide 8B — Validation: Annotation vs Enforcement
+
+<div class="columns">
+
+<div class="card" style="border-color:#e53935; background:#ffebee;">
+
+#### ❌ Looks validated, but is not
+
+```java
+public ResponseEntity<?> create(
+    @RequestBody ProductRequestDTO request) {
+    return service.createProduct(request);
+}
+```
+
+DTO constraints exist, but the boundary never triggers them.
+
+</div>
+
+<div class="card" style="border-color:#43a047; background:#e8f5e9;">
+
+#### ✅ Reject before business logic
+
+```java
+public ResponseEntity<?> create(
+    @Valid @RequestBody ProductRequestDTO request) {
+    return service.createProduct(request);
+}
+```
+
+Blank name or negative price → `400 Bad Request`
+
+</div>
+
+</div>
+
+Demo with `bruno/Create Product - Invalid.bru` or the README `curl`.
+
+---
+
+### Slide 8C — Transaction: One Product Is Enough
+
+<div class="columns">
+
+<div class="card" style="border-color:#e53935; background:#ffebee;">
+
+#### ❌ Unclear business boundary
+
+```java
+public ProductResponseDTO update(Long id, DTO dto) {
+    ProductEntity product = repository.findById(id).orElseThrow();
+    mapChanges(product, dto);
+    return map(repository.save(product));
+}
+```
+
+Repository calls may each have their own transaction.
+
+</div>
+
+<div class="card" style="border-color:#43a047; background:#e8f5e9;">
+
+#### ✅ Read-modify-write as one unit
+
+```java
+@Transactional
+public ProductResponseDTO update(Long id, DTO dto) {
+    // lookup + mutation + save
+}
+```
+
+The service method states the all-or-nothing boundary.
+
+</div>
+
+</div>
+
+**Important:** `@Transactional` defines commit/rollback scope. It does not
+automatically lock a row or prevent two requests from overwriting each other.
+
+* A `sleep` does not prove transaction safety.
+* Blocking needs explicit pessimistic locking.
+* Lost-update detection typically needs optimistic locking with `@Version`.
+
+No second entity or artificial slow endpoint is required for this workshop.
+Use Order + Inventory later for an advanced multi-entity example.
+
+---
+
+### Slide 8D — Conventions and Developer Etiquette
+
+| Convention | Why professionals care |
+|---|---|
+| Controller → Service → Repository | Each layer has one responsibility |
+| DTO ≠ Entity | API changes do not leak into the database model |
+| Constructor injection | Dependencies are explicit and testable |
+| `@Valid` at the boundary | Invalid data stops before business logic |
+| `@Transactional` in services | Business operations define atomicity |
+| Profiles + environment variables | Configuration changes without code or secrets |
+| Tests for happy and invalid paths | Confidence before sharing or deploying |
+
+**Etiquette:** meaningful names · small diffs · useful errors · no secrets · review generated code
+
+---
+
 ### Slide 9 — Why DI Wins Here
 
 <div class="columns">
@@ -465,7 +626,7 @@ H2 injected
 </div>
 
 ```
-step-0-starter → curl []  (H2)      step-3-complete + production → psql \dt → products
+step-0-starter → curl []  (Web MVC)      step-3-production + production → psql \dt → products
 ```
 
 ---
@@ -500,18 +661,19 @@ Tomcat · `DispatcherServlet` · `Jackson` · `Validator` · `HikariCP` · `TxMa
 
 ## Part 2 — Hands-On
 
-### 105 min · `step-0` → `step-3`
+### 120 min · `step-0` → `step-4`
 
 ---
 
-| Step | Branch | Add | File | Time |
+| Step | Tag | Add | File | Time |
 |------|--------|-----|------|------|
-| 0 | `step-0-starter` | Maven + H2 | `pom.xml` | 15 min |
+| 0 | `step-0-starter` | Maven + Web MVC | `pom.xml` | 10 min |
 | 1 | `step-1-rest-dto` | REST + validation | `ProductRequestDTO @NotBlank` | 25 min |
-| 2 | `step-2-service-db` | Entity + Repo + Service | `ProductEntity @Entity` | 35 min |
-| 3 | `step-3-complete` | Handler + tests + profiles | `GlobalExceptionHandler` | 30 min |
+| 2 | `step-2-service-db` | Entity + Repo + Service | `ProductEntity @Entity` | 40 min |
+| 3 | `step-3-production` | Handler + tests + profiles | `GlobalExceptionHandler` | 35 min |
+| 4 | `step-4-outbound-enrichment` | Optional outbound enrichment | `GET /api/products/{id}/summary` | 10 min |
 
-`git checkout step-0-starter` → `.\mvnw.cmd spring-boot:run`
+`git switch --detach step-0-starter` → `.\mvnw.cmd spring-boot:run`
 
 ---
 
@@ -520,3 +682,4 @@ Tomcat · `DispatcherServlet` · `Jackson` · `Validator` · `HikariCP` · `TxMa
 * 50 lines XML → 3 lines `properties`
 * `new ProductService(mockRepo)` — DB-free test
 * `@Transactional` → `existsById` + `deleteById` atomic
+* Two entities? Save Order + reduce Inventory — useful later, unnecessary for CRUD

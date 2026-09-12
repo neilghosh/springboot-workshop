@@ -1,43 +1,286 @@
-# AGENTS.md — springboot-workshop
+# AGENTS.md — Spring Boot Workshop
 
-## Bootstrap — How This Repo Was Generated
+## Mission
 
-To regenerate from zero, follow this exact order (verified against `pom.xml:6`, `src/main/resources/application*.properties`):
+This repository is a progressive teaching workshop, not only a finished Spring
+Boot application. Preserve the order in which concepts are introduced.
 
-1. **Scaffold:** `https://start.spring.io` → Maven, Java 17, Spring Boot 4.0.8, group `com.convergence`, artifact `ecommerce-api`, package `com.convergence.ecommerce`. Dependencies: Web MVC, Data JPA, Validation, H2 Console, H2, and PostgreSQL. No Lombok — workshop is intentionally verbose.
-2. **Wrapper:** Add custom `mvnw` / `mvnw.cmd` (see `mvnw.cmd:4` — checks `where mvn`, else bootstraps Maven 3.9.6 to `%USERPROFILE%\.m2\wrapper\dists\apache-maven-3.9.6` via PowerShell download). Add `.mvn/wrapper/maven-wrapper.properties` + `maven-wrapper.jar`.
-3. **Config:** `src/main/resources/application.properties` = H2 default (port 8080, `jdbc:h2:mem:ecommercedb`, `H2Dialect`, `ddl-auto=update`, `spring.config.import=optional:file:.env[.properties]`). Copy to `application-production.properties` with `${POSTGRES_URL}`, `${POSTGRES_USER}`, `${POSTGRES_PASSWORD}` + `PostgreSQLDialect`. Add `.env.example` (template, committed) and `.env` (real secrets, gitignored via `.gitignore:2`).
-4. **Code layers (package `com.convergence.ecommerce`):** `EcommerceApplication.java` → DTOs (`dto/Product*DTO.java` with `jakarta.validation`) → `model/ProductEntity.java` (JPA `@Entity`) → `repository/ProductRepository.java` (JpaRepository) → `service/ProductService.java` (constructor injection, `@Transactional`, explicit `mapToResponseDTO`) → `controller/ProductController.java` (explicit constructor, no Lombok) → `exception/GlobalExceptionHandler.java` (`@RestControllerAdvice`).
-5. **Tests:** `ProductServiceTest.java` (Mockito unit, uses setters not builders) + `ProductControllerIntegrationTest.java` (`@SpringBootTest` + `MockMvc`).
-6. **Tooling/docs:** `.vscode/launch.json:8` (`mainClass: com.convergence.ecommerce.EcommerceApplication`), `PRESENTATION.md` (Slides 1-5, Slide 5 is profile-based DI), `README.md` (curl-only).
-7. **Branches (create in order):** `git checkout -b step-0-starter` (pom + config), `step-1-rest-dto` (+DTOs/Controller), `step-2-service-db` (+Entity/Repo/Service), `step-3-complete` (+exception handler + tests + profiles + docs). Current tip is `step-3-complete`.
+A change is incomplete if the final code works but any of these become
+inconsistent:
+
+- workshop checkpoints;
+- participant instructions;
+- presentation slides;
+- tests and expected output;
+- local, Dev Container, Windows, or production setup.
+
+Prefer code that is explicit and easy to teach over abstractions that merely
+reduce line count.
+
+## Sources of Truth
+
+- `README.md`: participant journey, commands, endpoints, and expected results.
+- `PRESENTATION.md`: instructor narrative and live-coding sequence.
+- `pom.xml`: Java, Spring Boot, and dependency versions.
+- `src/main/resources/application*.properties`: profile behavior.
+- `.env.example`: documented environment variables without real credentials.
+- Git tags: published snapshots of the workshop stages.
+- This file: rules for modifying the repository safely.
+
+When these disagree, do not silently choose one. Determine the intended
+workshop behavior, then align every affected surface.
+
+## Workshop Progression
+
+Each stage is cumulative. A concept introduced in one stage normally remains
+present in all later stages.
+
+| Stage | Introduces | Must not introduce early |
+|---|---|---|
+| `step-0-starter` | Application entrypoint and Web MVC dependency | Product API, persistence, production configuration |
+| `step-1-rest-dto` | Product DTOs, validation, controller, in-memory storage | JPA, repository, database-backed service |
+| `step-2-service-db` | Service layer, entity, repository, JPA, H2, full CRUD | PostgreSQL profile, outbound enrichment |
+| `step-3-production` | Global errors, tests, profiles, PostgreSQL | Outbound enrichment |
+| `step-4-outbound-enrichment` | `RestTemplate`, proxy-ready external client, product summary | Nothing beyond the current workshop |
+| `main` | Maintained form of the latest completed stage | Unplanned concepts that bypass the workshop sequence |
+
+Pedagogical boundaries are requirements. Do not move an implementation into an
+earlier stage just because it is cleaner or more production-like.
+
+## Before Making a Change
+
+1. Identify the earliest stage whose behavior or teaching material is affected.
+2. Determine every later stage that inherits the changed concept.
+3. Read the corresponding sections of `README.md` and `PRESENTATION.md`.
+4. Inspect related code, tests, configuration, environment templates, and
+   Dev Container files.
+5. Decide whether the request changes only `main` or also requires publishing
+   replacement checkpoint snapshots.
+
+Examples:
+
+- DTO validation or REST contract changes affect `step-1` and every later stage.
+- Entity, repository, service, or H2 changes affect `step-2` and every later stage.
+- error handling, tests, PostgreSQL, or profile changes affect `step-3` onward.
+- external client or product-summary changes affect `step-4` and `main`.
+- Java, Maven, Dev Container, or command changes may affect every stage.
+- wording changes affect only the documents unless they alter an instruction,
+  command, expected response, or teaching sequence.
+
+## Required Change Propagation
+
+Do not update only the latest implementation when a change belongs to an
+earlier workshop stage.
+
+For every behavioral change:
+
+1. Preserve the API contract in later stages unless the change intentionally
+   modifies that contract.
+2. Propagate the concept through all later checkpoints where it remains relevant.
+3. Keep README commands and expected output executable against the matching stage.
+4. Keep presentation snippets and explanations consistent with the code shown at
+   that point in the workshop.
+5. Update tests at the stage where the behavior first becomes testable.
+6. Check both H2 and production-profile implications when persistence or
+   configuration changes.
+
+If checkpoint publication is not part of the request, modify `main` and report
+which checkpoint tags would need regeneration. Never move tags as an incidental
+side effect of an ordinary code change.
+
+## Checkpoint and Tag Guardrails
+
+Tags are published workshop artifacts. Treat them as immutable during normal
+development.
+
+- Do not create, delete, move, or force-push a tag unless the user explicitly
+  requests checkpoint publication.
+- Do not make an old tag point directly at `main`; each tag must remain a valid,
+  independently runnable teaching stage.
+- Do not add later-stage code to an earlier checkpoint.
+- Do not rewrite remote history or force-push without explicit approval.
+- Before changing checkpoints, inspect the existing stage with `git show` or a
+  temporary worktree instead of assuming it matches `main`.
+
+When explicitly asked to regenerate checkpoints:
+
+1. Rebuild the progression in stage order, starting with the earliest affected
+   stage.
+2. Use isolated branches or worktrees so stages do not contaminate each other.
+3. Verify each stage before preparing the next cumulative stage.
+4. Confirm that the diff from one stage to the next teaches only the concepts
+   assigned to that transition.
+5. Update local tags only after every affected stage passes verification.
+6. Present the old and new tag commit IDs before any remote tag update.
+
+## Repository Invariants
+
+### Teaching and code style
+
+- Use Java 17 and the Spring Boot version declared in `pom.xml`.
+- Do not add Lombok. Explicit constructors, getters, setters, and mappings are
+  intentional workshop material.
+- Use constructor injection.
+- Keep controllers focused on HTTP concerns and services focused on business
+  behavior.
+- Keep request/response DTOs separate from JPA entities.
+- Do not return `ProductEntity` directly from controller endpoints.
+- Keep mappings explicit, including `mapToResponseDTO`, unless the workshop is
+  deliberately changed to teach a mapping library.
+- Use Jakarta validation on request DTOs and `@Valid` at controller boundaries.
+- Use Spring Data repositories rather than adding direct JDBC code.
+- Use `@Transactional` at appropriate service boundaries.
+- Avoid adding architecture, frameworks, or patterns that have not been assigned
+  a place in the workshop progression.
+
+### Configuration and data
+
+- H2 is the zero-setup default profile.
+- PostgreSQL is enabled through the `production` profile.
+- Keep profile-specific values in `application-production.properties`.
+- Keep environment-variable names aligned across properties, `.env.example`,
+  Docker Compose, README instructions, and presentation material.
+- Never commit `.env`, passwords, tokens, connection secrets, or real credentials.
+- The Dev Container reads the root `.env`; do not hardcode credentials in
+  `.devcontainer` files.
+- Use `database` as the PostgreSQL hostname inside Docker Compose and `localhost`
+  for a PostgreSQL server running directly on the host.
+- Preserve proxy support for outbound HTTP unless the workshop requirement is
+  intentionally changed.
+
+### Participant experience
+
+- Participant-facing API examples use `curl`, not Postman.
+- Preserve both Unix/macOS and Windows usability when changing commands.
+- In PowerShell, quote Maven `-D` arguments.
+- Keep `curl.exe` JSON examples PowerShell-safe and on one command line where
+  documented that way.
+- Do not require software outside the documented local or Dev Container setup.
+- Error responses and status codes shown in documentation must match runtime
+  behavior.
+
+### Repository hygiene
+
+- Do not commit `target/`, `.env`, IDE state, operating-system files, or other
+  generated artifacts.
+- Keep `.vscode/launch.json` and `.vscode/extensions.json` tracked; other
+  `.vscode` state is intentionally ignored.
+- Do not introduce generated code or migration tooling without an explicit
+  workshop decision.
+- Avoid unrelated refactors. Small teaching diffs are easier to explain and
+  compare between stages.
+
+## Project Map
+
+```text
+src/main/java/com/example/ecommerce/
+├── EcommerceApplication.java
+├── client/          # outbound product integration, introduced at step 4
+├── config/          # RestTemplate and infrastructure configuration
+├── controller/      # HTTP endpoints and validation boundary
+├── dto/             # request, response, and composed response types
+├── exception/       # global API error handling
+├── model/           # JPA entities
+├── repository/      # Spring Data repositories
+└── service/         # transactions, business behavior, and DTO mapping
+
+src/test/java/com/example/ecommerce/
+├── controller/      # MockMvc/Spring Boot integration tests
+└── service/         # Mockito unit tests
+```
+
+The project is a single Maven module with package root
+`com.example.ecommerce`.
 
 ## Commands
 
-- **Java:** This Spring Boot 4.0.8 workshop requires **JDK 17**. Machine default is JDK 16 — set `JAVA_HOME=C:\Program Files\Java\jdk-17.0.20` (`java -version` must show 17). Wrapper respects `JAVA_HOME`.
-- **Run (default H2, no DB setup):** `.\mvnw.cmd spring-boot:run` (Linux/macOS: `./mvnw spring-boot:run`)
-- **Run (production Postgres):** `.\mvnw.cmd spring-boot:run "-Dspring-boot.run.profiles=production"` — **PowerShell requires quotes around `-D`** or use `$env:SPRING_PROFILES_ACTIVE="production"; .\mvnw.cmd spring-boot:run`
-- **Tests:** `.\mvnw.cmd test` (H2) · `.\mvnw.cmd test "-Dspring.profiles.active=production"` (Postgres) · single class: `.\mvnw.cmd -Dtest=ProductServiceTest test` or `ProductControllerIntegrationTest` · single method: `.\mvnw.cmd -Dtest=ProductServiceTest#testCreateProduct test`
-- **Debug:** `F5` → `Debug Spring Boot App` (`.vscode/launch.json:8`, `mainClass: com.convergence.ecommerce.EcommerceApplication`); or `.\mvnw.cmd spring-boot:run "-Dspring-boot.run.jvmArguments=-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005"` + attach to 5005 — breakpoint hits only on next `curl` request
-- **Build:** `.\mvnw.cmd clean compile|test|package|install` · `clean package "-DskipTests"` for JAR · `target/` is gitignored — `git status` shows dirty `target/classes` until `clean`
+Use the Maven wrapper rather than relying on a globally installed Maven version.
 
-## Project Structure
+### Unix/macOS
 
-- Single-module Maven: `pom.xml` (`java.version=17`, parent 4.0.8). Key dirs: `src/main/java/com/convergence/ecommerce/{controller,dto,model,repository,service,exception}/`, `src/main/resources/`.
-- Entrypoint: `EcommerceApplication.java`. No codegen/migrations — `ddl-auto=update`.
-- `.env` auto-loaded by `application.properties:2` (`spring.config.import=optional:file:.env[.properties]`). Do not assume shell `source .env` happened.
+```bash
+./mvnw spring-boot:run
+./mvnw clean test
+./mvnw -Dtest=ProductServiceTest test
+./mvnw -Dtest=ProductControllerIntegrationTest test
+SPRING_PROFILES_ACTIVE=production ./mvnw spring-boot:run
+```
 
-## Conventions & Gotchas
+### Windows PowerShell
 
-- **No Lombok** — all DTOs/entities use explicit getters/setters/constructors for workshop readability. Do not re-add.
-- **curl-only** — Postman was removed; `README.md` documents `curl`/`curl.exe` only. Keep `curl.exe` on single line with single-quoted JSON in PowerShell: `curl.exe -X POST http://localhost:8080/api/products -H "Content-Type: application/json" -d '{"name": "..."}'`.
-- **PowerShell quoting:** Every `-D` arg must be quoted (`"-Dspring-boot.run.profiles=production"`), else `Unknown lifecycle phase ".run.profiles=production"`.
-- **Postgres password:** Default `secret` in `.env.example` rarely matches local install → `FATAL: password authentication failed` → update `.env` or `$env:POSTGRES_PASSWORD`.
-- **`psql` PATH (Windows):** Installer not on PATH → use `& "C:\Program Files\PostgreSQL\16\bin\psql.exe"` or add via `[Environment]::SetEnvironmentVariable("PATH", ..., Machine)` + restart terminal.
-- **Service start needs Admin:** `Start-Service postgresql-x64-16` / `net start postgresql-x64-16` requires elevated shell; `Get-Service`/`sc query` does not. Linux: `systemctl status/start postgresql`, macOS: `brew services list/start`.
-- **`.vscode/` is gitignored** (`.gitignore:5` = `.vscode/*` + `!launch.json`/`!extensions.json`) — `settings.json` is ignored, `launch.json`/`extensions.json` stay tracked. `target/` was once committed in `d21f129` → now untracked via `git rm --cached -r target`.
+This workshop requires JDK 17. If the machine default differs, set `JAVA_HOME`
+to the JDK 17 installation before running the wrapper.
 
-## Verification
+```powershell
+.\mvnw.cmd spring-boot:run
+.\mvnw.cmd clean test
+.\mvnw.cmd "-Dtest=ProductServiceTest" test
+.\mvnw.cmd "-Dtest=ProductControllerIntegrationTest" test
+.\mvnw.cmd spring-boot:run "-Dspring-boot.run.profiles=production"
+```
 
-- Fast: `.\mvnw.cmd clean test` → expect 4 tests (service + controller) BUILD SUCCESS.
-- Live: run default profile → `curl http://localhost:8080/api/products` → `[]`; production profile → `psql -U postgres -c "\dt"` shows `products`.
+PowerShell must quote Maven arguments beginning with `-D`.
+
+## Verification Strategy
+
+Run the smallest verification that proves the change, then expand when the
+affected surface is broader.
+
+| Change | Minimum verification |
+|---|---|
+| DTO validation or mapping | related service test and controller integration test |
+| Controller endpoint or status code | controller integration test |
+| Service behavior | `ProductServiceTest` |
+| Entity, repository, JPA, or H2 config | full `./mvnw clean test` |
+| Production profile or PostgreSQL config | full tests plus production-profile startup when PostgreSQL is available |
+| Outbound client or summary endpoint | relevant tests plus a live summary request when practical |
+| Maven, Java, or shared infrastructure | full clean test |
+| Documentation only | verify commands, paths, stage names, and examples against the repository |
+| Checkpoint regeneration | verify every affected tag independently |
+
+Default full verification:
+
+```bash
+./mvnw clean test
+```
+
+Expected live checks where relevant:
+
+```bash
+curl http://localhost:8080/api/products
+curl http://localhost:8080/api/products/{id}/summary
+```
+
+Do not claim PostgreSQL verification if only H2 tests were run. State clearly
+when an external dependency prevented a live check.
+
+## Documentation Synchronization
+
+Update related documentation in the same change when any of these change:
+
+| Changed surface | Also inspect |
+|---|---|
+| endpoint, payload, status, or validation | README, presentation, controller tests |
+| stage boundary or teaching order | README workshop path, presentation agenda/slides, all later checkpoints |
+| dependency or Java/Spring version | README setup, Dev Container, wrapper behavior, presentation references |
+| profile or environment variable | both properties files, `.env.example`, Compose, README, presentation |
+| test count or test command | README expectations and workshop instructions |
+| outbound URL or proxy behavior | client configuration, properties, README, presentation, static example response |
+
+Do not duplicate large explanations between documents. Keep participant
+instructions in `README.md`; keep agent execution rules here.
+
+## Definition of Done
+
+A repository change is complete only when:
+
+- the earliest affected workshop stage is identified;
+- later stages remain valid cumulative extensions;
+- code follows the repository invariants;
+- relevant tests and live checks pass, or an unverified dependency is stated;
+- README commands and expected results match the implementation;
+- presentation content matches the workshop sequence;
+- configuration and environment-variable names agree everywhere;
+- no secret, build output, or unrelated file is included;
+- checkpoint impact is reported, and tags are changed only when explicitly
+  requested.
