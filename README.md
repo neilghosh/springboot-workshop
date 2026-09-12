@@ -93,6 +93,8 @@ Connect to PostgreSQL from the same terminal:
 psql -h database -U postgres -d ecommerce_db
 ```
 
+The production profile uses PostgreSQL and disables the H2 Console.
+
 Useful `psql` commands:
 
 ```text
