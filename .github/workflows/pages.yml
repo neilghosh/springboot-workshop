@@ -27,8 +27,7 @@ jobs:
       - name: Build slides HTML
         run: |
           mkdir -p docs
-          marp PRESENTATION.md -o docs/index.html --html
-          cp PRESENTATION.md docs/
+          marp docs/PRESENTATION.md -o docs/index.html --html
           touch docs/.nojekyll
       - uses: actions/configure-pages@v5
         with:
