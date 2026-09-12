@@ -70,8 +70,8 @@ Docker Compose starts two containers:
 | `database` | PostgreSQL 16 server |
 
 VS Code opens terminals in `app` because `.devcontainer/devcontainer.json`
-contains `"service": "app"`. The application connects to PostgreSQL using the
-Compose service hostname `database`.
+contains `"service": "app"`. PostgreSQL is available through the Compose service
+hostname `database` when the production profile is selected.
 
 ## Run
 
@@ -81,34 +81,11 @@ From the VS Code Dev Container terminal:
 ./mvnw spring-boot:run
 ```
 
-The Dev Container activates the `production` profile. Verify the API:
+Spring Boot uses its `default` profile and the H2 in-memory database. Verify the
+API:
 
 ```bash
 curl http://localhost:8080/api/products
-```
-
-Connect to PostgreSQL from the same terminal:
-
-```bash
-psql -h database -U postgres -d ecommerce_db
-```
-
-The production profile uses PostgreSQL and disables the H2 Console.
-
-Useful `psql` commands:
-
-```text
-\dt
-SELECT * FROM products;
-\q
-```
-
-## Run with H2 instead
-
-Override the Dev Container's production profile:
-
-```bash
-SPRING_PROFILES_ACTIVE=default ./mvnw spring-boot:run
 ```
 
 Open <http://localhost:8080/h2-console> and use:
@@ -121,10 +98,33 @@ Open <http://localhost:8080/h2-console> and use:
 
 H2 data is cleared when the application stops.
 
+## Run with PostgreSQL
+
+Activate the production profile explicitly:
+
+```bash
+SPRING_PROFILES_ACTIVE=production ./mvnw spring-boot:run
+```
+
+The production profile connects to PostgreSQL through `database` and disables
+the H2 Console. Connect with `psql` from another Dev Container terminal:
+
+```bash
+psql -h database -U postgres -d ecommerce_db
+```
+
+Useful `psql` commands:
+
+```text
+\dt
+SELECT * FROM products;
+\q
+```
+
 ## Build and test
 
 ```bash
-SPRING_PROFILES_ACTIVE=default ./mvnw clean test
+./mvnw clean test
 ./mvnw clean package
 ```
 
