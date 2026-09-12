@@ -36,12 +36,14 @@ public class ProductController {
         return ResponseEntity.ok(productService.getProductSummary(id));
     }
 
+    // @Valid enforces the DTO constraints before invalid input reaches the service.
     @PostMapping
     public ResponseEntity<ProductResponseDTO> createProduct(@Valid @RequestBody ProductRequestDTO requestDTO) {
         ProductResponseDTO created = productService.createProduct(requestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
+    // Updates use the same validation boundary as creates.
     @PutMapping("/{id}")
     public ResponseEntity<ProductResponseDTO> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductRequestDTO requestDTO) {
         ProductResponseDTO updated = productService.updateProduct(id, requestDTO);
