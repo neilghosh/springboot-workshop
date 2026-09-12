@@ -346,32 +346,6 @@ payload.
 Press `F5` and select **Debug Spring Boot App**. A breakpoint in
 `ProductController` or `ProductService` is hit by the next API request.
 
-## Framework conventions and developer etiquette
-
-The project keeps the conventions visible rather than hiding them behind
-generated code:
-
-- controllers own HTTP concerns such as request validation and status codes;
-- services own business behavior and transaction boundaries;
-- repositories own persistence;
-- request/response DTOs stay separate from JPA entities;
-- constructor injection makes dependencies explicit and testable;
-- configuration and credentials come from profiles and environment variables;
-- tests verify behavior before code is shared or deployed.
-
-Use the existing update operation to explain transactions without introducing
-a second entity. `ProductService.updateProduct` performs a read-modify-write
-sequence inside one `@Transactional` method. Removing the annotation makes the
-business operation depend on separate repository transactions and loses the
-clear all-or-nothing service boundary. Two entities are only necessary for a
-richer example such as creating an order while reducing inventory, which is
-beyond this workshop's current progression.
-
-Professional habits demonstrated in the workshop include meaningful names,
-small focused changes, useful error messages, no committed secrets, testing
-invalid input as well as the happy path, and reviewing AI-generated code for
-missing annotations or incorrect HTTP behavior.
-
 See [`PRESENTATION.md`](./PRESENTATION.md) for architecture diagrams and workshop
 notes.
 
