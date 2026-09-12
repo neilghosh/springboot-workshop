@@ -13,7 +13,7 @@ Each completed stage is a Git tag:
 | `step-0-starter` | Spring Boot application and Web MVC | None |
 | `step-1-rest-dto` | Product REST API, DTOs, and validation | In-memory Java list |
 | `step-2-service-db` | Service, repository, JPA entity, and persistence | H2 |
-| `step-3-complete` | PostgreSQL profile, tests, and global errors | H2 or PostgreSQL |
+| `step-3-production` | PostgreSQL profile, tests, and global errors | H2 or PostgreSQL |
 | `step-4-outbound-enrichment` | External client and composed response | H2 or PostgreSQL |
 
 Tags are read-only checkpoints. Move between them with:
@@ -22,7 +22,7 @@ Tags are read-only checkpoints. Move between them with:
 git switch --detach step-0-starter
 git switch --detach step-1-rest-dto
 git switch --detach step-2-service-db
-git switch --detach step-3-complete
+git switch --detach step-3-production
 git switch --detach step-4-outbound-enrichment
 ```
 
@@ -35,7 +35,7 @@ git switch main
 To change a checkpoint, create a temporary branch from its tag:
 
 ```bash
-git switch -c my-workshop-change step-3-complete
+git switch -c my-workshop-change step-3-production
 ```
 
 ## Shared setup
@@ -111,7 +111,7 @@ H2 data is cleared when the application stops.
 ## Step 3 — Production profile and tests
 
 ```bash
-git switch --detach step-3-complete
+git switch --detach step-3-production
 cp .env.example .env
 ```
 
