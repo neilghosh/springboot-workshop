@@ -465,7 +465,7 @@ H2 injected
 </div>
 
 ```
-step-0-starter → curl []  (H2)      step-3-complete + production → psql \dt → products
+step-0-starter → curl []  (Web MVC)      step-3-production + production → psql \dt → products
 ```
 
 ---
@@ -509,7 +509,8 @@ Tomcat · `DispatcherServlet` · `Jackson` · `Validator` · `HikariCP` · `TxMa
 | 0 | `step-0-starter` | Maven + H2 | `pom.xml` | 15 min |
 | 1 | `step-1-rest-dto` | REST + validation | `ProductRequestDTO @NotBlank` | 25 min |
 | 2 | `step-2-service-db` | Entity + Repo + Service | `ProductEntity @Entity` | 35 min |
-| 3 | `step-3-complete` | Handler + tests + profiles | `GlobalExceptionHandler` | 30 min |
+| 3 | `step-3-production` | Handler + tests + profiles | `GlobalExceptionHandler` | 30 min |
+| 4 | `step-4-outbound-enrichment` | RestTemplate + proxy-ready enrichment | `GET /api/products/{id}/summary` | 15 min |
 
 `git checkout step-0-starter` → `.\mvnw.cmd spring-boot:run`
 
