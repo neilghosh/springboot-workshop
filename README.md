@@ -11,28 +11,42 @@
 |-------|----------|---------|
 | Registration & Setup | 10 min | Clone repo, verify JDK 17 & run default profile (`curl []`) |
 | Concepts Before Code | 45 min | `PRESENTATION.md` — why Spring Boot vs Node/Python/Go, why code in agent era, Boot features, IoC/DI — **expanded** |
-| Hands-on Live Coding | 120 min | Follow git branches `step-0` → `step-4` |
+| Hands-on Live Coding | 120 min | Follow git tags `step-0` → `step-4` |
 | Q&A & Wrap-up | 20 min | Profiles, `curl`, Postgres, debug + agent-generated code review |
 
-**Live-coding branches — checkout to follow along:**
+**Live-coding tags — switch to each checkpoint to follow along:**
 ```bash
-git switch step-0-starter    # Starter: application + Web MVC
-git switch step-1-rest-dto   # REST + DTOs + validation
-git switch step-2-service-db # JPA Entity + Repository + Service + H2
-git switch step-3-complete   # PostgreSQL + tests + profiles + errors
-git switch step-4-outbound-enrichment # RestTemplate + proxy + composed response
+git switch --detach step-0-starter              # Starter: application + Web MVC
+git switch --detach step-1-rest-dto             # REST + DTOs + validation
+git switch --detach step-2-service-db           # JPA Entity + Repository + Service + H2
+git switch --detach step-3-complete             # PostgreSQL + tests + profiles + errors
+git switch --detach step-4-outbound-enrichment  # RestTemplate + proxy + composed response
 ```
 
-Each branch is independently buildable and adds only the dependencies needed for
+Each tag is an independently buildable checkpoint and adds only the dependencies needed for
 that stage:
 
-| Branch | Adds | Main dependency additions |
+| Tag | Adds | Main dependency additions |
 |---|---|---|
 | `step-0-starter` | Running application | Web MVC |
 | `step-1-rest-dto` | Product REST API and request validation | Validation |
 | `step-2-service-db` | Persistence, service layer, and H2 Console | Data JPA, H2, H2 Console |
 | `step-3-complete` | Profiles, PostgreSQL, errors, and tests | PostgreSQL, test starters |
 | `step-4-outbound-enrichment` | External HTTP enrichment through a proxy-ready client | No new dependency |
+
+Tags open in detached `HEAD` mode because they are fixed checkpoints. To keep
+your own work, create a branch from the stage where you want to begin:
+
+```bash
+git switch -c my-workshop-work step-0-starter
+```
+
+The maintained, fully completed workshop is on `main`. If checkpoint tags are
+moved as the workshop flow evolves, refresh a previous clone with:
+
+```bash
+git fetch origin main --tags --force
+```
 
 ---
 
@@ -90,7 +104,7 @@ This project is already generated and includes its wrapper, so you do not need M
 ```
 
 ### Generate a matching starter skeleton
-If you want to recreate the workshop's initial project before checking out the branches, use these Spring Initializr settings:
+If you want to recreate the workshop's initial project before switching to the tags, use these Spring Initializr settings:
 
 | Setting | Value |
 |---|---|
@@ -117,12 +131,13 @@ chmod +x mvnw
 ./mvnw spring-boot:run
 ```
 
-After confirming the generated starter runs, it can be discarded; the workshop branches contain the progressively completed version:
+After confirming the generated starter runs, it can be discarded; the workshop
+tags contain the progressively completed checkpoints:
 
 ```bash
 git clone <your-github-url> springboot-workshop
 cd springboot-workshop
-git checkout step-0-starter
+git switch --detach step-0-starter
 ```
 
 For the outbound HTTP exercise, the aligned JSON fixture is served from
@@ -130,10 +145,11 @@ For the outbound HTTP exercise, the aligned JSON fixture is served from
 product (`Mechanical Keyboard`) so the service-layer enrichment example stays
 easy to follow. No mock server or external account is required.
 
-The completed outbound example is on `step-4-outbound-enrichment`:
+The completed outbound example is tagged `step-4-outbound-enrichment` and is
+also the current state of `main`:
 
 ```bash
-git switch step-4-outbound-enrichment
+git switch --detach step-4-outbound-enrichment
 ./mvnw spring-boot:run
 curl -X POST http://localhost:8080/api/products -H "Content-Type: application/json" -d '{"name":"Mechanical Keyboard","description":"RGB wireless mechanical keyboard","price":79.99,"stockQuantity":50,"category":"electronics"}'
 curl http://localhost:8080/api/products/1/summary
@@ -159,7 +175,7 @@ request.
 
 The Dev Container is the recommended workshop setup. It provides Java 17, Maven,
 the Maven wrapper, the Copilot CLI, and PostgreSQL 16 through Docker Compose.
-This final branch uses the production profile and persistent PostgreSQL database.
+The final checkpoint uses the production profile and persistent PostgreSQL database.
 
 Open the repository in VS Code and run **Dev Containers: Reopen in Container**.
 Before starting the container, copy `.env.example` to `.env` and set

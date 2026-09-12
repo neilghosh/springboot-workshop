@@ -2,7 +2,7 @@ name: Deploy Slides to GitHub Pages
 
 on:
   push:
-    branches: [step-3-complete]
+    branches: [main]
   workflow_dispatch:
 
 permissions:

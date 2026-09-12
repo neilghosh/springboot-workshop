@@ -1,7 +1,7 @@
 # Workshop TODO
 
-Future workshop improvements that should be introduced as a separate branch and
-tagged release when complete:
+Future workshop improvements should be developed on `main`, then reflected in
+the affected checkpoint tags when the revised workshop flow is ready:
 
 - Optionally add a public DummyJSON variant after the local aligned fixture
   demo.

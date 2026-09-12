@@ -504,7 +504,7 @@ Tomcat · `DispatcherServlet` · `Jackson` · `Validator` · `HikariCP` · `TxMa
 
 ---
 
-| Step | Branch | Add | File | Time |
+| Step | Tag | Add | File | Time |
 |------|--------|-----|------|------|
 | 0 | `step-0-starter` | Maven + Web MVC | `pom.xml` | 15 min |
 | 1 | `step-1-rest-dto` | REST + validation | `ProductRequestDTO @NotBlank` | 25 min |
@@ -512,7 +512,7 @@ Tomcat · `DispatcherServlet` · `Jackson` · `Validator` · `HikariCP` · `TxMa
 | 3 | `step-3-complete` | Handler + tests + profiles | `GlobalExceptionHandler` | 30 min |
 | 4 | `step-4-outbound-enrichment` | RestTemplate + proxy-ready enrichment | `GET /api/products/{id}/summary` | 15 min |
 
-`git checkout step-0-starter` → `.\mvnw.cmd spring-boot:run`
+`git switch --detach step-0-starter` → `.\mvnw.cmd spring-boot:run`
 
 ---
 
