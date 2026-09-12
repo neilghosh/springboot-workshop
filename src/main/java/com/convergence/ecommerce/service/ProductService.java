@@ -20,6 +20,7 @@ public class ProductService {
         return repository.findAll().stream().map(this::toResponse).toList();
     }
 
+    // Persistence work belongs inside an explicit service transaction boundary.
     @Transactional
     public ProductResponseDTO createProduct(ProductRequestDTO request) {
         ProductEntity entity = new ProductEntity();

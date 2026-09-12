@@ -25,6 +25,7 @@ public class ProductController {
         return productService.getAllProducts();
     }
 
+    // @Valid enforces the DTO constraints before invalid input reaches the service.
     @PostMapping
     public ResponseEntity<ProductResponseDTO> createProduct(@Valid @RequestBody ProductRequestDTO request) {
         return ResponseEntity.status(HttpStatus.CREATED)

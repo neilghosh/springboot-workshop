@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "Spring Boot Workshop",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}
