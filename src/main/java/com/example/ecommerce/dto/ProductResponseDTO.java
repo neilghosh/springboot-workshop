@@ -1,4 +1,4 @@
-package com.convergence.ecommerce.dto;
+package com.example.ecommerce.dto;
 
 import java.time.LocalDateTime;
 

@@ -1,4 +1,4 @@
-package com.convergence.ecommerce.dto;
+package com.example.ecommerce.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
