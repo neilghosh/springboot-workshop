@@ -6,7 +6,31 @@ header: "Spring Boot Workshop"
 footer: "neilghosh/springboot-workshop"
 size: 16:9
 style: |
-  section { padding: 30px 42px; font-size: 23px; }
+  section {
+    box-sizing: border-box;
+    padding: 96px 42px 88px;
+    font-size: 22px;
+  }
+  header {
+    top: 18px;
+    left: 42px;
+    right: 42px;
+    line-height: 1.2;
+    padding-bottom: 6px;
+    border-bottom: 1px solid rgba(127, 127, 127, 0.35);
+  }
+  footer {
+    bottom: 16px;
+    left: 42px;
+    right: 82px;
+    line-height: 1.2;
+    padding-top: 6px;
+    border-top: 1px solid rgba(127, 127, 127, 0.35);
+  }
+  section::after {
+    right: 42px;
+    bottom: 16px;
+  }
   h1 { font-size: 1.5em; }
   h2 { font-size: 1.2em; }
   h3 { font-size: 1.0em; }
@@ -15,6 +39,7 @@ style: |
   pre { max-height: 38vh; }
   .columns { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
   .columns3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.8rem; }
+  .flow { grid-template-columns: 1fr auto 1fr; }
   .card { border: 2px solid #0288d1; border-radius: 14px; padding: 0.55em 0.7em; background: #f8fbff; }
   .card h4 { margin: 0 0 0.2em; color: #0288d1; }
   .pill { display:inline-block; background:#0288d1; color:#fff; border-radius:999px; padding:0.15em 0.6em; font-size:0.72em; }
@@ -54,7 +79,7 @@ Run app → first API request
 
 #### 🎯 30 min — Concepts
 
-Why Boot · IoC/DI · Profiles
+Why Spring Boot · dependency injection · profiles
 
 </div>
 
@@ -83,7 +108,7 @@ Why Boot · IoC/DI · Profiles
 #### ✅ `curl` — Primary
 
 All README examples<br>
-Zero account · scriptable<br>
+No account needed · easy to automate<br>
 Works in every terminal
 
 </div>
@@ -109,7 +134,7 @@ Not required for the workshop
 
 </div>
 
-> Learn HTTP requests and responses—not dependence on one API-client product.
+> Learn how HTTP requests and responses work, without depending on one API client.
 
 ---
 
@@ -126,17 +151,17 @@ Not required for the workshop
 | Framework conventions | Layer boundaries, DTO/entity separation, transactions |
 | Developer etiquette | Tests, small diffs, useful errors, no secrets, code review |
 
-> Teach portable HTTP testing rather than dependence on one client product.
+> Use portable HTTP tests instead of depending on one client product.
 
 ---
 
 <!-- _class: lead -->
 
-## From `main()` + JDBC
+## From Manual Setup
 
-## → Spring Idioms
+## → Spring Conventions
 
-70%+ Java microservices — Spring is the enterprise standard
+Spring Boot provides a common structure for long-lived Java services.
 
 ---
 
@@ -148,9 +173,9 @@ Not required for the workshop
 
 #### 🟢 Node (JS/TS)
 
-Fast MVP · Full-stack JS
+Fast prototyping · one language across the stack
 
-*⚠️ Single-thread · runtime bugs*
+*Consider: event-loop model and JavaScript runtime errors*
 
 </div>
 
@@ -158,9 +183,9 @@ Fast MVP · Full-stack JS
 
 #### 🐍 Python
 
-AI/ML king · Fastest to write
+Easy to learn · strong data and AI libraries
 
-*⚠️ GIL · slow · weak Tx*
+*Consider: dynamic typing and lower throughput for some services*
 
 </div>
 
@@ -168,9 +193,9 @@ AI/ML king · Fastest to write
 
 #### 🐹 Go
 
-Infra · Concurrency
+Simple deployment · built-in concurrency
 
-*⚠️ Thin enterprise eco*
+*Consider: a smaller enterprise framework ecosystem*
 
 </div>
 
@@ -178,45 +203,45 @@ Infra · Concurrency
 
 <div class="card" style="margin-top:0.6em; background:#e3f2fd; border-color:#0288d1; text-align:center;">
 
-#### ☕ Java + Spring Boot — **Run the business for 10 years with 50 engineers**
+#### ☕ Java + Spring Boot — **Built for long-lived business systems**
 
-Type-safe · Ecosystem (Security/Data) · JVM perf (HikariCP) · Team-readable layers
+Type safety · mature Security and Data libraries · JVM performance · clear application layers
 
 </div>
 
 ---
 
-### Slide 1C — Why Code When Agents Code? 🤖
+### Slide 1C — Why Learn This When AI Can Generate Code? 🤖
 
 <div class="columns">
 
 <div>
 
-**Agents write 80%**
+**AI can draft routine code**
 
-`ProductController` · DTOs · `Repository` in seconds
+It can quickly create controllers, DTOs, and repositories.
 
 <br>
 
-**You own the 20% they get wrong**
+**You are still responsible for correctness**
 
-* missing `@Valid` / wrong status
-* hard-wired `DataSource`
-* no `@Transactional`
+* Is `@Valid` present, and are status codes correct?
+* Is the database configuration replaceable?
+* Is the transaction boundary correct?
 
 </div>
 
 <div class="card" style="background:#fff3e0; border-color:#ef6c00;">
 
-#### Review > Generation
+#### Review Before You Ship
 
-`spec → generate → verify → ship`
+`describe → generate → verify → ship`
 
-Without IoC/DI you **ship the bug**.
+Without understanding dependency injection, you may approve incorrect code.
 
 <br>
 
-**We code *without* agent first — so you can *judge* one after.**
+**We first build it ourselves, so we can review generated code confidently.**
 
 </div>
 
@@ -240,11 +265,11 @@ Without IoC/DI you **ship the bug**.
 
 | Feature | One-liner |
 |---------|-----------|
-| **Starter** | `web/data-jpa/validation` = full stack |
-| **Auto-config** | Creates beans if on classpath |
-| **Embedded Tomcat** | `java -jar` runs |
-| **Config** | `properties` → `production` → env |
-| **Profiles** | One build, two `DataSource` |
+| **Starter dependencies** | Add a tested group of related libraries |
+| **Auto-configuration** | Configure components from available libraries and settings |
+| **Embedded Tomcat** | Run the application directly with `java -jar` |
+| **External configuration** | Read settings from properties and environment variables |
+| **Profiles** | Use the same build with H2 or PostgreSQL |
 
 </div>
 
@@ -275,18 +300,18 @@ Without IoC/DI you **ship the bug**.
 `@SpringBootApplication` = 
 `@Configuration` + `@EnableAutoConfiguration` + `@ComponentScan`
 
-150+ `*AutoConfiguration` → conditional on classpath
+Spring Boot applies only the configurations whose libraries and settings are present.
 
 </div>
 
 <div class="card">
 
-#### 📦 Starter = Bundle
+#### 📦 Starter = Dependency Bundle
 
 `data-jpa` = 
-`spring-data` + `hibernate` + `HikariCP` + Tx
+`spring-data` + `hibernate` + `HikariCP` + transaction support
 
-*One import = whole stack*
+*One starter adds the libraries needed for database access.*
 
 </div>
 
@@ -294,7 +319,7 @@ Without IoC/DI you **ship the bug**.
 
 <div class="card" style="margin-top:0.6em;">
 
-**Config precedence:** `application.properties` (H2 safe for 200) → `application-production.properties` (`${POSTGRES_URL}`) → `.env` (never committed)
+**Configuration order:** base H2 settings → production profile overrides → environment variables from `.env` (never committed)
 
 `port 8080` · `show-sql=true` · `/h2-console` · `/health` (Actuator)
 
@@ -302,13 +327,13 @@ Without IoC/DI you **ship the bug**.
 
 ---
 
-### Slide 4 — IoC: Who Creates Objects?
+### Slide 4 — Inversion of Control: Who Creates Objects?
 
-<div class="columns">
+<div class="columns flow">
 
 <div>
 
-**❌ Before** — you `new` everything
+**❌ Manual setup** — your code creates every dependency
 
 ```java
 repo = new Repo(
@@ -330,7 +355,7 @@ repo = new Repo(
 
 <div>
 
-**✅ After** — container injects
+**✅ Spring setup** — the container provides dependencies
 
 ```java
 @Service
@@ -347,15 +372,15 @@ class ProductService {
 
 <div class="card" style="text-align:center; margin-top:0.5em;">
 
-`ApplicationContext` : **scan** `com.example.ecommerce` → **instantiate** → **inject** → **singleton** → destroy
+The `ApplicationContext` scans `com.example.ecommerce`, creates each component, injects its dependencies, and manages its lifecycle.
 
-You never `new` a Service — *Boot does* (`ProductController.java:14`)
+You do not create the service in the controller. Spring creates and injects it (`ProductController.java:14`).
 
 </div>
 
 ---
 
-### Slide 5 — DI: Constructor Wins
+### Slide 5 — Dependency Injection: Prefer Constructors
 
 <div class="columns">
 
@@ -363,27 +388,27 @@ You never `new` a Service — *Boot does* (`ProductController.java:14`)
 
 | Style | Verdict |
 |-------|---------|
-| **Constructor** `Service(Repo r)` | ✅ Immutable, testable |
-| Setter `setRepo()` | Mutable only |
-| Field `@Autowired` | ❌ Hidden — not used |
+| **Constructor** `Service(Repo r)` | ✅ Required, explicit, and easy to test |
+| Setter `setRepo()` | Useful only for optional, changeable dependencies |
+| Field `@Autowired` | ❌ Hidden dependency; not used in this workshop |
 
 </div>
 
 <div class="card">
 
-#### Stereotypes = `@Component`
+#### Specialized Component Annotations
 
-* `@Service` → business + `@Transactional`
-* `@Repository` → DB
-* `@RestController` → HTTP
+* `@Service` marks business logic and transaction boundaries.
+* `@Repository` marks database access.
+* `@RestController` handles HTTP requests and responses.
 
-All auto-scanned. Single constructor → `@Autowired` optional.
-
-</div>
+Spring finds these classes automatically. With one constructor, `@Autowired` is unnecessary.
 
 </div>
 
-<div class="pill" style="margin-top:0.6em;">Demo: two beans → `NoUniqueBeanDefinitionException` → fix with `@Qualifier`</div>
+</div>
+
+<div class="pill" style="margin-top:0.6em;">Demo: two matching beans cause `NoUniqueBeanDefinitionException`; choose one with `@Qualifier`.</div>
 
 ---
 
@@ -395,7 +420,7 @@ Instantiate → Inject (DI) → @PostConstruct → Ready → @PreDestroy
          @Transactional proxy wraps the bean
 ```
 
-`ProductEntity @PrePersist` → JPA hook (different lifecycle, same idea)
+`ProductEntity @PrePersist` is a JPA callback. It belongs to the entity lifecycle, not the Spring bean lifecycle.
 
 ---
 
@@ -407,7 +432,7 @@ Instantiate → Inject (DI) → @PostConstruct → Ready → @PreDestroy
 
 </div>
 
-*Each `@GetMapping` is a handler — not a servlet you write.*
+*Each `@GetMapping` method handles a route; you do not write a servlet yourself.*
 
 ---
 
@@ -433,9 +458,9 @@ HTTP · `@Valid` · status `201 / 404`
 
 `@Service`
 
-Logic · `@Transactional` · DTO↔Entity
+Business rules · `@Transactional` · DTO-to-entity mapping
 
-*Decides 404 → handler*
+*Throws not-found errors for the global handler*
 
 </div>
 
@@ -447,13 +472,13 @@ Logic · `@Transactional` · DTO↔Entity
 
 `findAll()` · `findByCategory()`
 
-*No SQL — dialect hides H2/Postgres*
+*Usually no SQL; Hibernate handles H2 and PostgreSQL differences*
 
 </div>
 
 </div>
 
-> **Rule:** Controllers never touch `Entity` · Services never touch `HttpStatus`
+> **Rule:** Controllers do not expose entities, and services do not depend on HTTP status codes.
 
 ---
 
@@ -534,15 +559,14 @@ The service method states the all-or-nothing boundary.
 
 </div>
 
-**Important:** `@Transactional` defines commit/rollback scope. It does not
-automatically lock a row or prevent two requests from overwriting each other.
+**Important:** `@Transactional` defines the commit/rollback boundary. It does
+not prevent concurrent updates.
 
-* A `sleep` does not prove transaction safety.
-* Blocking needs explicit pessimistic locking.
-* Lost-update detection typically needs optimistic locking with `@Version`.
+* A `sleep` does not prove that a transaction is safe.
+* Use pessimistic locking when one request must block another.
+* Use optimistic locking with `@Version` to detect overwritten updates.
 
-No second entity or artificial slow endpoint is required for this workshop.
-Use Order + Inventory later for an advanced multi-entity example.
+Advanced locking and multi-entity transactions belong in a later workshop.
 
 ---
 
@@ -558,7 +582,7 @@ Use Order + Inventory later for an advanced multi-entity example.
 | Profiles + environment variables | Configuration changes without code or secrets |
 | Tests for happy and invalid paths | Confidence before sharing or deploying |
 
-**Etiquette:** meaningful names · small diffs · useful errors · no secrets · review generated code
+**Good team habits:** meaningful names · small changes · useful errors · no secrets · review generated code
 
 ---
 
@@ -568,17 +592,17 @@ Use Order + Inventory later for an advanced multi-entity example.
 
 <div class="card" style="border-color:#e53935; background:#ffebee;">
 
-#### ❌ Hard-wired
+#### ❌ Hard-coded Dependency
 
 `new PostgresDataSource(...)`
 
-→ 200 DB installs · tests fail · switch = edit code
+Every participant needs PostgreSQL, tests depend on it, and changing databases requires code changes.
 
 </div>
 
 <div class="card" style="border-color:#43a047; background:#e8f5e9; text-align:center;">
 
-#### ✅ Container picks
+#### ✅ Spring Selects the Dependency
 
 ```
 default    → H2 DS
@@ -587,7 +611,7 @@ production → Postgres DS
   Repository → Service
 ```
 
-*Profile decides, not code*
+*Configuration selects the database; application code stays the same.*
 
 </div>
 
@@ -595,7 +619,7 @@ production → Postgres DS
 
 ---
 
-### Slide 9b — Payoff: Zero Code Change
+### Slide 9b — Same Code, Different Database
 
 <div class="columns">
 
@@ -603,9 +627,9 @@ production → Postgres DS
 
 #### 🧪 Workshop
 
-H2 injected
+Spring injects H2.
 
-`.\mvnw.cmd test` **<3s** · no install
+`.\mvnw.cmd test` runs without installing a database.
 
 `MockMvc` + H2
 
@@ -617,17 +641,16 @@ H2 injected
 
 `-Dspring-boot.run.profiles=production`
 
-→ `HikariCP` + `PostgreSQLDialect`
+Spring configures `HikariCP` and the PostgreSQL dialect.
 
-`ProductService` **unchanged**
-
-</div>
+`ProductService` does not change.
 
 </div>
 
-```
-step-0-starter → curl []  (Web MVC)      step-3-production + production → psql \dt → products
-```
+</div>
+
+At `step-0-starter`, the application can serve HTTP requests. By
+`step-3-production`, the production profile stores products in PostgreSQL.
 
 ---
 
@@ -637,17 +660,17 @@ step-0-starter → curl []  (Web MVC)      step-3-production + production → ps
 
 <div class="card">
 
-#### ✍️ You type (~200 LOC)
+#### ✍️ You Write (~200 Lines)
 
 DTOs · Entity · `JpaRepository` · `Service` · `Controller` · `application*.properties`
 
-*Verbose, no Lombok — readable*
+*The code is explicit and uses no Lombok, which keeps it easy to teach.*
 
 </div>
 
 <div class="card" style="background:#f3e5f5; border-color:#8e24aa;">
 
-#### ⚙️ Boot creates
+#### ⚙️ Spring Boot Provides
 
 Tomcat · `DispatcherServlet` · `Jackson` · `Validator` · `HikariCP` · `TxManager` · `ExceptionHandler`
 
@@ -679,7 +702,7 @@ Tomcat · `DispatcherServlet` · `Jackson` · `Validator` · `HikariCP` · `TxMa
 
 ## Appendix — Backup
 
-* 50 lines XML → 3 lines `properties`
-* `new ProductService(mockRepo)` — DB-free test
-* `@Transactional` → `existsById` + `deleteById` atomic
-* Two entities? Save Order + reduce Inventory — useful later, unnecessary for CRUD
+* Spring Boot replaces lengthy XML setup with a few property settings.
+* `new ProductService(mockRepo)` creates a unit test without a database.
+* `@Transactional` keeps `existsById` and `deleteById` in one transaction.
+* A later advanced example could save an order and reduce inventory together; basic CRUD does not need it.
