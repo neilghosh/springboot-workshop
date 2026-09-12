@@ -1,45 +1,22 @@
-package com.convergence.ecommerce.model;
+package com.example.ecommerce.dto;
 
-import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "products")
-public class ProductEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class ProductResponseDTO {
     private Long id;
-
-    @Column(nullable = false)
     private String name;
-
-    @Column(nullable = false, length = 1000)
     private String description;
-
-    @Column(nullable = false)
     private Double price;
-
-    @Column(nullable = false)
     private Integer stockQuantity;
-
-    @Column(nullable = false)
     private String category;
-
-    @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-    }
-
     // Default Constructor
-    public ProductEntity() {
+    public ProductResponseDTO() {
     }
 
     // All-Args Constructor
-    public ProductEntity(Long id, String name, String description, Double price, Integer stockQuantity, String category, LocalDateTime createdAt) {
+    public ProductResponseDTO(Long id, String name, String description, Double price, Integer stockQuantity, String category, LocalDateTime createdAt) {
         this.id = id;
         this.name = name;
         this.description = description;

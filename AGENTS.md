@@ -173,7 +173,7 @@ When explicitly asked to regenerate checkpoints:
 ## Project Map
 
 ```text
-src/main/java/com/convergence/ecommerce/
+src/main/java/com/example/ecommerce/
 ├── EcommerceApplication.java
 ├── client/          # outbound product integration, introduced at step 4
 ├── config/          # RestTemplate and infrastructure configuration
@@ -184,13 +184,13 @@ src/main/java/com/convergence/ecommerce/
 ├── repository/      # Spring Data repositories
 └── service/         # transactions, business behavior, and DTO mapping
 
-src/test/java/com/convergence/ecommerce/
+src/test/java/com/example/ecommerce/
 ├── controller/      # MockMvc/Spring Boot integration tests
 └── service/         # Mockito unit tests
 ```
 
 The project is a single Maven module with package root
-`com.convergence.ecommerce`.
+`com.example.ecommerce`.
 
 ## Commands
 

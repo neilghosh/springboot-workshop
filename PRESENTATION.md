@@ -2,8 +2,8 @@
 marp: true
 theme: gaia
 paginate: true
-header: "Convergence 2026 — Spring Boot Workshop"
-footer: "GDGC VNR VJIET · neilghosh/springboot-workshop"
+header: "Spring Boot Workshop"
+footer: "neilghosh/springboot-workshop"
 size: 16:9
 style: |
   section { padding: 30px 42px; font-size: 23px; }
@@ -27,7 +27,7 @@ style: |
 
 ## E-Commerce API Workshop
 
-**Convergence 2026 · GDGC VNR VJIET**
+**A reusable hands-on backend development workshop**
 
 `@RestController` → `@Service` → `JpaRepository` → **H2 / Postgres**
 
@@ -113,9 +113,9 @@ Not required for the workshop
 
 ---
 
-### Briefing Requirements — Covered
+### Workshop Learning Outcomes
 
-| Requested module | Workshop implementation |
+| Learning objective | Workshop implementation |
 |---|---|
 | Spring Boot fundamentals | Boot, auto-configuration, IoC/DI, profiles |
 | REST controllers + CRUD | `ProductController` from Step 1 onward |
@@ -126,7 +126,7 @@ Not required for the workshop
 | Framework conventions | Layer boundaries, DTO/entity separation, transactions |
 | Developer etiquette | Tests, small diffs, useful errors, no secrets, code review |
 
-> Intentional substitution: teach portable HTTP testing, not one proprietary client.
+> Teach portable HTTP testing rather than dependence on one client product.
 
 ---
 
@@ -347,7 +347,7 @@ class ProductService {
 
 <div class="card" style="text-align:center; margin-top:0.5em;">
 
-`ApplicationContext` : **scan** `com.convergence.ecommerce` → **instantiate** → **inject** → **singleton** → destroy
+`ApplicationContext` : **scan** `com.example.ecommerce` → **instantiate** → **inject** → **singleton** → destroy
 
 You never `new` a Service — *Boot does* (`ProductController.java:14`)
 
