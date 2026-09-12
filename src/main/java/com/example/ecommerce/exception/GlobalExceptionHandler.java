@@ -1,4 +1,4 @@
-package com.convergence.ecommerce.exception;
+package com.example.ecommerce.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

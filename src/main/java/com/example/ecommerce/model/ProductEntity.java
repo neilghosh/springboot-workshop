@@ -1,43 +1,63 @@
-package com.convergence.ecommerce.dto;
+package com.example.ecommerce.model;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
-public class ProductRequestDTO {
+@Entity
+@Table(name = "products")
+public class ProductEntity {
 
-    @NotBlank(message = "Product name is required")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
     private String name;
 
-    @NotBlank(message = "Description is required")
+    @Column(nullable = false, length = 1000)
     private String description;
 
-    @NotNull(message = "Price is required")
-    @Positive(message = "Price must be greater than zero")
+    @Column(nullable = false)
     private Double price;
 
-    @NotNull(message = "Stock quantity is required")
-    @PositiveOrZero(message = "Stock cannot be negative")
+    @Column(nullable = false)
     private Integer stockQuantity;
 
-    @NotBlank(message = "Category is required")
+    @Column(nullable = false)
     private String category;
 
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
+
     // Default Constructor
-    public ProductRequestDTO() {
+    public ProductEntity() {
     }
 
     // All-Args Constructor
-    public ProductRequestDTO(String name, String description, Double price, Integer stockQuantity, String category) {
+    public ProductEntity(Long id, String name, String description, Double price, Integer stockQuantity, String category, LocalDateTime createdAt) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
         this.stockQuantity = stockQuantity;
         this.category = category;
+        this.createdAt = createdAt;
     }
 
     // Getters and Setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }
@@ -76,5 +96,13 @@ public class ProductRequestDTO {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 }

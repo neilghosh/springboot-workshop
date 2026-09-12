@@ -1,6 +1,6 @@
-package com.convergence.ecommerce.controller;
+package com.example.ecommerce.controller;
 
-import com.convergence.ecommerce.dto.ProductRequestDTO;
+import com.example.ecommerce.dto.ProductRequestDTO;
 import tools.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

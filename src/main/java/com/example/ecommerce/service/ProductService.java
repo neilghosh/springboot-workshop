@@ -1,9 +1,9 @@
-package com.convergence.ecommerce.service;
+package com.example.ecommerce.service;
 
-import com.convergence.ecommerce.dto.ProductRequestDTO;
-import com.convergence.ecommerce.dto.ProductResponseDTO;
-import com.convergence.ecommerce.model.ProductEntity;
-import com.convergence.ecommerce.repository.ProductRepository;
+import com.example.ecommerce.dto.ProductRequestDTO;
+import com.example.ecommerce.dto.ProductResponseDTO;
+import com.example.ecommerce.model.ProductEntity;
+import com.example.ecommerce.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
