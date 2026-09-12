@@ -45,10 +45,16 @@ Install:
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 - [VS Code](https://code.visualstudio.com/)
 - The VS Code **Dev Containers** extension
+- Optional: [Bruno](https://www.usebruno.com/) for a graphical API client
 
 After switching checkpoints, run **Dev Containers: Rebuild and Reopen in
 Container** when VS Code prompts you. The Dev Container supplies Java 17, Maven,
 and Copilot CLI; later stages also include PostgreSQL 16 and its matching client.
+
+All participant instructions use `curl` so the exercises remain portable and
+require no API-client account. If you prefer a graphical client, open the
+repository's [`bruno`](./bruno) collection and send the equivalent requests
+from Bruno. Postman can also send the same HTTP requests, but it is not required.
 
 The default profile is local development with H2. Press `Ctrl+C` before moving
 to another checkpoint so the next stage can use port 8080.
@@ -118,6 +124,18 @@ curl http://localhost:8080/api/products
 **Expect:** `POST` returns `201 Created` with an assigned ID, and `GET` returns
 the product from the in-memory list. Removing `name` or using a negative `price`
 returns `400 Bad Request`. Data disappears when the application stops.
+
+Try the validation boundary explicitly:
+
+```bash
+curl -X POST http://localhost:8080/api/products \
+  -H "Content-Type: application/json" \
+  -d '{"name":"","description":"Invalid example","price":-1,"stockQuantity":-2,"category":""}'
+```
+
+The request must fail before the controller calls the service. Without `@Valid`
+on the controller parameter, the DTO annotations still exist but Spring MVC
+does not enforce them at that boundary.
 
 ## Step 2 — Service, JPA, and H2
 
@@ -327,6 +345,32 @@ payload.
 
 Press `F5` and select **Debug Spring Boot App**. A breakpoint in
 `ProductController` or `ProductService` is hit by the next API request.
+
+## Framework conventions and developer etiquette
+
+The project keeps the conventions visible rather than hiding them behind
+generated code:
+
+- controllers own HTTP concerns such as request validation and status codes;
+- services own business behavior and transaction boundaries;
+- repositories own persistence;
+- request/response DTOs stay separate from JPA entities;
+- constructor injection makes dependencies explicit and testable;
+- configuration and credentials come from profiles and environment variables;
+- tests verify behavior before code is shared or deployed.
+
+Use the existing update operation to explain transactions without introducing
+a second entity. `ProductService.updateProduct` performs a read-modify-write
+sequence inside one `@Transactional` method. Removing the annotation makes the
+business operation depend on separate repository transactions and loses the
+clear all-or-nothing service boundary. Two entities are only necessary for a
+richer example such as creating an order while reducing inventory, which is
+beyond this workshop's current progression.
+
+Professional habits demonstrated in the workshop include meaningful names,
+small focused changes, useful error messages, no committed secrets, testing
+invalid input as well as the happy path, and reviewing AI-generated code for
+missing annotations or incorrect HTTP behavior.
 
 See [`PRESENTATION.md`](./PRESENTATION.md) for architecture diagrams and workshop
 notes.

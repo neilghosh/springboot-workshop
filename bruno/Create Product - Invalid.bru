@@ -1,0 +1,25 @@
+meta {
+  name: Create Product - Invalid
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:8080/api/products
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "name": "",
+    "description": "Invalid validation example",
+    "price": -1,
+    "stockQuantity": -2,
+    "category": ""
+  }
+}

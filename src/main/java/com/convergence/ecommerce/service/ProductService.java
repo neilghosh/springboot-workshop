@@ -47,6 +47,7 @@ public class ProductService {
         return mapToResponseDTO(savedEntity);
     }
 
+    // The lookup and write form one read-modify-write business operation.
     @Transactional
     public ProductResponseDTO updateProduct(Long id, ProductRequestDTO requestDTO) {
         ProductEntity existingEntity = productRepository.findById(id)
@@ -62,6 +63,7 @@ public class ProductService {
         return mapToResponseDTO(updatedEntity);
     }
 
+    // The existence check and delete must share the same transaction boundary.
     @Transactional
     public void deleteProduct(Long id) {
         if (!productRepository.existsById(id)) {
