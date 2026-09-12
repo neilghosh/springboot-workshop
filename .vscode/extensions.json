@@ -1,6 +1,7 @@
 {
   "recommendations": [
     "ms-vscode-remote.remote-containers",
+    "marp-team.marp-vscode",
     "vscjava.vscode-java-pack",
     "vmware.vscode-spring-boot",
     "vscjava.vscode-maven",
