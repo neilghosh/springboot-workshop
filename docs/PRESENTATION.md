@@ -1,6 +1,7 @@
 ---
 marp: true
 theme: gaia
+class: invert
 paginate: true
 header: "Spring Boot Workshop"
 footer: "neilghosh/springboot-workshop"
@@ -40,11 +41,11 @@ style: |
   .columns { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
   .columns3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.8rem; }
   .flow { grid-template-columns: 1fr auto 1fr; }
-  .card { border: 2px solid #0288d1; border-radius: 14px; padding: 0.55em 0.7em; background: #f8fbff; }
-  .card h4 { margin: 0 0 0.2em; color: #0288d1; }
+  .card { border: 2px solid #38bdf8; border-radius: 14px; padding: 0.55em 0.7em; background: #1f2937; }
+  .card h4 { margin: 0 0 0.2em; color: #7dd3fc; }
   .pill { display:inline-block; background:#0288d1; color:#fff; border-radius:999px; padding:0.15em 0.6em; font-size:0.72em; }
-  .arrow { color:#0288d1; font-weight: 800; }
-  .source { font-size: 0.55em; color: #607d8b; }
+  .arrow { color:#38bdf8; font-weight: 800; }
+  .source { font-size: 0.55em; color: #94a3b8; }
 ---
 
 <!-- _class: lead invert -->
@@ -75,7 +76,7 @@ Java and Maven · run the application · make an API request
 
 </div>
 
-<div class="card" style="border-color:#43a047; background:#f6fdf6;">
+<div class="card" style="border-color:#66bb6a; background:#173126;">
 
 #### Concepts
 
@@ -83,7 +84,7 @@ Spring vs Spring Boot · build tools · dependency injection · profiles
 
 </div>
 
-<div class="card" style="border-color:#ef6c00; background:#fff8f0;">
+<div class="card" style="border-color:#ffa726; background:#3a2818;">
 
 #### Hands-on Workshop
 
@@ -113,7 +114,7 @@ Works in every terminal
 
 </div>
 
-<div class="card" style="background:#e8f5e9; border-color:#43a047;">
+<div class="card" style="background:#173126; border-color:#66bb6a;">
 
 #### Bruno / Insomnia / Postman — Optional Visual Clients
 
@@ -188,7 +189,7 @@ Simple deployment · built-in concurrency
 
 </div>
 
-<div class="card" style="margin-top:0.6em; background:#e3f2fd; border-color:#0288d1; text-align:center;">
+<div class="card" style="margin-top:0.6em; background:#172b3a; border-color:#38bdf8; text-align:center;">
 
 #### ☕ Java + Spring Boot — **Built for long-lived business systems**
 
@@ -218,7 +219,7 @@ It can quickly turn a description into a plausible implementation.
 
 </div>
 
-<div class="card" style="background:#fff3e0; border-color:#ef6c00;">
+<div class="card" style="background:#3a2818; border-color:#ffa726;">
 
 #### Review Before You Ship
 
@@ -277,7 +278,7 @@ You choose and configure the application pieces.
 
 </div>
 
-<div class="card" style="background:#e8f5e9; border-color:#43a047;">
+<div class="card" style="background:#173126; border-color:#66bb6a;">
 
 #### Spring Boot: Defaults and Auto-configuration
 
@@ -314,7 +315,7 @@ A build tool resolves dependencies, compiles code, runs tests, and packages the 
 
 <div class="columns3">
 
-<div class="card" style="background:#e8f5e9; border-color:#43a047;">
+<div class="card" style="background:#173126; border-color:#66bb6a;">
 
 #### Maven — This Workshop
 
@@ -625,7 +626,7 @@ HTTP · `@Valid` · status `201 / 404`
 
 </div>
 
-<div class="card" style="text-align:center; background:#e8f5e9; border-color:#43a047;">
+<div class="card" style="text-align:center; background:#173126; border-color:#66bb6a;">
 
 #### ⚙️ Service
 
@@ -637,7 +638,7 @@ Business rules · `@Transactional` · DTO-to-entity mapping
 
 </div>
 
-<div class="card" style="text-align:center; background:#fce4ec; border-color:#e53935;">
+<div class="card" style="text-align:center; background:#3a1f26; border-color:#ef5350;">
 
 #### 🗄️ Repository
 
@@ -659,7 +660,7 @@ Business rules · `@Transactional` · DTO-to-entity mapping
 
 <div class="columns">
 
-<div class="card" style="border-color:#e53935; background:#ffebee;">
+<div class="card" style="border-color:#ef5350; background:#3a1f26;">
 
 #### ❌ Looks validated, but is not
 
@@ -675,7 +676,7 @@ The constraint annotations are metadata until the controller requests validation
 
 </div>
 
-<div class="card" style="border-color:#43a047; background:#e8f5e9;">
+<div class="card" style="border-color:#66bb6a; background:#173126;">
 
 #### ✅ Reject before business logic
 
@@ -707,7 +708,7 @@ curl -X POST http://localhost:8080/api/products \
 
 <div class="columns">
 
-<div class="card" style="border-color:#e53935; background:#ffebee;">
+<div class="card" style="border-color:#ef5350; background:#3a1f26;">
 
 #### ❌ Unclear business boundary
 
@@ -723,7 +724,7 @@ Repository calls may each have their own transaction.
 
 </div>
 
-<div class="card" style="border-color:#43a047; background:#e8f5e9;">
+<div class="card" style="border-color:#66bb6a; background:#173126;">
 
 #### ✅ Read-modify-write as one unit
 
@@ -776,7 +777,7 @@ the Java code.
 
 <div class="columns">
 
-<div class="card" style="border-color:#e53935; background:#ffebee;">
+<div class="card" style="border-color:#ef5350; background:#3a1f26;">
 
 #### ❌ Hard-coded Dependency
 
@@ -786,7 +787,7 @@ Every participant needs PostgreSQL, tests depend on it, and changing databases r
 
 </div>
 
-<div class="card" style="border-color:#43a047; background:#e8f5e9; text-align:center;">
+<div class="card" style="border-color:#66bb6a; background:#173126; text-align:center;">
 
 #### ✅ Spring Selects the Dependency
 
@@ -821,7 +822,7 @@ Spring injects H2.
 
 </div>
 
-<div class="card" style="background:#e3f2fd;">
+<div class="card" style="background:#172b3a;">
 
 #### 🚀 Production
 
@@ -855,7 +856,7 @@ DTOs · Entity · `JpaRepository` · `Service` · `Controller` · `application*.
 
 </div>
 
-<div class="card" style="background:#f3e5f5; border-color:#8e24aa;">
+<div class="card" style="background:#30203a; border-color:#ba68c8;">
 
 #### ⚙️ Spring Boot Provides
 
