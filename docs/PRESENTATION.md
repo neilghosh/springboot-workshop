@@ -63,32 +63,31 @@ style: |
 
 ---
 
-## Agenda — 3 Hours
+## Agenda
 
 <div class="columns3">
 
 <div class="card">
 
-#### ⏱️ 15 min — Setup
+#### Setup
 
-`java -version`  
-Run app → first API request
+Java and Maven · run the application · make an API request
 
 </div>
 
 <div class="card" style="border-color:#43a047; background:#f6fdf6;">
 
-#### 🎯 30 min — Concepts
+#### Concepts
 
-Spring vs Spring Boot · dependency injection · profiles
+Spring vs Spring Boot · build tools · dependency injection · profiles
 
 </div>
 
 <div class="card" style="border-color:#ef6c00; background:#fff8f0;">
 
-#### 🛠️ 120 min — Code
+#### Hands-on Workshop
 
-`step-0` → `step-4` live
+REST API · validation · persistence · production · outbound HTTP
 
 </div>
 
@@ -96,13 +95,13 @@ Spring vs Spring Boot · dependency injection · profiles
 
 <br>
 
-<div class="pill">Q&A 15 min — API clients · Postgres · debug · conventions</div>
+<div class="pill">Q&A — API clients · Postgres · debugging · conventions</div>
 
 ---
 
 ### Workshop Toolset
 
-<div class="columns3">
+<div class="columns">
 
 <div class="card">
 
@@ -116,20 +115,7 @@ Works in every terminal
 
 <div class="card" style="background:#e8f5e9; border-color:#43a047;">
 
-#### 🟢 Bruno — Optional
-
-Open-source GUI client<br>
-Open the `bruno/` collection<br>
-Requests stay with the code
-
-</div>
-
-<div class="card">
-
-#### Postman — Compatible
-
-Can send the same requests<br>
-Not required for the workshop
+#### Bruno / Insomnia / Postman — Optional Visual Clients
 
 </div>
 
@@ -218,17 +204,17 @@ Type safety · mature Security and Data libraries · JVM performance · clear ap
 
 <div>
 
-**AI can draft routine code**
+**AI can draft application code**
 
-It can quickly create controllers, DTOs, and repositories.
+It can quickly turn a description into a plausible implementation.
 
 <br>
 
 **You are still responsible for correctness**
 
-* Is `@Valid` present, and are status codes correct?
-* Is the database configuration replaceable?
-* Is the transaction boundary correct?
+* Does the design match the requirements?
+* Are responsibilities separated clearly?
+* Can the behavior be tested and changed safely?
 
 </div>
 
@@ -318,9 +304,43 @@ classes. Boot mainly removes repetitive application setup.
 
 <!-- _class: invert -->
 
-# What Does Spring Boot *Actually* Give You?
+# Build Tools: From Source Code to Application
 
-`pom.xml` → auto-configured app. No XML. No WAR.
+A build tool resolves dependencies, compiles code, runs tests, and packages the application.
+
+---
+
+### Slide 1F — Maven, Gradle, and Ant
+
+<div class="columns3">
+
+<div class="card" style="background:#e8f5e9; border-color:#43a047;">
+
+#### Maven — This Workshop
+
+Uses a declarative `pom.xml` and established conventions.
+
+</div>
+
+<div class="card">
+
+#### Gradle — Modern Alternative
+
+Uses `build.gradle` or `build.gradle.kts` and offers a programmable build.
+
+</div>
+
+<div class="card">
+
+#### Ant — Older Example
+
+Uses `build.xml` to define explicit tasks with fewer built-in conventions.
+
+</div>
+
+</div>
+
+> `pom.xml` configures the Maven build. Spring Boot application configuration normally uses annotations and properties instead of traditional Spring XML.
 
 ---
 
@@ -342,13 +362,21 @@ classes. Boot mainly removes repetitive application setup.
 
 <div class="card">
 
-#### Where you see it
+#### First Look at Spring Code
 
-* `pom.xml` parent `4.0.8`
-* `@SpringBootApplication`
-* `mvn spring-boot:run`
-* `application.properties:2`
-* H2 vs Postgres
+```java
+@Service
+class GreetingService {
+  private final MessageSource source;
+
+  GreetingService(MessageSource source) {
+    this.source = source;
+  }
+}
+```
+
+`@Service` tells Spring to manage the class. The constructor declares what the
+class needs, so Spring can provide it and tests can replace it.
 
 </div>
 
@@ -396,39 +424,32 @@ Spring Boot applies only the configurations whose libraries and settings are pre
 
 ### Slide 4 — Inversion of Control: Who Creates Objects?
 
-<div class="columns flow">
+<div class="columns">
 
-<div>
+<div class="card">
 
-**❌ Manual setup** — your code creates every dependency
+#### Option A
 
 ```java
-repo = new Repo(
-  new PostgresDS("jdbc:..."));
-// test needs Postgres
+class ProductService {
+  private final Repo repo =
+      new PostgresRepo();
+}
 ```
 
 </div>
 
-<div style="text-align:center; padding-top:1.2em; font-size:2.2em;">
+<div class="card">
 
-`→`
-
-<br>
-
-<span style="font-size:0.45em; color:#6a7a7d;">Hollywood Principle<br><i>"Don't call us,<br>we'll call you"</i></span>
-
-</div>
-
-<div>
-
-**✅ Spring setup** — the container provides dependencies
+#### Option B
 
 ```java
 @Service
 class ProductService {
-  ProductService(Repo r){
-    this.r = r;
+  private final Repo repo;
+
+  ProductService(Repo repo) {
+    this.repo = repo;
   }
 }
 ```
@@ -437,13 +458,25 @@ class ProductService {
 
 </div>
 
-<div class="card" style="text-align:center; margin-top:0.5em;">
+<div class="pill" style="margin-top:0.6em;">
 
-The `ApplicationContext` scans `com.example.ecommerce`, creates each component, injects its dependencies, and manages its lifecycle.
-
-You do not create the service in the controller. Spring creates and injects it (`ProductController.java:14`).
+Which option is easier to test and change? What problem could the `new` keyword create?
 
 </div>
+
+---
+
+### Slide 4B — Answer: Let the Container Create Dependencies
+
+**Option B** separates using a repository from choosing its implementation.
+
+1. `@Service` tells Spring that `ProductService` is an application component.
+2. The constructor tells Spring that the service requires a `Repo`.
+3. The `ApplicationContext` creates a matching repository and passes it in.
+4. A test can pass a fake repository without starting PostgreSQL.
+
+This reversal of responsibility is **Inversion of Control**: application code
+declares what it needs; the Spring container creates and connects the objects.
 
 ---
 
@@ -451,43 +484,109 @@ You do not create the service in the controller. Spring creates and injects it (
 
 <div class="columns">
 
-<div>
+<div class="card">
 
-| Style | Verdict |
-|-------|---------|
-| **Constructor** `Service(Repo r)` | ✅ Required, explicit, and easy to test |
-| Setter `setRepo()` | Useful only for optional, changeable dependencies |
-| Field `@Autowired` | ❌ Hidden dependency; not used in this workshop |
+#### Option A — Field Injection
+
+```java
+@Service
+class CheckoutService {
+  @Autowired
+  private PaymentClient client;
+}
+```
 
 </div>
 
 <div class="card">
 
-#### Specialized Component Annotations
+#### Option B — Constructor Injection
 
-* `@Service` marks business logic and transaction boundaries.
-* `@Repository` marks database access.
-* `@RestController` handles HTTP requests and responses.
+```java
+@Service
+class CheckoutService {
+  private final PaymentClient client;
 
-Spring finds these classes automatically. With one constructor, `@Autowired` is unnecessary.
+  CheckoutService(PaymentClient client) {
+    this.client = client;
+  }
+}
+```
 
 </div>
 
 </div>
 
-<div class="pill" style="margin-top:0.6em;">Demo: two matching beans cause `NoUniqueBeanDefinitionException`; choose one with `@Qualifier`.</div>
+<div class="pill" style="margin-top:0.6em;">
+
+Both work in Spring. Which one makes the dependency and a missing setup problem easier to see?
+
+</div>
+
+---
+
+### Slide 5B — Answer: Constructor Injection
+
+<div class="columns">
+
+<div>
+
+**Why prefer the constructor?**
+
+* The class cannot be created without its required dependency.
+* The dependency can be `final`.
+* A unit test can call `new CheckoutService(fakeClient)`.
+* With one constructor, `@Autowired` is unnecessary.
+
+Field injection hides the requirement and leaves the field unset when the class
+is created outside Spring.
+
+</div>
+
+<div class="card">
+
+#### What the annotations mean
+
+* `@Service` — business logic managed by Spring
+* `@Repository` — database access managed by Spring
+* `@RestController` — HTTP requests handled by Spring
+
+The annotation makes the class discoverable; the constructor makes its required
+collaborators explicit.
+
+</div>
+
+</div>
 
 ---
 
 ### Slide 6 — Bean Lifecycle
 
 ```
-Instantiate → Inject (DI) → @PostConstruct → Ready → @PreDestroy
-                  ↑
-         @Transactional proxy wraps the bean
+Construct + inject → @PostConstruct → Ready for requests → @PreDestroy
 ```
 
-`ProductEntity @PrePersist` is a JPA callback. It belongs to the entity lifecycle, not the Spring bean lifecycle.
+```java
+@Component
+class ProductCache {
+  ProductCache(ProductRepository repo) { ... }
+
+  @PostConstruct
+  void loadProducts() { ... }
+
+  @PreDestroy
+  void clearCache() { ... }
+}
+```
+
+Spring first calls the constructor and supplies the repository. It then calls
+`loadProducts()` once before the bean is used and `clearCache()` during a
+graceful application shutdown.
+
+For example, JPA calls
+`@PrePersist void setCreatedAt() { createdAt = Instant.now(); }` immediately
+before an entity `INSERT`. That is an entity lifecycle callback, not a Spring
+bean lifecycle callback.
 
 ---
 
@@ -495,11 +594,18 @@ Instantiate → Inject (DI) → @PostConstruct → Ready → @PreDestroy
 
 <div class="card" style="text-align:center; font-family: monospace; line-height:1.25;">
 
-`curl POST /api/products` <span class="arrow">→</span> **DispatcherServlet** *(auto)* <span class="arrow">→</span> **Controller** `@Valid` <span class="arrow">→</span> **Service** `@Transactional` <span class="arrow">→</span> **Repository** <span class="arrow">→</span> **HikariCP** <span class="arrow">→</span> **H2 / Postgres**
+`curl POST /api/products` <span class="arrow">→</span> **DispatcherServlet** <span class="arrow">→</span> **Controller** <span class="arrow">→</span> **Service** <span class="arrow">→</span> **Repository** <span class="arrow">→</span> **H2 / PostgreSQL**
 
 </div>
 
-*Each `@GetMapping` method handles a route; you do not write a servlet yourself.*
+1. The `DispatcherServlet` finds the controller method matching the HTTP route.
+2. The controller converts JSON to a DTO and validates the request.
+3. The service performs the business operation inside a transaction.
+4. The repository asks JPA to read or write database rows.
+5. The result returns through the controller as an HTTP response.
+
+Spring Boot configures the dispatcher; the application defines routes with
+annotations such as `@PostMapping`.
 
 ---
 
@@ -564,7 +670,8 @@ public ResponseEntity<?> create(
 }
 ```
 
-DTO constraints exist, but the boundary never triggers them.
+`@RequestBody` converts JSON into the DTO, but it does not run Bean Validation.
+The constraint annotations are metadata until the controller requests validation.
 
 </div>
 
@@ -581,11 +688,18 @@ public ResponseEntity<?> create(
 
 Blank name or negative price → `400 Bad Request`
 
-</div>
+`@Valid` tells Spring to check the DTO before entering the method. If a
+constraint fails, Spring returns `400` and does not call the service.
 
 </div>
 
-Demo with `bruno/Create Product - Invalid.bru` or the README `curl`.
+</div>
+
+```bash
+curl -X POST http://localhost:8080/api/products \
+  -H "Content-Type: application/json" \
+  -d '{"name":"","description":"Invalid example","price":-1,"stockQuantity":-2,"category":""}'
+```
 
 ---
 
@@ -626,14 +740,15 @@ The service method states the all-or-nothing boundary.
 
 </div>
 
-**Important:** `@Transactional` defines the commit/rollback boundary. It does
-not prevent concurrent updates.
+When another Spring bean calls this method through the Spring proxy:
 
-* A `sleep` does not prove that a transaction is safe.
-* Use pessimistic locking when one request must block another.
-* Use optimistic locking with `@Version` to detect overwritten updates.
+1. Spring opens a JPA persistence context and begins a database transaction.
+2. Repository operations in the method participate in that same transaction.
+3. A normal return commits; an unhandled runtime exception rolls back.
+4. Spring closes the persistence context after the method finishes.
 
-Advanced locking and multi-entity transactions belong in a later workshop.
+This is not a user login session. It is a transaction and persistence context
+scoped to the business operation; a database connection is obtained as needed.
 
 ---
 
@@ -648,6 +763,10 @@ Advanced locking and multi-entity transactions belong in a later workshop.
 | `@Transactional` in services | Business operations define atomicity |
 | Profiles + environment variables | Configuration changes without code or secrets |
 | Tests for happy and invalid paths | Confidence before sharing or deploying |
+
+**Example:** the production profile reads `POSTGRES_URL`, `POSTGRES_USER`, and
+`POSTGRES_PASSWORD` from the environment, so deployment settings stay outside
+the Java code.
 
 **Good team habits:** meaningful names · small changes · useful errors · no secrets · review generated code
 
@@ -708,9 +827,10 @@ Spring injects H2.
 
 `-Dspring-boot.run.profiles=production`
 
-Spring configures `HikariCP` and the PostgreSQL dialect.
+Spring loads `application-production.properties` and connects the repository to PostgreSQL.
 
-`ProductService` does not change.
+`ProductService` does not change because it depends on the repository
+abstraction, not on database configuration.
 
 </div>
 
