@@ -44,6 +44,7 @@ style: |
   .card h4 { margin: 0 0 0.2em; color: #0288d1; }
   .pill { display:inline-block; background:#0288d1; color:#fff; border-radius:999px; padding:0.15em 0.6em; font-size:0.72em; }
   .arrow { color:#0288d1; font-weight: 800; }
+  .source { font-size: 0.55em; color: #607d8b; }
 ---
 
 <!-- _class: lead invert -->
@@ -79,7 +80,7 @@ Run app → first API request
 
 #### 🎯 30 min — Concepts
 
-Why Spring Boot · dependency injection · profiles
+Spring vs Spring Boot · dependency injection · profiles
 
 </div>
 
@@ -142,7 +143,7 @@ Not required for the workshop
 
 | Learning objective | Workshop implementation |
 |---|---|
-| Spring Boot fundamentals | Boot, auto-configuration, IoC/DI, profiles |
+| Spring Boot fundamentals | Spring vs Boot, auto-configuration, IoC/DI, profiles |
 | REST controllers + CRUD | `ProductController` from Step 1 onward |
 | Service layer | `ProductService` introduced with persistence |
 | DTO validation | Jakarta constraints + `@Valid` + `400` demo |
@@ -246,6 +247,72 @@ Without understanding dependency injection, you may approve incorrect code.
 </div>
 
 </div>
+
+---
+
+### Slide 1D — Spring Framework vs Spring Boot
+
+> **Spring Boot uses Spring Framework. It does not replace it.**
+
+| Question | Spring Framework | Spring Boot |
+|---|---|---|
+| What does it provide? | Dependency injection, MVC, data access, transactions | A simpler way to configure and run Spring applications |
+| Dependencies | Choose and configure individual libraries | Use starter dependencies such as `spring-boot-starter-web` |
+| Configuration | More setup is written explicitly | Auto-configuration supplies sensible defaults |
+| Web server | Configure deployment or server integration | Embedded Tomcat is ready by default |
+| Running the app | Setup depends on the chosen deployment model | Run `main()` or an executable JAR |
+| Production support | Add and configure the required tools | Actuator and external configuration integrate easily |
+
+<p class="source">Reference: geeksforgeeks.org/java/difference-between-spring-and-spring-boot/</p>
+
+---
+
+### Slide 1E — Same Spring Concepts, Less Setup
+
+<div class="columns">
+
+<div class="card">
+
+#### Spring Framework: Explicit Setup
+
+```java
+@Configuration
+@EnableWebMvc
+@ComponentScan("com.example")
+class AppConfig {
+  @Bean
+  ProductService productService() {
+    return new ProductService();
+  }
+}
+```
+
+You choose and configure the application pieces.
+
+</div>
+
+<div class="card" style="background:#e8f5e9; border-color:#43a047;">
+
+#### Spring Boot: Defaults and Auto-configuration
+
+```java
+@SpringBootApplication
+public class EcommerceApplication {
+  public static void main(String[] args) {
+    SpringApplication.run(
+        EcommerceApplication.class, args);
+  }
+}
+```
+
+Boot scans components, configures Spring MVC, and starts embedded Tomcat.
+
+</div>
+
+</div>
+
+**Both can use the same** `@RestController`, `@Service`, and `@Repository`
+classes. Boot mainly removes repetitive application setup.
 
 ---
 
