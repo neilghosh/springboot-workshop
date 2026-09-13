@@ -3,14 +3,14 @@ marp: true
 theme: gaia
 class: invert
 paginate: true
-header: "Spring Boot Workshop"
+header: "Spring Boot in 30 Minutes"
 footer: "neilghosh/springboot-workshop"
 size: 16:9
 style: |
   section {
     box-sizing: border-box;
     padding: 96px 42px 88px;
-    font-size: 22px;
+    font-size: 24px;
   }
   header {
     top: 18px;
@@ -32,63 +32,80 @@ style: |
     right: 42px;
     bottom: 16px;
   }
-  h1 { font-size: 1.5em; }
-  h2 { font-size: 1.2em; }
-  h3 { font-size: 1.0em; }
-  table { font-size: 0.58em; }
-  pre, code { font-size: 0.68em; }
-  pre { max-height: 38vh; }
+  h1 { font-size: 1.65em; }
+  h2 { font-size: 1.3em; }
+  h3 { font-size: 1.05em; }
+  table { font-size: 0.66em; }
+  pre, code { font-size: 0.72em; }
+  pre { max-height: 40vh; }
   .columns { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
   .columns3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.8rem; }
-  .flow { grid-template-columns: 1fr auto 1fr; }
-  .card { border: 2px solid #38bdf8; border-radius: 14px; padding: 0.55em 0.7em; background: #1f2937; }
-  .card h4 { margin: 0 0 0.2em; color: #7dd3fc; }
-  .pill { display:inline-block; background:#0288d1; color:#fff; border-radius:999px; padding:0.15em 0.6em; font-size:0.72em; }
+  .card {
+    border: 2px solid #38bdf8;
+    border-radius: 14px;
+    padding: 0.6em 0.75em;
+    background: #1f2937;
+  }
+  .card h4 { margin: 0 0 0.25em; color: #7dd3fc; }
+  .good { background:#173126; border-color:#66bb6a; }
+  .warn { background:#3a2818; border-color:#ffa726; }
+  .bad { background:#3a1f26; border-color:#ef5350; }
+  .accent { background:#30203a; border-color:#ba68c8; }
+  .pill {
+    display: inline-block;
+    background: #0288d1;
+    color: #fff;
+    border-radius: 999px;
+    padding: 0.18em 0.7em;
+    font-size: 0.75em;
+  }
+  .flow {
+    text-align: center;
+    font-family: monospace;
+    line-height: 1.5;
+  }
   .arrow { color:#38bdf8; font-weight: 800; }
   .source { font-size: 0.55em; color: #94a3b8; }
 ---
 
 <!-- _class: lead invert -->
 
-# Spring Boot 4
+# Spring Boot in 30 Minutes
 
-## E-Commerce API Workshop
+## A visual guide to building Java services
 
-**A reusable hands-on backend development workshop**
-
-`@RestController` → `@Service` → `JpaRepository` → **H2 / Postgres**
-
-```
-  [ curl ] → [ DispatcherServlet ] → [ Controller ] → [ Service ] → [ JPA ] → [ H2 / Postgres ]
-```
+`HTTP` <span class="arrow">→</span> `Controller` <span class="arrow">→</span> `Service` <span class="arrow">→</span> `Repository` <span class="arrow">→</span> `Database`
 
 ---
 
-## Agenda
+## Our Route
 
 <div class="columns3">
 
 <div class="card">
 
-#### Setup
+#### 1 · Why
 
-Java and Maven · run the application · make an API request
-
-</div>
-
-<div class="card" style="border-color:#66bb6a; background:#173126;">
-
-#### Concepts
-
-Spring vs Spring Boot · build tools · dependency injection · profiles
+Spring vs Spring Boot<br>
+Build tools
 
 </div>
 
-<div class="card" style="border-color:#ffa726; background:#3a2818;">
+<div class="card good">
 
-#### Hands-on Workshop
+#### 2 · How
 
-REST API · validation · persistence · production · outbound HTTP
+IoC · dependency injection<br>
+Annotations · layers
+
+</div>
+
+<div class="card warn">
+
+#### 3 · Runtime
+
+Requests · validation<br>
+transactions · profiles
 
 </div>
 
@@ -96,334 +113,229 @@ REST API · validation · persistence · production · outbound HTTP
 
 <br>
 
-<div class="pill">Q&A — API clients · Postgres · debugging · conventions</div>
+<div class="pill">Goal: read an unfamiliar Spring Boot service with confidence</div>
 
 ---
 
-### Workshop Toolset
-
-<div class="columns">
-
-<div class="card">
-
-#### ✅ `curl` — Primary
-
-All README examples<br>
-No account needed · easy to automate<br>
-Works in every terminal
-
-</div>
-
-<div class="card" style="background:#173126; border-color:#66bb6a;">
-
-#### Bruno / Insomnia / Postman — Optional Visual Clients
-
-</div>
-
-</div>
-
-> Learn how HTTP requests and responses work, without depending on one API client.
-
----
-
-### Workshop Learning Outcomes
-
-| Learning objective | Workshop implementation |
-|---|---|
-| Spring Boot fundamentals | Spring vs Boot, auto-configuration, IoC/DI, profiles |
-| REST controllers + CRUD | `ProductController` from Step 1 onward |
-| Service layer | `ProductService` introduced with persistence |
-| DTO validation | Jakarta constraints + `@Valid` + `400` demo |
-| Database integration | H2 default; PostgreSQL production profile |
-| API testing | `curl` primary; Bruno optional; Postman compatible |
-| Framework conventions | Layer boundaries, DTO/entity separation, transactions |
-| Developer etiquette | Tests, small diffs, useful errors, no secrets, code review |
-
-> Use portable HTTP tests instead of depending on one client product.
-
----
-
-<!-- _class: lead -->
-
-## From Manual Setup
-
-## → Spring Conventions
-
-Spring Boot provides a common structure for long-lived Java services.
-
----
-
-### Slide 1B — Why Not Just Node / Python / Go?
+## Workshop Toolset
 
 <div class="columns3">
 
 <div class="card">
 
-#### 🟢 Node (JS/TS)
+#### 🌐 Internet
 
-Fast prototyping · one language across the stack
-
-*Consider: event-loop model and JavaScript runtime errors*
-
-</div>
-
-<div class="card">
-
-#### 🐍 Python
-
-Easy to learn · strong data and AI libraries
-
-*Consider: dynamic typing and lower throughput for some services*
+Clone the repository<br>
+Pull container images
 
 </div>
 
 <div class="card">
 
-#### 🐹 Go
+#### 🧑‍💻 VS Code
 
-Simple deployment · built-in concurrency
+Editor<br>
+Dev Containers extension
 
-*Consider: a smaller enterprise framework ecosystem*
+</div>
+
+<div class="card">
+
+#### 🐳 Docker Desktop
+
+Runs the application and database containers
 
 </div>
 
 </div>
-
-<div class="card" style="margin-top:0.6em; background:#172b3a; border-color:#38bdf8; text-align:center;">
-
-#### ☕ Java + Spring Boot — **Built for long-lived business systems**
-
-Type safety · mature Security and Data libraries · JVM performance · clear application layers
-
-</div>
-
----
-
-### Slide 1C — Why Learn This When AI Can Generate Code? 🤖
-
-<div class="columns">
-
-<div>
-
-**AI can draft application code**
-
-It can quickly turn a description into a plausible implementation.
 
 <br>
 
-**You are still responsible for correctness**
+<div class="card good flow">
 
-* Does the design match the requirements?
-* Are responsibilities separated clearly?
-* Can the behavior be tested and changed safely?
+**Image pull provides:** Java 17 + Maven <span class="arrow">│</span> PostgreSQL 16
 
 </div>
 
-<div class="card" style="background:#3a2818; border-color:#ffa726;">
-
-#### Review Before You Ship
-
-`describe → generate → verify → ship`
-
-Without understanding dependency injection, you may approve incorrect code.
-
-<br>
-
-**We first build it ourselves, so we can review generated code confidently.**
-
-</div>
-
-</div>
+> No separate Java or PostgreSQL installation is required.
 
 ---
 
-### Slide 1D — Spring Framework vs Spring Boot
-
-> **Spring Boot uses Spring Framework. It does not replace it.**
-
-| Question | Spring Framework | Spring Boot |
-|---|---|---|
-| What does it provide? | Dependency injection, MVC, data access, transactions | A simpler way to configure and run Spring applications |
-| Dependencies | Choose and configure individual libraries | Use starter dependencies such as `spring-boot-starter-web` |
-| Configuration | More setup is written explicitly | Auto-configuration supplies sensible defaults |
-| Web server | Configure deployment or server integration | Embedded Tomcat is ready by default |
-| Running the app | Setup depends on the chosen deployment model | Run `main()` or an executable JAR |
-| Production support | Add and configure the required tools | Actuator and external configuration integrate easily |
-
-<p class="source">Reference: geeksforgeeks.org/java/difference-between-spring-and-spring-boot/</p>
-
----
-
-### Slide 1E — Same Spring Concepts, Less Setup
-
-<div class="columns">
-
-<div class="card">
-
-#### Spring Framework: Explicit Setup
-
-```java
-@Configuration
-@EnableWebMvc
-@ComponentScan("com.example")
-class AppConfig {
-  @Bean
-  ProductService productService() {
-    return new ProductService();
-  }
-}
-```
-
-You choose and configure the application pieces.
-
-</div>
-
-<div class="card" style="background:#173126; border-color:#66bb6a;">
-
-#### Spring Boot: Defaults and Auto-configuration
-
-```java
-@SpringBootApplication
-public class EcommerceApplication {
-  public static void main(String[] args) {
-    SpringApplication.run(
-        EcommerceApplication.class, args);
-  }
-}
-```
-
-Boot scans components, configures Spring MVC, and starts embedded Tomcat.
-
-</div>
-
-</div>
-
-**Both can use the same** `@RestController`, `@Service`, and `@Repository`
-classes. Boot mainly removes repetitive application setup.
-
----
-
-<!-- _class: invert -->
-
-# Build Tools: From Source Code to Application
-
-A build tool resolves dependencies, compiles code, runs tests, and packages the application.
-
----
-
-### Slide 1F — Maven, Gradle, and Ant
+## Why Spring Boot?
 
 <div class="columns3">
 
-<div class="card" style="background:#173126; border-color:#66bb6a;">
-
-#### Maven — This Workshop
-
-Uses a declarative `pom.xml` and established conventions.
-
-</div>
-
 <div class="card">
 
-#### Gradle — Modern Alternative
+#### Java
 
-Uses `build.gradle` or `build.gradle.kts` and offers a programmable build.
-
-</div>
-
-<div class="card">
-
-#### Ant — Older Example
-
-Uses `build.xml` to define explicit tasks with fewer built-in conventions.
+Type safety<br>
+JVM performance<br>
+Mature ecosystem
 
 </div>
 
+<div class="card good">
+
+#### Spring
+
+Dependency injection<br>
+Web, data, security<br>
+Clear application layers
+
 </div>
 
-> `pom.xml` configures the Maven build. Spring Boot application configuration normally uses annotations and properties instead of traditional Spring XML.
+<div class="card warn">
+
+#### Boot
+
+Sensible defaults<br>
+Fast startup path<br>
+Production conventions
+
+</div>
+
+</div>
+
+<br>
+
+**AI can generate code. You still verify the design, boundaries, and behavior.**
+
+<p class="source">Node, Python, and Go have different strengths; choose for the workload and team.</p>
 
 ---
 
-### Slide 2 — Boot in 5 Features
-
-<div class="columns">
-
-<div>
-
-| Feature | One-liner |
-|---------|-----------|
-| **Starter dependencies** | Add a tested group of related libraries |
-| **Auto-configuration** | Configure components from available libraries and settings |
-| **Embedded Tomcat** | Run the application directly with `java -jar` |
-| **External configuration** | Read settings from properties and environment variables |
-| **Profiles** | Use the same build with H2 or PostgreSQL |
-
-</div>
-
-<div class="card">
-
-#### First Look at Spring Code
-
-```java
-@Service
-class GreetingService {
-  private final MessageSource source;
-
-  GreetingService(MessageSource source) {
-    this.source = source;
-  }
-}
-```
-
-`@Service` tells Spring to manage the class. The constructor declares what the
-class needs, so Spring can provide it and tests can replace it.
-
-</div>
-
-</div>
-
----
-
-### Slide 3 — How It Works Under the Hood
+## Spring Framework + Spring Boot
 
 <div class="columns">
 
 <div class="card">
 
-#### 🔍 Auto-configuration
+#### Spring Framework
 
-`@SpringBootApplication` = 
-`@Configuration` + `@EnableAutoConfiguration` + `@ComponentScan`
+`DI` · `MVC` · `Data` · `Transactions`
 
-Spring Boot applies only the configurations whose libraries and settings are present.
-
-</div>
-
-<div class="card">
-
-#### 📦 Starter = Dependency Bundle
-
-`data-jpa` = 
-`spring-data` + `hibernate` + `HikariCP` + transaction support
-
-*One starter adds the libraries needed for database access.*
+The programming model and infrastructure.
 
 </div>
 
+<div class="card good">
+
+#### Spring Boot
+
+`Starters` · `Defaults` · `Embedded Server` · `Operations`
+
+The fast path to configuring and running Spring.
+
 </div>
 
-<div class="card" style="margin-top:0.6em;">
+</div>
 
-**Configuration order:** base H2 settings → production profile overrides → environment variables from `.env` (never committed)
+<br>
 
-`port 8080` · `show-sql=true` · `/h2-console` · `/health` (Actuator)
+<div class="flow">
+
+**Spring concepts** <span class="arrow">+</span> **Boot conventions**
+<span class="arrow">→</span> **Runnable application**
 
 </div>
 
 ---
 
-### Slide 4 — Inversion of Control: Who Creates Objects?
+## Build Tool = Repeatable Pipeline
+
+<div class="card flow">
+
+`source` <span class="arrow">→</span> `compile` <span class="arrow">→</span> `test` <span class="arrow">→</span> `package` <span class="arrow">→</span> `run`
+
+</div>
+
+<br>
+
+<div class="columns3">
+
+<div class="card good">
+
+#### Maven
+
+`pom.xml`<br>
+Convention-driven
+
+</div>
+
+<div class="card">
+
+#### Gradle
+
+`build.gradle(.kts)`<br>
+Programmable
+
+</div>
+
+<div class="card">
+
+#### Ant
+
+`build.xml`<br>
+Older, task-oriented
+
+</div>
+
+</div>
+
+<p class="source">The XML in pom.xml configures Maven, not the Spring application.</p>
+
+---
+
+## Five Things Boot Gives You
+
+<div class="columns3">
+
+<div class="card">
+
+#### 📦 Starters
+
+Compatible dependency bundles
+
+</div>
+
+<div class="card">
+
+#### ⚙️ Auto-configuration
+
+Defaults based on libraries and settings
+
+</div>
+
+<div class="card">
+
+#### 🌐 Embedded server
+
+Run directly as an application
+
+</div>
+
+<div class="card">
+
+#### 🔧 External config
+
+Properties and environment variables
+
+</div>
+
+<div class="card">
+
+#### 🎛️ Profiles
+
+Different environments, same build
+
+</div>
+
+</div>
+
+---
+
+## Who Should Create the Dependency?
 
 <div class="columns">
 
@@ -432,7 +344,7 @@ Spring Boot applies only the configurations whose libraries and settings are pre
 #### Option A
 
 ```java
-class ProductService {
+class OrderService {
   private final Repo repo =
       new PostgresRepo();
 }
@@ -446,10 +358,10 @@ class ProductService {
 
 ```java
 @Service
-class ProductService {
+class OrderService {
   private final Repo repo;
 
-  ProductService(Repo repo) {
+  OrderService(Repo repo) {
     this.repo = repo;
   }
 }
@@ -459,408 +371,250 @@ class ProductService {
 
 </div>
 
-<div class="pill" style="margin-top:0.6em;">
+<div class="pill">Which option is easier to test and change—and why?</div>
 
-Which option is easier to test and change? What problem could the `new` keyword create?
+---
+
+## Answer: Invert Control
+
+<div class="flow">
+
+`@Repository Repo` <span class="arrow">→</span> `OrderService(Repo)` <span class="arrow">→</span> `@RestController`
 
 </div>
-
----
-
-### Slide 4B — Answer: Let the Container Create Dependencies
-
-**Option B** separates using a repository from choosing its implementation.
-
-1. `@Service` tells Spring that `ProductService` is an application component.
-2. The constructor tells Spring that the service requires a `Repo`.
-3. The `ApplicationContext` creates a matching repository and passes it in.
-4. A test can pass a fake repository without starting PostgreSQL.
-
-This reversal of responsibility is **Inversion of Control**: application code
-declares what it needs; the Spring container creates and connects the objects.
-
----
-
-### Slide 5 — Dependency Injection: Prefer Constructors
 
 <div class="columns">
 
-<div class="card">
+<div class="card good">
 
-#### Option A — Field Injection
+#### Spring's job
 
-```java
-@Service
-class CheckoutService {
-  @Autowired
-  private PaymentClient client;
-}
-```
+1. Discover components
+2. Create objects
+3. Connect dependencies
+4. Manage lifecycle
 
 </div>
 
 <div class="card">
 
-#### Option B — Constructor Injection
+#### Your class's job
 
-```java
-@Service
-class CheckoutService {
-  private final PaymentClient client;
-
-  CheckoutService(PaymentClient client) {
-    this.client = client;
-  }
-}
-```
+* Declare required dependencies
+* Focus on business behavior
+* Accept a fake dependency in tests
 
 </div>
 
 </div>
 
-<div class="pill" style="margin-top:0.6em;">
-
-Both work in Spring. Which one makes the dependency and a missing setup problem easier to see?
-
-</div>
+**Constructor injection makes required dependencies explicit and immutable.**
 
 ---
 
-### Slide 5B — Answer: Constructor Injection
-
-<div class="columns">
-
-<div>
-
-**Why prefer the constructor?**
-
-* The class cannot be created without its required dependency.
-* The dependency can be `final`.
-* A unit test can call `new CheckoutService(fakeClient)`.
-* With one constructor, `@Autowired` is unnecessary.
-
-Field injection hides the requirement and leaves the field unset when the class
-is created outside Spring.
-
-</div>
-
-<div class="card">
-
-#### What the annotations mean
-
-* `@Service` — business logic managed by Spring
-* `@Repository` — database access managed by Spring
-* `@RestController` — HTTP requests handled by Spring
-
-The annotation makes the class discoverable; the constructor makes its required
-collaborators explicit.
-
-</div>
-
-</div>
-
----
-
-### Slide 6 — Bean Lifecycle
-
-```
-Construct + inject → @PostConstruct → Ready for requests → @PreDestroy
-```
-
-```java
-@Component
-class ProductCache {
-  ProductCache(ProductRepository repo) { ... }
-
-  @PostConstruct
-  void loadProducts() { ... }
-
-  @PreDestroy
-  void clearCache() { ... }
-}
-```
-
-Spring first calls the constructor and supplies the repository. It then calls
-`loadProducts()` once before the bean is used and `clearCache()` during a
-graceful application shutdown.
-
-For example, JPA calls
-`@PrePersist void setCreatedAt() { createdAt = Instant.now(); }` immediately
-before an entity `INSERT`. That is an entity lifecycle callback, not a Spring
-bean lifecycle callback.
-
----
-
-### Slide 7 — Request Lifecycle
-
-<div class="card" style="text-align:center; font-family: monospace; line-height:1.25;">
-
-`curl POST /api/products` <span class="arrow">→</span> **DispatcherServlet** <span class="arrow">→</span> **Controller** <span class="arrow">→</span> **Service** <span class="arrow">→</span> **Repository** <span class="arrow">→</span> **H2 / PostgreSQL**
-
-</div>
-
-1. The `DispatcherServlet` finds the controller method matching the HTTP route.
-2. The controller converts JSON to a DTO and validates the request.
-3. The service performs the business operation inside a transaction.
-4. The repository asks JPA to read or write database rows.
-5. The result returns through the controller as an HTTP response.
-
-Spring Boot configures the dispatcher; the application defines routes with
-annotations such as `@PostMapping`.
-
----
-
-### Slide 8 — Three Layers, One Rule
+## Three Annotations, Three Responsibilities
 
 <div class="columns3">
 
-<div class="card" style="text-align:center;">
+<div class="card">
 
-#### 🎮 Controller
+#### `@RestController`
 
-`@RestController`
-
-HTTP · `@Valid` · status `201 / 404`
-
-*No SQL*
+HTTP input/output<br>
+Validation<br>
+Status codes
 
 </div>
 
-<div class="card" style="text-align:center; background:#173126; border-color:#66bb6a;">
+<div class="card good">
 
-#### ⚙️ Service
+#### `@Service`
 
-`@Service`
-
-Business rules · `@Transactional` · DTO-to-entity mapping
-
-*Throws not-found errors for the global handler*
+Business rules<br>
+Transactions<br>
+DTO mapping
 
 </div>
 
-<div class="card" style="text-align:center; background:#3a1f26; border-color:#ef5350;">
+<div class="card bad">
 
-#### 🗄️ Repository
+#### `@Repository`
 
-`JpaRepository`
-
-`findAll()` · `findByCategory()`
-
-*Usually no SQL; Hibernate handles H2 and PostgreSQL differences*
+Persistence<br>
+Queries<br>
+Database abstraction
 
 </div>
 
 </div>
 
-> **Rule:** Controllers do not expose entities, and services do not depend on HTTP status codes.
+<br>
+
+<div class="flow">
+
+**Controller** <span class="arrow">→</span> **Service** <span class="arrow">→</span> **Repository**
+
+</div>
+
+> Keep API DTOs separate from database entities.
 
 ---
 
-### Slide 8B — Validation: Annotation vs Enforcement
+## One Request, End to End
 
-<div class="columns">
+<div class="card flow">
 
-<div class="card" style="border-color:#ef5350; background:#3a1f26;">
-
-#### ❌ Looks validated, but is not
-
-```java
-public ResponseEntity<?> create(
-    @RequestBody ProductRequestDTO request) {
-    return service.createProduct(request);
-}
-```
-
-`@RequestBody` converts JSON into the DTO, but it does not run Bean Validation.
-The constraint annotations are metadata until the controller requests validation.
+`JSON` <span class="arrow">→</span> **Route** <span class="arrow">→</span> **Validate** <span class="arrow">→</span> **Business logic** <span class="arrow">→</span> **JPA** <span class="arrow">→</span> **Database**
 
 </div>
 
-<div class="card" style="border-color:#66bb6a; background:#173126;">
+<br>
 
-#### ✅ Reject before business logic
-
-```java
-public ResponseEntity<?> create(
-    @Valid @RequestBody ProductRequestDTO request) {
-    return service.createProduct(request);
-}
-```
-
-Blank name or negative price → `400 Bad Request`
-
-`@Valid` tells Spring to check the DTO before entering the method. If a
-constraint fails, Spring returns `400` and does not call the service.
-
-</div>
-
-</div>
-
-```bash
-curl -X POST http://localhost:8080/api/products \
-  -H "Content-Type: application/json" \
-  -d '{"name":"","description":"Invalid example","price":-1,"stockQuantity":-2,"category":""}'
-```
+| Stage | Spring concept |
+|---|---|
+| Route | `DispatcherServlet` + `@PostMapping` |
+| Validate | `@RequestBody` + `@Valid` |
+| Business | `@Service` + `@Transactional` |
+| Persist | `JpaRepository` + Hibernate |
+| Respond | DTO serialized as JSON |
 
 ---
 
-### Slide 8C — Transaction: One Product Is Enough
+## Validation Happens at the Boundary
 
 <div class="columns">
 
-<div class="card" style="border-color:#ef5350; background:#3a1f26;">
+<div class="card bad">
 
-#### ❌ Unclear business boundary
+#### Constraint metadata only
 
 ```java
-public ProductResponseDTO update(Long id, DTO dto) {
-    ProductEntity product = repository.findById(id).orElseThrow();
-    mapChanges(product, dto);
-    return map(repository.save(product));
-}
+create(@RequestBody
+       CreateRequest request)
 ```
 
-Repository calls may each have their own transaction.
+Method still receives invalid data.
 
 </div>
 
-<div class="card" style="border-color:#66bb6a; background:#173126;">
+<div class="card good">
 
-#### ✅ Read-modify-write as one unit
+#### Validation enforced
+
+```java
+create(@Valid @RequestBody
+       CreateRequest request)
+```
+
+Invalid input returns `400` before the service runs.
+
+</div>
+
+</div>
+
+<br>
+
+`curl ... -d '{"name":""}'` <span class="arrow">→</span> `400 Bad Request`
+
+---
+
+## Transaction = One Business Operation
+
+<div class="card flow">
+
+**begin** <span class="arrow">→</span> `load` <span class="arrow">→</span> `change` <span class="arrow">→</span> `save` <span class="arrow">→</span> **commit**
+
+<br>
+
+`runtime exception` <span class="arrow">→</span> **rollback**
+
+</div>
 
 ```java
 @Transactional
-public ProductResponseDTO update(Long id, DTO dto) {
-    // lookup + mutation + save
+public Order updateOrder(...) {
+  // all repository work joins one transaction
 }
 ```
 
-The service method states the all-or-nothing boundary.
-
-</div>
-
-</div>
-
-When another Spring bean calls this method through the Spring proxy:
-
-1. Spring opens a JPA persistence context and begins a database transaction.
-2. Repository operations in the method participate in that same transaction.
-3. A normal return commits; an unhandled runtime exception rolls back.
-4. Spring closes the persistence context after the method finishes.
-
-This is not a user login session. It is a transaction and persistence context
-scoped to the business operation; a database connection is obtained as needed.
+Spring opens a JPA persistence context for the method and obtains a database
+connection as needed. This is not a user login session.
 
 ---
 
-### Slide 8D — Conventions and Developer Etiquette
-
-| Convention | Why professionals care |
-|---|---|
-| Controller → Service → Repository | Each layer has one responsibility |
-| DTO ≠ Entity | API changes do not leak into the database model |
-| Constructor injection | Dependencies are explicit and testable |
-| `@Valid` at the boundary | Invalid data stops before business logic |
-| `@Transactional` in services | Business operations define atomicity |
-| Profiles + environment variables | Configuration changes without code or secrets |
-| Tests for happy and invalid paths | Confidence before sharing or deploying |
-
-**Example:** the production profile reads `POSTGRES_URL`, `POSTGRES_USER`, and
-`POSTGRES_PASSWORD` from the environment, so deployment settings stay outside
-the Java code.
-
-**Good team habits:** meaningful names · small changes · useful errors · no secrets · review generated code
-
----
-
-### Slide 9 — Why DI Wins Here
-
-<div class="columns">
-
-<div class="card" style="border-color:#ef5350; background:#3a1f26;">
-
-#### ❌ Hard-coded Dependency
-
-`new PostgresDataSource(...)`
-
-Every participant needs PostgreSQL, tests depend on it, and changing databases requires code changes.
-
-</div>
-
-<div class="card" style="border-color:#66bb6a; background:#173126; text-align:center;">
-
-#### ✅ Spring Selects the Dependency
-
-```
-default    → H2 DS
-production → Postgres DS
-      ↓
-  Repository → Service
-```
-
-*Configuration selects the database; application code stays the same.*
-
-</div>
-
-</div>
-
----
-
-### Slide 9b — Same Code, Different Database
+## Same Code, Different Database
 
 <div class="columns">
 
 <div class="card">
 
-#### 🧪 Workshop
+#### Default profile
 
-Spring injects H2.
+`H2`
 
-`.\mvnw.cmd test` runs without installing a database.
-
-`MockMvc` + H2
-
-</div>
-
-<div class="card" style="background:#172b3a;">
-
-#### 🚀 Production
-
-`-Dspring-boot.run.profiles=production`
-
-Spring loads `application-production.properties` and connects the repository to PostgreSQL.
-
-`ProductService` does not change because it depends on the repository
-abstraction, not on database configuration.
+Fast local development<br>
+Zero setup
 
 </div>
 
+<div class="card good">
+
+#### Production profile
+
+`PostgreSQL`
+
+`POSTGRES_URL`<br>
+`POSTGRES_USER`<br>
+`POSTGRES_PASSWORD`
+
 </div>
 
-At `step-0-starter`, the application can serve HTTP requests. By
-`step-3-production`, the production profile stores products in PostgreSQL.
+</div>
+
+<div class="flow">
+
+**profile configuration** <span class="arrow">→</span> **Repository** <span class="arrow">→</span> **unchanged Service**
+
+</div>
 
 ---
 
-### Slide 10 — What You Type vs What Boot Creates
+## Two Lifecycles
 
 <div class="columns">
 
 <div class="card">
 
-#### ✍️ You Write (~200 Lines)
+#### Spring bean
 
-DTOs · Entity · `JpaRepository` · `Service` · `Controller` · `application*.properties`
+`construct + inject`
 
-*The code is explicit and uses no Lombok, which keeps it easy to teach.*
+<span class="arrow">↓</span>
+
+`@PostConstruct`
+
+<span class="arrow">↓</span>
+
+`ready`
+
+<span class="arrow">↓</span>
+
+`@PreDestroy`
 
 </div>
 
-<div class="card" style="background:#30203a; border-color:#ba68c8;">
+<div class="card accent">
 
-#### ⚙️ Spring Boot Provides
+#### JPA entity
 
-Tomcat · `DispatcherServlet` · `Jackson` · `Validator` · `HikariCP` · `TxManager` · `ExceptionHandler`
+```java
+@PrePersist
+void setCreatedAt() {
+  createdAt = Instant.now();
+}
+```
+
+Runs immediately before an `INSERT`.
 
 </div>
 
@@ -868,29 +622,122 @@ Tomcat · `DispatcherServlet` · `Jackson` · `Validator` · `HikariCP` · `TxMa
 
 ---
 
-<!-- _class: lead -->
+## You Write Less Infrastructure
 
-## Part 2 — Hands-On
+<div class="columns">
 
-### 120 min · `step-0` → `step-4`
+<div class="card">
+
+#### You write
+
+DTOs<br>
+Business rules<br>
+Entities and repositories<br>
+Configuration<br>
+Tests
+
+</div>
+
+<div class="card accent">
+
+#### Boot provides
+
+Server and routing<br>
+JSON conversion<br>
+Validation integration<br>
+Database plumbing<br>
+Transaction management
+
+</div>
+
+</div>
+
+<br>
+
+**Less setup does not mean less responsibility.**
 
 ---
 
-| Step | Tag | Add | File | Time |
-|------|--------|-----|------|------|
-| 0 | `step-0-starter` | Maven + Web MVC | `pom.xml` | 10 min |
-| 1 | `step-1-rest-dto` | REST + validation | `ProductRequestDTO @NotBlank` | 25 min |
-| 2 | `step-2-service-db` | Entity + Repo + Service | `ProductEntity @Entity` | 40 min |
-| 3 | `step-3-production` | Handler + tests + profiles | `GlobalExceptionHandler` | 35 min |
-| 4 | `step-4-outbound-enrichment` | Optional outbound enrichment | `GET /api/products/{id}/summary` | 10 min |
+## Keep These Five Ideas
 
-`git switch --detach step-0-starter` → `.\mvnw.cmd spring-boot:run`
+<div class="columns3">
+
+<div class="card">
+
+#### 1
+
+Boot configures Spring; it does not replace Spring.
+
+</div>
+
+<div class="card">
+
+#### 2
+
+Constructors make dependencies visible.
+
+</div>
+
+<div class="card">
+
+#### 3
+
+Controllers, services, and repositories have distinct jobs.
+
+</div>
+
+<div class="card">
+
+#### 4
+
+Validation and transactions define boundaries.
+
+</div>
+
+<div class="card">
+
+#### 5
+
+Profiles change infrastructure without changing business code.
+
+</div>
+
+</div>
 
 ---
 
-## Appendix — Backup
+<!-- _class: lead invert -->
 
-* Spring Boot replaces lengthy XML setup with a few property settings.
-* `new ProductService(mockRepo)` creates a unit test without a database.
-* `@Transactional` keeps `existsById` and `deleteById` in one transaction.
-* A later advanced example could save an order and reduce inventory together; basic CRUD does not need it.
+# Continue Learning
+
+<div class="columns">
+
+<div class="card">
+
+#### Advanced topics
+
+* [Testing](https://docs.spring.io/spring-boot/reference/testing/)
+* [Security](https://docs.spring.io/spring-security/reference/)
+* [Transactions](https://docs.spring.io/spring-framework/reference/data-access/transaction.html)
+* [Spring Data JPA](https://docs.spring.io/spring-data/jpa/reference/)
+* [Observability and Actuator](https://docs.spring.io/spring-boot/reference/actuator/)
+
+</div>
+
+<div class="card good">
+
+#### Hands-on workshop
+
+REST · validation · H2 · PostgreSQL · profiles · outbound HTTP
+
+**github.com/neilghosh/springboot-workshop**
+
+[Open the workshop repository](https://github.com/neilghosh/springboot-workshop)
+
+</div>
+
+</div>
+
+<br>
+
+## Questions?
