@@ -42,41 +42,60 @@ git switch -c my-workshop-change step-3-production
 
 ## Shared setup
 
-Choose one development setup.
+- Choose either **Dev Container** or **Local**.
+- Use the repository's Maven Wrapper (`./mvnw` or `.\mvnw.cmd`); do not install
+  Maven separately.
+- Participant-facing examples use `curl`. Optional: use the [`bruno`](./bruno)
+  collection or another graphical API client.
+- Press `Ctrl+C` before moving to another checkpoint so the next stage can use
+  port 8080.
+
+### Tools
+
+| Setup | Required tools |
+|---|---|
+| Dev Container | Docker, [VS Code](https://code.visualstudio.com/), VS Code Dev Containers extension |
+| Local | [JDK 17](https://learn.microsoft.com/en-us/java/openjdk/download/), PostgreSQL 16 for the production profile |
 
 ### Dev Container
 
-Install:
+- Windows Docker install:
 
-- A Docker-compatible Linux container engine:
-  - Windows or macOS: [Docker Desktop](https://www.docker.com/products/docker-desktop/)
-  - Linux: Docker Engine with Docker Compose, or Docker Desktop
-- [VS Code](https://code.visualstudio.com/)
-- The VS Code **Dev Containers** extension
+```powershell
+winget install --exact --id Docker.DockerDesktop --accept-package-agreements --accept-source-agreements
+```
 
-Open the cloned repository in VS Code, then run **Dev Containers: Rebuild and
-Reopen in Container**. The container supplies Java 17 and Copilot CLI; use the
-repository's Maven Wrapper (`./mvnw`) for Maven commands. Starting at step 3, it
-also starts PostgreSQL 16 and includes its matching client.
+- Linux Docker install (Ubuntu):
 
-After switching checkpoints, rebuild the Dev Container when VS Code prompts
-you so its tools and services match that stage.
+```bash
+sudo apt update && sudo apt install -y curl && curl -fsSL https://get.docker.com | sudo sh && sudo usermod -aG docker "$USER"
+```
+
+- Sign out and back in after the Linux Docker command so group membership
+  takes effect.
+- Open the repository in VS Code and run **Dev Containers: Rebuild and Reopen
+  in Container**.
+- The container supplies Java 17, Copilot CLI, and PostgreSQL 16 starting at
+  step 3.
+- Rebuild the Dev Container after switching checkpoints when VS Code prompts
+  you.
 
 ### Local tools
 
-To run the workshop without a Dev Container, install
-[JDK 17](https://learn.microsoft.com/en-us/java/openjdk/download/). PostgreSQL
-16 is only needed when the production profile is introduced in step 3.
+- Windows PowerShell Java and PostgreSQL install:
 
-Optional: install [Bruno](https://www.usebruno.com/) for a graphical API client.
+```powershell
+winget install --exact --id Microsoft.OpenJDK.17 --accept-package-agreements --accept-source-agreements; winget install --exact --id PostgreSQL.PostgreSQL.16 --accept-package-agreements --accept-source-agreements
+```
 
-All participant instructions use `curl` so the exercises remain portable and
-require no API-client account. If you prefer a graphical client, open the
-repository's [`bruno`](./bruno) collection and send the equivalent requests
-from Bruno. Postman can also send the same HTTP requests, but it is not required.
+- Linux Java and PostgreSQL install (Ubuntu 24.04 LTS):
 
-The default profile is local development with H2. Press `Ctrl+C` before moving
-to another checkpoint so the next stage can use port 8080.
+```bash
+sudo apt update && sudo apt install -y openjdk-17-jdk postgresql-16
+```
+
+- PostgreSQL is only needed when the production profile is introduced in
+  step 3; the default profile uses H2.
 
 ## Step 0 — Starter
 
@@ -364,6 +383,11 @@ payload.
 
 Press `F5` and select **Debug Spring Boot App**. A breakpoint in
 `ProductController` or `ProductService` is hit by the next API request.
+
+To debug against PostgreSQL, create `.env` from `.env.example`, set
+`POSTGRES_PASSWORD`, then press `F5` and select
+**Debug Spring Boot App (production)**. That VS Code launch profile loads
+`.env` and activates the `production` Spring profile.
 
 ## Troubleshooting
 

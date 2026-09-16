@@ -12,6 +12,17 @@
     },
     {
       "type": "java",
+      "name": "Debug Spring Boot App (production)",
+      "request": "launch",
+      "mainClass": "com.example.ecommerce.EcommerceApplication",
+      "projectName": "ecommerce-api",
+      "envFile": "${workspaceFolder}/.env",
+      "env": {
+        "SPRING_PROFILES_ACTIVE": "production"
+      }
+    },
+    {
+      "type": "java",
       "name": "Attach to Spring Boot",
       "request": "attach",
       "hostName": "localhost",
