@@ -42,16 +42,33 @@ git switch -c my-workshop-change step-3-production
 
 ## Shared setup
 
+Choose one development setup.
+
+### Dev Container
+
 Install:
 
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+- A Docker-compatible Linux container engine:
+  - Windows or macOS: [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+  - Linux: Docker Engine with Docker Compose, or Docker Desktop
 - [VS Code](https://code.visualstudio.com/)
 - The VS Code **Dev Containers** extension
-- Optional: [Bruno](https://www.usebruno.com/) for a graphical API client
 
-After switching checkpoints, run **Dev Containers: Rebuild and Reopen in
-Container** when VS Code prompts you. The Dev Container supplies Java 17, Maven,
-and Copilot CLI; later stages also include PostgreSQL 16 and its matching client.
+Open the cloned repository in VS Code, then run **Dev Containers: Rebuild and
+Reopen in Container**. The container supplies Java 17 and Copilot CLI; use the
+repository's Maven Wrapper (`./mvnw`) for Maven commands. Starting at step 3, it
+also starts PostgreSQL 16 and includes its matching client.
+
+After switching checkpoints, rebuild the Dev Container when VS Code prompts
+you so its tools and services match that stage.
+
+### Local tools
+
+To run the workshop without a Dev Container, install
+[JDK 17](https://learn.microsoft.com/en-us/java/openjdk/download/). PostgreSQL
+16 is only needed when the production profile is introduced in step 3.
+
+Optional: install [Bruno](https://www.usebruno.com/) for a graphical API client.
 
 All participant instructions use `curl` so the exercises remain portable and
 require no API-client account. If you prefer a graphical client, open the
@@ -349,6 +366,29 @@ Press `F5` and select **Debug Spring Boot App**. A breakpoint in
 `ProductController` or `ProductService` is hit by the next API request.
 
 ## Troubleshooting
+
+<details>
+<summary><b>Windows: accessing specified distro mount service</b></summary>
+
+This failure happens before the Dev Container starts when VS Code tries to
+forward a WSLg Wayland socket:
+
+```text
+accessing specified distro mount service:
+stat /run/guest-services/distro-services/ubuntu.sock: no such file or directory
+```
+
+The workshop does not use Linux GUI applications. In VS Code, open **User
+Settings (JSON)**, add the following setting, and then run **Dev Containers:
+Rebuild and Reopen in Container**:
+
+```json
+"dev.containers.mountWaylandSocket": false
+```
+
+This disables an optional Linux GUI socket that the workshop does not use.
+
+</details>
 
 <details>
 <summary><b>macOS: docker-credential-desktop not found</b></summary>
