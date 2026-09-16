@@ -243,11 +243,14 @@ SPRING_PROFILES_ACTIVE=production
 
 ```bash
 git switch --detach step-3-production
-cp .env.example .env
 ```
 
-Set `POSTGRES_PASSWORD` in `.env`, then rebuild the Dev Container. Docker
-Compose starts:
+Dev Container and Codespaces users can start this stage without creating
+`.env`; Docker Compose uses workshop defaults. To customize PostgreSQL
+credentials, copy `.env.example` to `.env`, set `POSTGRES_PASSWORD`, then
+rebuild the Dev Container.
+
+Docker Compose starts:
 
 | Service | Purpose |
 |---|---|
@@ -302,7 +305,6 @@ New API in this step:
 
 ```bash
 git switch --detach step-4-outbound-enrichment
-cp .env.example .env
 ```
 
 This stage adds `RestTemplate`, proxy-ready client configuration, and a composed
@@ -457,7 +459,8 @@ Use user `sa`, leave the password blank, and run with the default profile.
 <details>
 <summary><b>PostgreSQL authentication fails</b></summary>
 
-Confirm that `.env` contains:
+The Dev Container uses workshop defaults when `.env` is absent. If you created
+`.env` to customize credentials, confirm that it contains matching values:
 
 ```ini
 POSTGRES_DB=ecommerce_db
