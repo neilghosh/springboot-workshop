@@ -42,24 +42,60 @@ git switch -c my-workshop-change step-3-production
 
 ## Shared setup
 
-Install:
+- Choose either **Dev Container** or **Local**.
+- Use the repository's Maven Wrapper (`./mvnw` or `.\mvnw.cmd`); do not install
+  Maven separately.
+- Participant-facing examples use `curl`. Optional: use the [`bruno`](./bruno)
+  collection or another graphical API client.
+- Press `Ctrl+C` before moving to another checkpoint so the next stage can use
+  port 8080.
 
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/)
-- [VS Code](https://code.visualstudio.com/)
-- The VS Code **Dev Containers** extension
-- Optional: [Bruno](https://www.usebruno.com/) for a graphical API client
+### Tools
 
-After switching checkpoints, run **Dev Containers: Rebuild and Reopen in
-Container** when VS Code prompts you. The Dev Container supplies Java 17, Maven,
-and Copilot CLI; later stages also include PostgreSQL 16 and its matching client.
+| Setup | Required tools |
+|---|---|
+| Dev Container | Docker, [VS Code](https://code.visualstudio.com/), VS Code Dev Containers extension |
+| Local | [JDK 17](https://learn.microsoft.com/en-us/java/openjdk/download/), PostgreSQL 16 for the production profile |
 
-All participant instructions use `curl` so the exercises remain portable and
-require no API-client account. If you prefer a graphical client, open the
-repository's [`bruno`](./bruno) collection and send the equivalent requests
-from Bruno. Postman can also send the same HTTP requests, but it is not required.
+### Dev Container
 
-The default profile is local development with H2. Press `Ctrl+C` before moving
-to another checkpoint so the next stage can use port 8080.
+- Windows Docker install:
+
+```powershell
+winget install --exact --id Docker.DockerDesktop --accept-package-agreements --accept-source-agreements
+```
+
+- Linux Docker install (Ubuntu):
+
+```bash
+sudo apt update && sudo apt install -y curl && curl -fsSL https://get.docker.com | sudo sh && sudo usermod -aG docker "$USER"
+```
+
+- Sign out and back in after the Linux Docker command so group membership
+  takes effect.
+- Open the repository in VS Code and run **Dev Containers: Rebuild and Reopen
+  in Container**.
+- The container supplies Java 17, Copilot CLI, and PostgreSQL 16 starting at
+  step 3.
+- Rebuild the Dev Container after switching checkpoints when VS Code prompts
+  you.
+
+### Local tools
+
+- Windows PowerShell Java and PostgreSQL install:
+
+```powershell
+winget install --exact --id Microsoft.OpenJDK.17 --accept-package-agreements --accept-source-agreements; winget install --exact --id PostgreSQL.PostgreSQL.16 --accept-package-agreements --accept-source-agreements
+```
+
+- Linux Java and PostgreSQL install (Ubuntu 24.04 LTS):
+
+```bash
+sudo apt update && sudo apt install -y openjdk-17-jdk postgresql-16
+```
+
+- PostgreSQL is only needed when the production profile is introduced in
+  step 3; the default profile uses H2.
 
 ## Step 0 — Starter
 
@@ -349,6 +385,29 @@ Press `F5` and select **Debug Spring Boot App**. A breakpoint in
 `ProductController` or `ProductService` is hit by the next API request.
 
 ## Troubleshooting
+
+<details>
+<summary><b>Windows: accessing specified distro mount service</b></summary>
+
+This failure happens before the Dev Container starts when VS Code tries to
+forward a WSLg Wayland socket:
+
+```text
+accessing specified distro mount service:
+stat /run/guest-services/distro-services/ubuntu.sock: no such file or directory
+```
+
+The workshop does not use Linux GUI applications. In VS Code, open **User
+Settings (JSON)**, add the following setting, and then run **Dev Containers:
+Rebuild and Reopen in Container**:
+
+```json
+"dev.containers.mountWaylandSocket": false
+```
+
+This disables an optional Linux GUI socket that the workshop does not use.
+
+</details>
 
 <details>
 <summary><b>macOS: docker-credential-desktop not found</b></summary>
