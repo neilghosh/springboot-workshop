@@ -88,6 +88,13 @@ sudo apt update && sudo apt install -y curl && curl -fsSL https://get.docker.com
 winget install --exact --id Microsoft.OpenJDK.17 --accept-package-agreements --accept-source-agreements; winget install --exact --id PostgreSQL.PostgreSQL.16 --accept-package-agreements --accept-source-agreements
 ```
 
+- Create the local workshop database, then connect to it:
+
+```powershell
+& "C:\Program Files\PostgreSQL\16\bin\psql.exe" -h localhost -U postgres -d postgres -c "CREATE DATABASE ecommerce_db;"
+& "C:\Program Files\PostgreSQL\16\bin\psql.exe" -h localhost -U postgres -d ecommerce_db
+```
+
 - Linux Java and PostgreSQL install (Ubuntu 24.04 LTS):
 
 ```bash
