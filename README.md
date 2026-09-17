@@ -285,10 +285,16 @@ Docker Compose starts:
 VS Code enters `app` because `devcontainer.json` specifies `"service": "app"`.
 The PostgreSQL hostname inside the Compose network is `database`.
 
-Run this stage with PostgreSQL:
+Run this stage with PostgreSQL from a Dev Container, Linux, or macOS terminal:
 
 ```bash
 SPRING_PROFILES_ACTIVE=production ./mvnw spring-boot:run
+```
+
+On Windows PowerShell, use the Maven profile argument instead:
+
+```powershell
+.\mvnw.cmd spring-boot:run "-Dspring-boot.run.profiles=production"
 ```
 
 To use local H2 instead, omit the production profile:
@@ -352,10 +358,16 @@ curl GET /api/products/{id}/summary
 **Run and observe:**
 
 Stop any application started before switching tags, then start Step 4 so the JVM
-loads the outbound client code:
+loads the outbound client code. From a Dev Container, Linux, or macOS terminal:
 
 ```bash
 SPRING_PROFILES_ACTIVE=production ./mvnw spring-boot:run
+```
+
+On Windows PowerShell:
+
+```powershell
+.\mvnw.cmd spring-boot:run "-Dspring-boot.run.profiles=production"
 ```
 
 In another terminal, first inspect the simulated external response:
