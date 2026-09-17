@@ -151,21 +151,29 @@ git switch --detach step-1-rest-dto
 
 Products are temporarily stored in a Java list. Create and list products.
 
-**Unix/macOS:**
+**Unix/macOS — create a product:**
 
 ```bash
 curl -X POST http://localhost:8080/api/products \
   -H "Content-Type: application/json" \
   -d '{"name":"Mechanical Keyboard","description":"RGB Wireless","price":79.99,"stockQuantity":50,"category":"Electronics"}'
+```
 
+**Unix/macOS — list products:**
+
+```bash
 curl http://localhost:8080/api/products
 ```
 
-**Windows PowerShell:**
+**Windows PowerShell — create a product:**
 
 ```powershell
 curl.exe -X POST http://localhost:8080/api/products -H "Content-Type: application/json" -d '{"name":"Mechanical Keyboard","description":"RGB Wireless","price":79.99,"stockQuantity":50,"category":"Electronics"}'
+```
 
+**Windows PowerShell — list products:**
+
+```powershell
 curl.exe http://localhost:8080/api/products
 ```
 
