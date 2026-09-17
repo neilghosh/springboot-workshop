@@ -120,7 +120,7 @@ After confirming the generated starter runs, it can be discarded; the workshop b
 ```bash
 git clone <your-github-url> springboot-workshop
 cd springboot-workshop
-git checkout step-0-starter
+git switch --detach refs/tags/step-0-starter
 ```
 
 For the future outbound HTTP exercise, `examples/external-product.json` is the
