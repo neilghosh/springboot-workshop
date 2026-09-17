@@ -168,7 +168,7 @@ curl http://localhost:8080/api/products
 **Windows PowerShell — create a product:**
 
 ```powershell
-curl.exe -X POST http://localhost:8080/api/products -H "Content-Type: application/json" -d '{"name":"Mechanical Keyboard","description":"RGB Wireless","price":79.99,"stockQuantity":50,"category":"Electronics"}'
+'{"name":"Mechanical Keyboard","description":"RGB Wireless","price":79.99,"stockQuantity":50,"category":"Electronics"}' | curl.exe -i http://localhost:8080/api/products --json '@-'
 ```
 
 **Windows PowerShell — list products:**
