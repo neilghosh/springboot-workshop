@@ -149,7 +149,9 @@ git switch --detach step-1-rest-dto
 ./mvnw spring-boot:run
 ```
 
-Products are temporarily stored in a Java list. Create and list products:
+Products are temporarily stored in a Java list. Create and list products.
+
+**Unix/macOS:**
 
 ```bash
 curl -X POST http://localhost:8080/api/products \
@@ -157,6 +159,14 @@ curl -X POST http://localhost:8080/api/products \
   -d '{"name":"Mechanical Keyboard","description":"RGB Wireless","price":79.99,"stockQuantity":50,"category":"Electronics"}'
 
 curl http://localhost:8080/api/products
+```
+
+**Windows PowerShell:**
+
+```powershell
+curl.exe -X POST http://localhost:8080/api/products -H "Content-Type: application/json" -d '{"name":"Mechanical Keyboard","description":"RGB Wireless","price":79.99,"stockQuantity":50,"category":"Electronics"}'
+
+curl.exe http://localhost:8080/api/products
 ```
 
 **Expect:** `POST` returns `201 Created` with an assigned ID, and `GET` returns
