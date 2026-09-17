@@ -21,11 +21,11 @@ Each completed stage is a Git tag:
 Tags are read-only checkpoints. Move between them with:
 
 ```bash
-git switch --detach step-0-starter
-git switch --detach step-1-rest-dto
-git switch --detach step-2-service-db
-git switch --detach step-3-production
-git switch --detach step-4-outbound-enrichment
+git switch --detach refs/tags/step-0-starter
+git switch --detach refs/tags/step-1-rest-dto
+git switch --detach refs/tags/step-2-service-db
+git switch --detach refs/tags/step-3-production
+git switch --detach refs/tags/step-4-outbound-enrichment
 ```
 
 Return to the maintained version with:
@@ -112,7 +112,7 @@ EcommerceApplication.main()
 **Do:**
 
 ```bash
-git switch --detach step-0-starter
+git switch --detach refs/tags/step-0-starter
 ./mvnw spring-boot:run
 ```
 
@@ -145,7 +145,7 @@ APIs introduced in this step:
 **Do:**
 
 ```bash
-git switch --detach step-1-rest-dto
+git switch --detach refs/tags/step-1-rest-dto
 ./mvnw spring-boot:run
 ```
 
@@ -221,7 +221,7 @@ The same REST contract now uses H2, with additional CRUD operations:
 **Do:**
 
 ```bash
-git switch --detach step-2-service-db
+git switch --detach refs/tags/step-2-service-db
 ./mvnw spring-boot:run
 ```
 
@@ -260,7 +260,7 @@ SPRING_PROFILES_ACTIVE=production
 **Do:**
 
 ```bash
-git switch --detach step-3-production
+git switch --detach refs/tags/step-3-production
 cp .env.example .env
 ```
 
@@ -319,7 +319,7 @@ New API in this step:
 **Do:**
 
 ```bash
-git switch --detach step-4-outbound-enrichment
+git switch --detach refs/tags/step-4-outbound-enrichment
 cp .env.example .env
 ```
 
