@@ -6,9 +6,105 @@
 
 Instructor materials are kept separately in [`docs/`](./docs/README.md).
 
-## Workshop path
+## Quick start
 
-Each completed stage is a Git tag:
+Choose one setup:
+
+| Setup | Install | Best for |
+|---|---|---|
+| **Dev Container (recommended)** | Docker, [VS Code](https://code.visualstudio.com/), and the VS Code Dev Containers extension | A ready-to-use Java 17 environment; PostgreSQL is included from Step 3 |
+| **Local** | [JDK 17](https://learn.microsoft.com/en-us/java/openjdk/download/) | Running directly on your computer; install PostgreSQL 16 only for the Step 3 production profile |
+
+### Option 1 — Dev Container
+
+1. Install and start Docker.
+2. Open this repository in VS Code.
+3. Run **Dev Containers: Rebuild and Reopen in Container**.
+4. Open a terminal in VS Code and verify:
+
+```bash
+java -version
+./mvnw --version
+```
+
+The container provides Java 17, Copilot CLI, and the required development
+tools. Rebuild it after switching checkpoints if VS Code prompts you.
+
+### Option 2 — Local
+
+Install JDK 17. PostgreSQL 16 is also required when you reach the Step 3
+production profile.
+
+**Windows PowerShell:**
+
+```powershell
+winget install --exact --id Microsoft.OpenJDK.17 --accept-package-agreements --accept-source-agreements
+winget install --exact --id PostgreSQL.PostgreSQL.16 --accept-package-agreements --accept-source-agreements
+```
+
+Create the local workshop database, then connect to it:
+
+```powershell
+& "C:\Program Files\PostgreSQL\16\bin\psql.exe" -h localhost -U postgres -d postgres -c "CREATE DATABASE ecommerce_db;"
+& "C:\Program Files\PostgreSQL\16\bin\psql.exe" -h localhost -U postgres -d ecommerce_db
+```
+
+**Ubuntu 24.04 LTS:**
+
+```bash
+sudo apt update && sudo apt install -y openjdk-17-jdk postgresql-16
+```
+
+Verify the local tools:
+
+**Unix/macOS:**
+
+```bash
+java -version
+./mvnw --version
+```
+
+**Windows PowerShell:**
+
+```powershell
+java -version
+.\mvnw.cmd --version
+```
+
+Use the repository's Maven Wrapper; a separate Maven installation is not
+required. PostgreSQL is optional until Step 3 because the default profile uses
+the embedded H2 database.
+
+### Run the application
+
+Start with the maintained version on `main`:
+
+**Unix/macOS:**
+
+```bash
+./mvnw spring-boot:run
+```
+
+**Windows PowerShell:**
+
+```powershell
+.\mvnw.cmd spring-boot:run
+```
+
+Open <http://localhost:8080/api/products>. Stop the application with `Ctrl+C`
+before switching checkpoints or starting it again.
+
+Common commands:
+
+| Task | Unix/macOS | Windows PowerShell |
+|---|---|---|
+| Run with H2 | `./mvnw spring-boot:run` | `.\mvnw.cmd spring-boot:run` |
+| Run tests | `./mvnw clean test` | `.\mvnw.cmd clean test` |
+| Run with PostgreSQL | `SPRING_PROFILES_ACTIVE=production ./mvnw spring-boot:run` | `.\mvnw.cmd spring-boot:run "-Dspring-boot.run.profiles=production"` |
+
+## Workshop flow
+
+Work through the checkpoints in order. Each stage builds on the previous one:
 
 | Tag | Focus | Database |
 |---|---|---|
@@ -18,17 +114,16 @@ Each completed stage is a Git tag:
 | `step-3-production` | PostgreSQL profile, tests, and global errors | H2 or PostgreSQL |
 | `step-4-outbound-enrichment` | External client and composed response | H2 or PostgreSQL |
 
-Tags are read-only checkpoints. Move between them with:
+For each stage:
 
 ```bash
 git switch --detach refs/tags/step-0-starter
-git switch --detach refs/tags/step-1-rest-dto
-git switch --detach refs/tags/step-2-service-db
-git switch --detach refs/tags/step-3-production
-git switch --detach refs/tags/step-4-outbound-enrichment
+./mvnw spring-boot:run
 ```
 
-Return to the maintained version with:
+Replace `step-0-starter` with the next tag as you progress. On Windows, run
+`.\mvnw.cmd spring-boot:run`. Tags are read-only checkpoints; return to the
+maintained version with:
 
 ```bash
 git switch main
@@ -40,69 +135,8 @@ To change a checkpoint, create a temporary branch from its tag:
 git switch -c my-workshop-change step-3-production
 ```
 
-## Shared setup
-
-- Choose either **Dev Container** or **Local**.
-- Use the repository's Maven Wrapper (`./mvnw` or `.\mvnw.cmd`); do not install
-  Maven separately.
-- Participant-facing examples use `curl`. Optional: use the [`bruno`](./bruno)
-  collection or another graphical API client.
-- Press `Ctrl+C` before moving to another checkpoint so the next stage can use
-  port 8080.
-
-### Tools
-
-| Setup | Required tools |
-|---|---|
-| Dev Container | Docker, [VS Code](https://code.visualstudio.com/), VS Code Dev Containers extension |
-| Local | [JDK 17](https://learn.microsoft.com/en-us/java/openjdk/download/), PostgreSQL 16 for the production profile |
-
-### Dev Container
-
-- Windows Docker install:
-
-```powershell
-winget install --exact --id Docker.DockerDesktop --accept-package-agreements --accept-source-agreements
-```
-
-- Linux Docker install (Ubuntu):
-
-```bash
-sudo apt update && sudo apt install -y curl && curl -fsSL https://get.docker.com | sudo sh && sudo usermod -aG docker "$USER"
-```
-
-- Sign out and back in after the Linux Docker command so group membership
-  takes effect.
-- Open the repository in VS Code and run **Dev Containers: Rebuild and Reopen
-  in Container**.
-- The container supplies Java 17, Copilot CLI, and PostgreSQL 16 starting at
-  step 3.
-- Rebuild the Dev Container after switching checkpoints when VS Code prompts
-  you.
-
-### Local tools
-
-- Windows PowerShell Java and PostgreSQL install:
-
-```powershell
-winget install --exact --id Microsoft.OpenJDK.17 --accept-package-agreements --accept-source-agreements; winget install --exact --id PostgreSQL.PostgreSQL.16 --accept-package-agreements --accept-source-agreements
-```
-
-- Create the local workshop database, then connect to it:
-
-```powershell
-& "C:\Program Files\PostgreSQL\16\bin\psql.exe" -h localhost -U postgres -d postgres -c "CREATE DATABASE ecommerce_db;"
-& "C:\Program Files\PostgreSQL\16\bin\psql.exe" -h localhost -U postgres -d ecommerce_db
-```
-
-- Linux Java and PostgreSQL install (Ubuntu 24.04 LTS):
-
-```bash
-sudo apt update && sudo apt install -y openjdk-17-jdk postgresql-16
-```
-
-- PostgreSQL is only needed when the production profile is introduced in
-  step 3; the default profile uses H2.
+API examples use `curl`. The [`bruno`](./bruno) collection is available as an
+optional graphical client.
 
 ## Step 0 — Starter
 
@@ -283,29 +317,9 @@ Docker Compose starts:
 | `database` | PostgreSQL 16 server |
 
 VS Code enters `app` because `devcontainer.json` specifies `"service": "app"`.
-The PostgreSQL hostname inside the Compose network is `database`.
-
-Run this stage with PostgreSQL on Windows PowerShell:
-
-```powershell
-.\mvnw.cmd spring-boot:run "-Dspring-boot.run.profiles=production"
-```
-
-From a Dev Container, Linux, or macOS terminal:
-
-```bash
-SPRING_PROFILES_ACTIVE=production ./mvnw spring-boot:run
-```
-
-To use local H2 instead, omit the production profile:
-
-```powershell
-.\mvnw.cmd spring-boot:run
-```
-
-```bash
-./mvnw spring-boot:run
-```
+The PostgreSQL hostname inside the Compose network is `database`. Run the
+production-profile command from the [common commands](#run-the-application).
+Use the H2 command instead when PostgreSQL is not needed.
 
 The production profile disables the H2 Console. Connect to PostgreSQL from
 another Dev Container terminal:
@@ -314,11 +328,7 @@ another Dev Container terminal:
 psql -h database -U postgres -d ecommerce_db
 ```
 
-Run the tests:
-
-```bash
-./mvnw clean test
-```
+Run the test command from the [common commands](#run-the-application).
 
 **Expect:** The startup log reports the `production` profile, PostgreSQL JDBC
 driver, and PostgreSQL 16. In `psql`, `\dt` lists the `products` table and data
@@ -342,6 +352,9 @@ New API in this step:
 git switch --detach refs/tags/step-4-outbound-enrichment
 ```
 
+Keep the `.env` created in Step 3. If you started at this checkpoint, copy
+`.env.example` using the Step 3 instructions and set `POSTGRES_PASSWORD`.
+
 This stage adds `RestTemplate`, proxy-ready client configuration, and a composed
 product summary. To keep the workshop offline, `/external-product.json`
 simulates a third-party product API. In a real integration,
@@ -362,17 +375,8 @@ curl GET /api/products/{id}/summary
 **Run and observe:**
 
 Stop any application started before switching tags, then start Step 4 so the JVM
-loads the outbound client code. On Windows PowerShell:
-
-```powershell
-.\mvnw.cmd spring-boot:run "-Dspring-boot.run.profiles=production"
-```
-
-From a Dev Container, Linux, or macOS terminal:
-
-```bash
-SPRING_PROFILES_ACTIVE=production ./mvnw spring-boot:run
-```
+loads the outbound client code. Use the production-profile command from the
+[common commands](#run-the-application).
 
 In another terminal, first inspect the simulated external response:
 
@@ -389,12 +393,10 @@ curl -X POST http://localhost:8080/api/products \
 ```
 
 Copy the `id` from the POST response. PostgreSQL data persists across restarts,
-so the new product is not always ID `1`. Request the composed response with the
-returned ID:
+so the new product is not always ID `1`. Replace `2` below with the returned ID:
 
 ```bash
-PRODUCT_ID=2 # replace with the ID returned by POST
-curl "http://localhost:8080/api/products/$PRODUCT_ID/summary"
+curl http://localhost:8080/api/products/2/summary
 ```
 
 The response makes the external value explicit:
@@ -520,5 +522,11 @@ Stop the process using port 8080 or choose another port:
 
 ```bash
 ./mvnw spring-boot:run -Dspring-boot.run.arguments=--server.port=8081
+```
+
+On Windows PowerShell:
+
+```powershell
+.\mvnw.cmd spring-boot:run "-Dspring-boot.run.arguments=--server.port=8081"
 ```
 </details>
