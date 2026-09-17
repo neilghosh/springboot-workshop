@@ -240,20 +240,46 @@ Test classes: `ProductServiceTest` (Mockito unit) + `ProductControllerIntegratio
 | `DELETE` | `/api/products/{id}` | Delete |
 
 ### cURL — Bash / Linux / macOS
+
+**Create a product:**
+
 ```bash
 curl -X POST http://localhost:8080/api/products -H "Content-Type: application/json" -d '{"name":"Mechanical Keyboard","description":"RGB Wireless","price":79.99,"stockQuantity":50,"category":"Electronics"}'
+```
+
+**Get products:**
+
+```bash
 curl http://localhost:8080/api/products
 curl http://localhost:8080/api/products/1
+```
+
+**Update and delete a product:**
+
+```bash
 curl -X PUT http://localhost:8080/api/products/1 -H "Content-Type: application/json" -d '{"name":"Updated Keyboard","description":"RGB Wireless","price":89.99,"stockQuantity":40,"category":"Electronics"}'
 curl -X DELETE http://localhost:8080/api/products/1
 ```
 
 ### cURL — Windows PowerShell
 Use `curl.exe` (bare `curl` is an alias for `Invoke-WebRequest`):
+
+**Create a product:**
+
 ```powershell
 curl.exe -X POST http://localhost:8080/api/products -H "Content-Type: application/json" -d '{"name": "Mechanical Keyboard", "description": "RGB Wireless", "price": 79.99, "stockQuantity": 50, "category": "Electronics"}'
+```
+
+**Get products:**
+
+```powershell
 curl.exe http://localhost:8080/api/products
 curl.exe http://localhost:8080/api/products/1
+```
+
+**Update and delete a product:**
+
+```powershell
 curl.exe -X PUT http://localhost:8080/api/products/1 -H "Content-Type: application/json" -d '{"name": "Updated Keyboard", "description": "RGB Wireless", "price": 89.99, "stockQuantity": 40, "category": "Electronics"}'
 curl.exe -X DELETE http://localhost:8080/api/products/1
 ```
