@@ -1,61 +1,64 @@
 # Spring Boot 4 E-Commerce API Workshop
 
-> **Format:** 3 hours · **Audience:** 2nd–4th year engineering students
-> Build a REST API progressively with validation, service-layer design, JPA,
-> H2, PostgreSQL, testing, profiles, error handling, and outbound HTTP.
+> **Format:** 3 hours | **Audience:** 2nd-4th year engineering students
 
-Instructor materials are kept separately in [`docs/`](./docs/README.md).
+Build a REST API progressively with validation, service-layer design, JPA, H2,
+PostgreSQL, testing, profiles, error handling, outbound HTTP, entity
+relationships, and dependency inversion.
 
-## Quick start
+Follow the complete checkpoint journey in **[WORKSHOP.md](WORKSHOP.md)**.
+Instructor presentation materials are in [docs/](docs/README.md).
+
+## Clone
+
+```bash
+git clone https://github.com/neilghosh/springboot-workshop.git
+cd springboot-workshop
+git fetch --tags
+```
+
+## Prerequisites
 
 Choose one setup:
 
 | Setup | Install | Best for |
 |---|---|---|
-| **Dev Container (recommended)** | Docker, [VS Code](https://code.visualstudio.com/), and the VS Code Dev Containers extension | A ready-to-use Java 17 environment; PostgreSQL is included from Step 3 |
-| **Local** | [JDK 17](https://learn.microsoft.com/en-us/java/openjdk/download/) | Running directly on your computer; install PostgreSQL 16 only for the Step 3 production profile |
+| **Dev Container (recommended)** | Docker, [VS Code](https://code.visualstudio.com/), and the VS Code Dev Containers extension | Ready-to-use Java 17 and PostgreSQL environment |
+| **Local** | [JDK 17](https://learn.microsoft.com/en-us/java/openjdk/download/) | Running directly on your computer |
 
-### Option 1 — Dev Container
+PostgreSQL 16 is optional until the production-profile workshop stage. The
+default profile uses the embedded H2 database.
+
+## Dev Container setup
 
 1. Install and start Docker.
 2. Open this repository in VS Code.
 3. Run **Dev Containers: Rebuild and Reopen in Container**.
-4. Open a terminal in VS Code and verify:
+4. Verify the tools:
 
 ```bash
 java -version
 ./mvnw --version
 ```
 
-The container provides Java 17, Copilot CLI, and the required development
-tools. Rebuild it after switching checkpoints if VS Code prompts you.
+The container supplies Java 17, PostgreSQL 16, Copilot CLI, and the development
+tools used by the workshop.
 
-### Option 2 — Local
+## Local setup
 
-Install JDK 17. PostgreSQL 16 is also required when you reach the Step 3
-production profile.
-
-**Windows PowerShell:**
+Install JDK 17. On Windows PowerShell:
 
 ```powershell
 winget install --exact --id Microsoft.OpenJDK.17 --accept-package-agreements --accept-source-agreements
-winget install --exact --id PostgreSQL.PostgreSQL.16 --accept-package-agreements --accept-source-agreements
 ```
 
-Create the local workshop database, then connect to it:
-
-```powershell
-& "C:\Program Files\PostgreSQL\16\bin\psql.exe" -h localhost -U postgres -d postgres -c "CREATE DATABASE ecommerce_db;"
-& "C:\Program Files\PostgreSQL\16\bin\psql.exe" -h localhost -U postgres -d ecommerce_db
-```
-
-**Ubuntu 24.04 LTS:**
+On Ubuntu 24.04 LTS:
 
 ```bash
-sudo apt update && sudo apt install -y openjdk-17-jdk postgresql-16
+sudo apt update && sudo apt install -y openjdk-17-jdk
 ```
 
-Verify the local tools:
+Verify the repository Maven Wrapper:
 
 **Unix/macOS:**
 
@@ -71,13 +74,28 @@ java -version
 .\mvnw.cmd --version
 ```
 
-Use the repository's Maven Wrapper; a separate Maven installation is not
-required. PostgreSQL is optional until Step 3 because the default profile uses
-the embedded H2 database.
+A separate Maven installation is not required.
 
-### Run the application
+### Optional local PostgreSQL
 
-Start with the maintained version on `main`:
+Install PostgreSQL 16 only when running the production profile outside the Dev
+Container.
+
+**Windows PowerShell:**
+
+```powershell
+winget install --exact --id PostgreSQL.PostgreSQL.16 --accept-package-agreements --accept-source-agreements
+& "C:\Program Files\PostgreSQL\16\bin\psql.exe" -h localhost -U postgres -d postgres -c "CREATE DATABASE ecommerce_db;"
+```
+
+**Ubuntu 24.04 LTS:**
+
+```bash
+sudo apt install -y postgresql-16
+sudo -u postgres createdb ecommerce_db
+```
+
+## Run the maintained application
 
 **Unix/macOS:**
 
@@ -91,521 +109,20 @@ Start with the maintained version on `main`:
 .\mvnw.cmd spring-boot:run
 ```
 
-Open <http://localhost:8080/api/products>. Stop the application with `Ctrl+C`
-before switching checkpoints or starting it again.
+Open <http://localhost:8080/api/products>. Stop the application with `Ctrl+C`.
 
-Common commands:
+## Test
 
-| Task | Unix/macOS | Windows PowerShell |
-|---|---|---|
-| Run with H2 | `./mvnw spring-boot:run` | `.\mvnw.cmd spring-boot:run` |
-| Run tests | `./mvnw clean test` | `.\mvnw.cmd clean test` |
-| Run with PostgreSQL | `SPRING_PROFILES_ACTIVE=production ./mvnw spring-boot:run` | `.\mvnw.cmd spring-boot:run "-Dspring-boot.run.profiles=production"` |
-
-## Workshop flow
-
-Work through the checkpoints in order. Each stage builds on the previous one:
-
-| Tag | Focus | Database |
-|---|---|---|
-| `step-0-starter` | Spring Boot application and Web MVC | None |
-| `step-1-rest-dto` | Product REST API, DTOs, and validation | In-memory Java list |
-| `step-2-service-db` | Service, repository, JPA entity, and persistence | H2 |
-| `step-3-production` | PostgreSQL profile, tests, and global errors | H2 or PostgreSQL |
-| `step-4-outbound-enrichment` | External client and composed response | H2 or PostgreSQL |
-| `step-5-order-relationship` | Order creation, JPA relationship, and summary DTO | H2 or PostgreSQL |
-| `step-6-dependency-inversion` | Payment interface, `@Primary`, and order processing | H2 or PostgreSQL |
-
-For each stage:
+**Unix/macOS:**
 
 ```bash
-git switch --detach refs/tags/step-0-starter
-./mvnw spring-boot:run
+./mvnw clean test
 ```
 
-Replace `step-0-starter` with the next tag as you progress. On Windows, run
-`.\mvnw.cmd spring-boot:run`. Tags are read-only checkpoints; return to the
-maintained version with:
-
-```bash
-git switch main
-```
-
-To change a checkpoint, create a temporary branch from its tag:
-
-```bash
-git switch -c my-workshop-change step-3-production
-```
-
-API examples use `curl`. The [`bruno`](./bruno) collection is available as an
-optional graphical client.
-
-## Step 0 — Starter
-
-**Goal:** Understand the minimum structure needed to start Spring Boot.
-
-**Flow:**
-
-```text
-EcommerceApplication.main()
-  -> SpringApplication.run()
-  -> embedded Tomcat starts on port 8080
-```
-
-**Do:**
-
-```bash
-git switch --detach refs/tags/step-0-starter
-./mvnw spring-boot:run
-```
-
-**Expect:** The application starts successfully and logs that Tomcat is
-listening on port 8080. A request to `/api/products` returns `404` because no
-controller exists yet.
-
-## Step 1 — REST and DTO validation
-
-**Goal:** Accept JSON requests, validate them, and return product responses
-without introducing a database.
-
-**Flow:**
-
-```text
-curl JSON
-  -> ProductController
-  -> ProductRequestDTO validation
-  -> in-memory Java list
-  -> ProductResponseDTO JSON
-```
-
-APIs introduced in this step:
-
-| Method | Endpoint | Behavior |
-|---|---|---|
-| `GET` | `/api/products` | List products held in memory |
-| `POST` | `/api/products` | Validate and create an in-memory product |
-
-**Do:**
-
-```bash
-git switch --detach refs/tags/step-1-rest-dto
-./mvnw spring-boot:run
-```
-
-Products are temporarily stored in a Java list. Create and list products.
-
-**Unix/macOS — create a product:**
-
-```bash
-curl -X POST http://localhost:8080/api/products \
-  -H "Content-Type: application/json" \
-  -d '{"name":"Mechanical Keyboard","description":"RGB Wireless","price":79.99,"stockQuantity":50,"category":"Electronics"}'
-```
-
-**Unix/macOS — list products:**
-
-```bash
-curl http://localhost:8080/api/products
-```
-
-**Windows PowerShell — create a product:**
+**Windows PowerShell:**
 
 ```powershell
-'{"name":"Mechanical Keyboard","description":"RGB Wireless","price":79.99,"stockQuantity":50,"category":"Electronics"}' | curl.exe -i http://localhost:8080/api/products --json '@-'
+.\mvnw.cmd clean test
 ```
 
-**Windows PowerShell — list products:**
-
-```powershell
-curl.exe http://localhost:8080/api/products
-```
-
-**Expect:** `POST` returns `201 Created` with an assigned ID, and `GET` returns
-the product from the in-memory list. Removing `name` or using a negative `price`
-returns `400 Bad Request`. Data disappears when the application stops.
-
-Try the validation boundary explicitly:
-
-```bash
-curl -X POST http://localhost:8080/api/products \
-  -H "Content-Type: application/json" \
-  -d '{"name":"","description":"Invalid example","price":-1,"stockQuantity":-2,"category":""}'
-```
-
-The request must fail before the controller calls the service. Without `@Valid`
-on the controller parameter, the DTO annotations still exist but Spring MVC
-does not enforce them at that boundary.
-
-## Step 2 — Service, JPA, and H2
-
-**Goal:** Separate HTTP handling from business logic and replace the Java list
-with database persistence.
-
-**Flow:**
-
-```text
-ProductController
-  -> ProductService
-  -> ProductRepository
-  -> Hibernate/JPA
-  -> H2 in-memory database
-```
-
-The same REST contract now uses H2, with additional CRUD operations:
-
-| Method | Endpoint | H2 operation |
-|---|---|---|
-| `GET` | `/api/products` | Select all products |
-| `GET` | `/api/products/{id}` | Select one product by ID |
-| `POST` | `/api/products` | Insert a product |
-| `PUT` | `/api/products/{id}` | Update a product |
-| `DELETE` | `/api/products/{id}` | Delete a product |
-
-**Do:**
-
-```bash
-git switch --detach refs/tags/step-2-service-db
-./mvnw spring-boot:run
-```
-
-Open <http://localhost:8080/h2-console>:
-
-| Field | Value |
-|---|---|
-| JDBC URL | `jdbc:h2:mem:ecommercedb` |
-| User Name | `sa` |
-| Password | Leave blank |
-
-Create a product using the Step 1 `POST`, then run this query in the H2 Console:
-
-```sql
-SELECT * FROM products;
-```
-
-**Expect:** The API response remains the same, but the row is now stored in the
-`products` table. Hibernate creates the table automatically. H2 data is still
-cleared when the application stops.
-
-## Step 3 — Production profile and tests
-
-**Goal:** Keep H2 convenient for local work while adding explicit PostgreSQL
-configuration, persistent data, error handling, and automated tests.
-
-**Flow:**
-
-```text
-SPRING_PROFILES_ACTIVE=production
-  -> application-production.properties
-  -> JDBC connection to database:5432
-  -> PostgreSQL products table
-```
-
-**Do:**
-
-```bash
-git switch --detach refs/tags/step-3-production
-```
-
-Dev Container and Codespaces users can start this stage without creating
-`.env`; Docker Compose uses workshop defaults. To customize PostgreSQL
-credentials, copy `.env.example` to `.env`, set `POSTGRES_PASSWORD`, then
-rebuild the Dev Container.
-
-Docker Compose starts:
-
-| Service | Purpose |
-|---|---|
-| `app` | Java environment and VS Code terminal |
-| `database` | PostgreSQL 16 server |
-
-VS Code enters `app` because `devcontainer.json` specifies `"service": "app"`.
-The PostgreSQL hostname inside the Compose network is `database`. Run the
-production-profile command from the [common commands](#run-the-application).
-Use the H2 command instead when PostgreSQL is not needed.
-
-The production profile disables the H2 Console. Connect to PostgreSQL from
-another Dev Container terminal:
-
-```bash
-psql -h database -U postgres -d ecommerce_db
-```
-
-Run the test command from the [common commands](#run-the-application).
-
-**Expect:** The startup log reports the `production` profile, PostgreSQL JDBC
-driver, and PostgreSQL 16. In `psql`, `\dt` lists the `products` table and data
-survives application restarts. Tests finish with `BUILD SUCCESS` using Mockito
-service tests and MockMvc controller integration tests.
-
-## Step 4 — Outbound enrichment
-
-**Goal:** Compose local product data with a price obtained through an outbound
-HTTP call.
-
-New API in this step:
-
-| Method | Endpoint | Behavior |
-|---|---|---|
-| `GET` | `/api/products/{id}/summary` | Combine the stored product with an external live price |
-
-**Do:**
-
-```bash
-git switch --detach refs/tags/step-4-outbound-enrichment
-```
-
-Keep the `.env` created in Step 3. If you started at this checkpoint, copy
-`.env.example` using the Step 3 instructions and set `POSTGRES_PASSWORD`.
-
-This stage adds `RestTemplate`, proxy-ready client configuration, and a composed
-product summary. To keep the workshop offline, `/external-product.json`
-simulates a third-party product API. In a real integration,
-`external.product-url` would point to another service.
-
-**Flow:**
-
-```text
-curl GET /api/products/{id}/summary
-  -> ProductController
-  -> ProductService loads the requested product from PostgreSQL
-  -> ExternalProductClient
-  -> RestTemplate GET /external-product.json
-  <- external live price
-  -> ProductService combines both responses
-```
-
-**Run and observe:**
-
-Stop any application started before switching tags, then start Step 4 so the JVM
-loads the outbound client code. Use the production-profile command from the
-[common commands](#run-the-application).
-
-In another terminal, first inspect the simulated external response:
-
-```bash
-curl http://localhost:8080/external-product.json
-```
-
-Create a local product with a different price:
-
-```bash
-curl -X POST http://localhost:8080/api/products \
-  -H "Content-Type: application/json" \
-  -d '{"name":"Mechanical Keyboard","description":"RGB Wireless","price":89.99,"stockQuantity":50,"category":"Electronics"}'
-```
-
-Copy the `id` from the POST response. PostgreSQL data persists across restarts,
-so the new product is not always ID `1`. Replace `2` below with the returned ID:
-
-```bash
-curl http://localhost:8080/api/products/2/summary
-```
-
-The response makes the external value explicit:
-
-```json
-{
-  "product": {
-    "price": 89.99
-  },
-  "livePrice": 79.99,
-  "priceDifference": 10.0,
-  "externalSource": "local external-product.json fixture",
-  "externalUrl": "http://localhost:8080/external-product.json"
-}
-```
-
-Open `externalUrl` directly to inspect the payload used as the live price. The
-application log also shows the outbound request:
-
-```text
-Calling external product API: http://localhost:8080/external-product.json
-```
-
-**Expect:** The response contains the stored product, `livePrice` from the
-outbound JSON, the calculated `priceDifference`, and the URL of the external
-payload.
-
-## Step 5 — Product orders
-
-This stage demonstrates a same-database relationship.
-Each order stores a quantity and a required foreign key from
-`orders.product_id` to `products.id`.
-
-**Do:**
-
-```bash
-git switch --detach refs/tags/step-5-order-relationship
-```
-
-Create a product first, then use its returned `id` to create an order:
-
-```bash
-curl -X POST http://localhost:8080/api/orders \
-  -H "Content-Type: application/json" \
-  -d '{"productId":1,"quantity":2}'
-```
-
-The create response contains the generated order ID, product ID, and quantity.
-Use that order ID to request the calculated summary:
-
-```bash
-curl http://localhost:8080/api/orders/1/summary
-```
-
-```json
-{
-  "orderId": 1,
-  "productDescription": "RGB Wireless",
-  "productName": "Mechanical Keyboard",
-  "quantity": 2,
-  "unitPrice": 89.99,
-  "totalPrice": 179.98
-}
-```
-
-The summary DTO returns a useful product description instead of exposing the
-entity relationship ID, illustrating that API DTOs do not need to mirror the
-database model. IDs may differ when PostgreSQL already contains data. An
-unknown product or order returns `404`; a missing or non-positive product ID or
-quantity returns `400`.
-
-## Step 6 — Dependency inversion
-
-**Do:**
-
-```bash
-git switch --detach refs/tags/step-6-dependency-inversion
-```
-
-`OrderService` depends on the `PaymentService` interface rather than a concrete
-payment implementation. Both `UpiService` and `CardService` implement that
-interface; constructor `@Autowired` requests a `PaymentService`, and `@Primary`
-tells Spring to inject `UpiService` for this example.
-
-```text
-OrderController -> OrderService -> PaymentService <- UpiService (@Primary)
-                                               <- CardService
-```
-
-Process an existing order:
-
-```bash
-curl -X POST http://localhost:8080/api/orders/1/process
-```
-
-```json
-{
-  "paymentMethod": "UPI"
-}
-```
-
-Moving `@Primary` from `UpiService` to `CardService` changes the selected
-implementation without changing `OrderService`. An unknown order returns `404`.
-
-## Debug
-
-Press `F5` and select **Debug Spring Boot App**. A breakpoint in
-`ProductController` or `ProductService` is hit by the next API request.
-
-To debug against PostgreSQL, create `.env` from `.env.example`, set
-`POSTGRES_PASSWORD`, then press `F5` and select
-**Debug Spring Boot App (production)**. That VS Code launch profile loads
-`.env` and activates the `production` Spring profile.
-
-## Troubleshooting
-
-<details>
-<summary><b>Windows: accessing specified distro mount service</b></summary>
-
-This failure happens before the Dev Container starts when VS Code tries to
-forward a WSLg Wayland socket:
-
-```text
-accessing specified distro mount service:
-stat /run/guest-services/distro-services/ubuntu.sock: no such file or directory
-```
-
-The workshop does not use Linux GUI applications. In VS Code, open **User
-Settings (JSON)**, add the following setting, and then run **Dev Containers:
-Rebuild and Reopen in Container**:
-
-```json
-"dev.containers.mountWaylandSocket": false
-```
-
-This disables an optional Linux GUI socket that the workshop does not use.
-
-</details>
-
-<details>
-<summary><b>macOS: docker-credential-desktop not found</b></summary>
-
-This failure happens on the host before the Dev Container starts:
-
-```text
-error getting credentials - err: exec: "docker-credential-desktop": executable file not found in $PATH
-```
-
-Open **Docker Desktop → Settings → Advanced** and configure or reinstall the
-Docker CLI tools. Restart VS Code and verify:
-
-```bash
-command -v docker-credential-desktop
-docker pull mcr.microsoft.com/devcontainers/java:1-17-bookworm
-```
-
-If the helper exists but is not on `PATH`, create a symlink on Apple Silicon:
-
-```bash
-ln -s /Applications/Docker.app/Contents/Resources/bin/docker-credential-desktop \
-  /opt/homebrew/bin/docker-credential-desktop
-```
-
-On an Intel Mac, use `/usr/local/bin/docker-credential-desktop` as the
-destination.
-</details>
-
-<details>
-<summary><b>H2 reports /home/vscode/test not found</b></summary>
-
-Replace the console default `jdbc:h2:~/test` with:
-
-```text
-jdbc:h2:mem:ecommercedb
-```
-
-Use user `sa`, leave the password blank, and run with the default profile.
-</details>
-
-<details>
-<summary><b>PostgreSQL authentication fails</b></summary>
-
-The Dev Container uses workshop defaults when `.env` is absent. If you created
-`.env` to customize credentials, confirm that it contains matching values:
-
-```ini
-POSTGRES_DB=ecommerce_db
-POSTGRES_URL=jdbc:postgresql://database:5432/ecommerce_db
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=your_password
-```
-
-Never commit `.env`.
-</details>
-
-<details>
-<summary><b>Port 8080 is already in use</b></summary>
-
-Stop the process using port 8080 or choose another port:
-
-```bash
-./mvnw spring-boot:run -Dspring-boot.run.arguments=--server.port=8081
-```
-
-On Windows PowerShell:
-
-```powershell
-.\mvnw.cmd spring-boot:run "-Dspring-boot.run.arguments=--server.port=8081"
-```
-</details>
+Continue with the [step-by-step workshop guide](WORKSHOP.md).

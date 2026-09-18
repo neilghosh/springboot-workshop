@@ -60,8 +60,8 @@ a stage or introduce concepts early.
 
 ## Procedure
 
-1. Read `AGENTS.md`, the affected sections of `README.md` and
-   `docs/PRESENTATION.md`, and the directly related implementation and tests.
+1. Read `AGENTS.md`, the affected sections of `README.md`, `WORKSHOP.md`, and
+   `docs/PRESENTATION.md`, plus the directly related implementation and tests.
 2. Inspect the working tree. Preserve unrelated user changes and generated
    files. Never include secrets, `.env`, `target/`, or unrelated lock-file
    changes.

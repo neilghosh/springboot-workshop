@@ -19,7 +19,8 @@ reduce line count.
 
 ## Sources of Truth
 
-- `README.md`: participant journey, commands, endpoints, and expected results.
+- `README.md`: clone, prerequisites, environment setup, and basic run commands.
+- `WORKSHOP.md`: participant journey, checkpoints, endpoints, and expected results.
 - `docs/PRESENTATION.md`: instructor narrative and live-coding sequence.
 - `pom.xml`: Java, Spring Boot, and dependency versions.
 - `src/main/resources/application*.properties`: profile behavior.
@@ -53,7 +54,7 @@ earlier stage just because it is cleaner or more production-like.
 
 1. Identify the earliest stage whose behavior or teaching material is affected.
 2. Determine every later stage that inherits the changed concept.
-3. Read the corresponding sections of `README.md` and
+3. Read the corresponding sections of `WORKSHOP.md` and
    `docs/PRESENTATION.md`.
 4. Inspect related code, tests, configuration, environment templates, and
    Dev Container files.
@@ -265,15 +266,16 @@ Update related documentation in the same change when any of these change:
 
 | Changed surface | Also inspect |
 |---|---|
-| endpoint, payload, status, or validation | README, presentation, controller tests |
-| stage boundary or teaching order | README workshop path, presentation agenda/slides, all later checkpoints |
+| endpoint, payload, status, or validation | workshop guide, presentation, controller tests |
+| stage boundary or teaching order | workshop path, presentation agenda/slides, all later checkpoints |
 | dependency or Java/Spring version | README setup, Dev Container, wrapper behavior, presentation references |
-| profile or environment variable | both properties files, `.env.example`, Compose, README, presentation |
-| test count or test command | README expectations and workshop instructions |
-| outbound URL or proxy behavior | client configuration, properties, README, presentation, static example response |
+| profile or environment variable | both properties files, `.env.example`, Compose, README, workshop guide, presentation |
+| test count or test command | workshop expectations and instructions |
+| outbound URL or proxy behavior | client configuration, properties, workshop guide, presentation, static example response |
 
 Do not duplicate large explanations between documents. Keep participant
-instructions in `README.md`; keep agent execution rules here.
+setup in `README.md`, workshop instructions in `WORKSHOP.md`, and agent
+execution rules here.
 
 ## Definition of Done
 
