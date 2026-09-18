@@ -1,6 +1,6 @@
 ---
 name: propagate-workshop-change
-description: 'Propagate a code, configuration, test, or documentation change from a selected Spring Boot workshop stage through every later checkpoint and main. Use when asked to check in a change across tags, update workshop checkpoints, regenerate stage tags, or make a change appear from step 0, 1, 2, 3, or 4 onward.'
+description: 'Propagate a code, configuration, test, or documentation change from a selected Spring Boot workshop stage through every later checkpoint and main. Use when asked to check in a change across tags, update workshop checkpoints, regenerate stage tags, or make a change appear from step 0, 1, 2, 3, 4, or 5 onward.'
 argument-hint: 'Describe the change to propagate'
 user-invocable: true
 disable-model-invocation: false
@@ -30,7 +30,8 @@ Checkpoint order:
 4. `step-3-complete`
 5. `step-3-production`
 6. `step-4-outbound-enrichment`
-7. `main`
+7. `step-5-order-relationship`
+8. `main`
 
 Treat both step 3 tags as distinct published snapshots unless the user
 explicitly asks to retire or rename one.
@@ -46,8 +47,9 @@ Offer these choices:
 - Step 0: update every checkpoint and `main`
 - Step 1: update step 1 and every later checkpoint plus `main`
 - Step 2: update step 2 and every later checkpoint plus `main`
-- Step 3: update both step 3 checkpoints, step 4, and `main`
-- Step 4: update only step 4 and `main`
+- Step 3: update both step 3 checkpoints, steps 4 and 5, and `main`
+- Step 4: update steps 4 and 5 plus `main`
+- Step 5: update only step 5 and `main`
 - Main only: do not update checkpoint tags
 
 If the change itself clearly belongs to a later concept, explain the conflict

@@ -113,6 +113,7 @@ Work through the checkpoints in order. Each stage builds on the previous one:
 | `step-2-service-db` | Service, repository, JPA entity, and persistence | H2 |
 | `step-3-production` | PostgreSQL profile, tests, and global errors | H2 or PostgreSQL |
 | `step-4-outbound-enrichment` | External client and composed response | H2 or PostgreSQL |
+| `step-5-order-relationship` | Order creation, JPA relationship, and summary DTO | H2 or PostgreSQL |
 
 For each stage:
 
@@ -423,6 +424,50 @@ Calling external product API: http://localhost:8080/external-product.json
 **Expect:** The response contains the stored product, `livePrice` from the
 outbound JSON, the calculated `priceDifference`, and the URL of the external
 payload.
+
+## Step 5 — Product orders
+
+This stage demonstrates a same-database relationship.
+Each order stores a quantity and a required foreign key from
+`orders.product_id` to `products.id`.
+
+**Do:**
+
+```bash
+git switch --detach refs/tags/step-5-order-relationship
+```
+
+Create a product first, then use its returned `id` to create an order:
+
+```bash
+curl -X POST http://localhost:8080/api/orders \
+  -H "Content-Type: application/json" \
+  -d '{"productId":1,"quantity":2}'
+```
+
+The create response contains the generated order ID, product ID, and quantity.
+Use that order ID to request the calculated summary:
+
+```bash
+curl http://localhost:8080/api/orders/1/summary
+```
+
+```json
+{
+  "orderId": 1,
+  "productDescription": "RGB Wireless",
+  "productName": "Mechanical Keyboard",
+  "quantity": 2,
+  "unitPrice": 89.99,
+  "totalPrice": 179.98
+}
+```
+
+The summary DTO returns a useful product description instead of exposing the
+entity relationship ID, illustrating that API DTOs do not need to mirror the
+database model. IDs may differ when PostgreSQL already contains data. An unknown product
+or order returns `404`; a missing or non-positive product ID or quantity returns
+`400`.
 
 ## Debug
 

@@ -708,6 +708,30 @@ Profiles change infrastructure without changing business code.
 
 <!-- _class: lead invert -->
 
+# Step 5: Orders
+
+`OrderEntity` uses `@ManyToOne` and `orders.product_id` references
+`products.id` because both records belong to this service and database.
+
+```text
+POST /api/orders { productId, quantity }
+  -> load ProductEntity
+  -> save OrderEntity with product foreign key
+
+GET /api/orders/{id}/summary
+  -> order + product name + description + unit price + calculated total
+```
+
+The entity stores a `ProductEntity` relationship, while the summary DTO exposes
+the useful product description instead of the relationship ID.
+
+Keep only a scalar product ID when Product and Order are owned by separate
+services with separate databases.
+
+---
+
+<!-- _class: lead invert -->
+
 # Continue Learning
 
 <div class="columns">

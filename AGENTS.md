@@ -40,8 +40,9 @@ present in all later stages.
 | `step-0-starter` | Application entrypoint and Web MVC dependency | Product API, persistence, production configuration |
 | `step-1-rest-dto` | Product DTOs, validation, controller, in-memory storage | JPA, repository, database-backed service |
 | `step-2-service-db` | Service layer, entity, repository, JPA, H2, full CRUD | PostgreSQL profile, outbound enrichment |
-| `step-3-production` | Global errors, tests, profiles, PostgreSQL | Outbound enrichment |
-| `step-4-outbound-enrichment` | `RestTemplate`, proxy-ready external client, product summary | Nothing beyond the current workshop |
+| `step-3-production` | Global errors, tests, profiles, PostgreSQL | Outbound enrichment, orders |
+| `step-4-outbound-enrichment` | `RestTemplate`, proxy-ready external client, product summary | Orders and entity relationships |
+| `step-5-order-relationship` | Order creation, `ManyToOne` product relationship, order summary DTO | Nothing beyond the current workshop |
 | `main` | Maintained form of the latest completed stage | Unplanned concepts that bypass the workshop sequence |
 
 Pedagogical boundaries are requirements. Do not move an implementation into an
@@ -63,7 +64,8 @@ Examples:
 - DTO validation or REST contract changes affect `step-1` and every later stage.
 - Entity, repository, service, or H2 changes affect `step-2` and every later stage.
 - error handling, tests, PostgreSQL, or profile changes affect `step-3` onward.
-- external client or product-summary changes affect `step-4` and `main`.
+- external client or product-summary changes affect `step-4`, `step-5`, and `main`.
+- order or product-relationship changes affect `step-5` and `main`.
 - Java, Maven, Dev Container, or command changes may affect every stage.
 - wording changes affect only the documents unless they alter an instruction,
   command, expected response, or teaching sequence.
