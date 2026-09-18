@@ -3,786 +3,787 @@ marp: true
 theme: gaia
 class: invert
 paginate: true
-header: "Spring Boot in 30 Minutes"
-footer: "neilghosh/springboot-workshop"
+header: "Spring Boot Concepts"
+footer: "Spring Boot Concepts"
 size: 16:9
 style: |
   section {
+    --ink: #f2f5f5;
+    --muted: #c4d3d7;
+    --cyan: #6eced4;
+    --green: #90d9b1;
+    --amber: #f6c46b;
+    --red: #ffabab;
     box-sizing: border-box;
     padding: 96px 42px 88px;
     font-size: 24px;
+    line-height: 1.4;
+    letter-spacing: 0;
+    background: #1b272b;
+    color: var(--ink);
   }
-  header {
-    top: 18px;
-    left: 42px;
-    right: 42px;
-    line-height: 1.2;
-    padding-bottom: 6px;
-    border-bottom: 1px solid rgba(127, 127, 127, 0.35);
-  }
-  footer {
-    bottom: 16px;
-    left: 42px;
-    right: 82px;
-    line-height: 1.2;
-    padding-top: 6px;
-    border-top: 1px solid rgba(127, 127, 127, 0.35);
-  }
-  section::after {
-    right: 42px;
-    bottom: 16px;
-  }
+  header { top: 18px; left: 42px; right: 42px; line-height: 1.2; color: var(--muted); padding-bottom: 6px; border-bottom: 1px solid rgba(127, 127, 127, 0.35); }
+  footer { bottom: 16px; left: 42px; right: 82px; line-height: 1.2; color: var(--muted); padding-top: 6px; border-top: 1px solid rgba(127, 127, 127, 0.35); }
+  section::after { right: 42px; bottom: 16px; }
+  h1, h2, h3, h4 { letter-spacing: 0; }
   h1 { font-size: 1.65em; }
-  h2 { font-size: 1.3em; }
+  section.lead h1 { font-size: 2.2em; }
+  h2 { font-size: 1.3em; margin: 0 0 22px; }
   h3 { font-size: 1.05em; }
-  table { font-size: 0.66em; }
-  pre, code { font-size: 0.72em; }
-  pre { max-height: 40vh; }
-  .columns { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-  .columns3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.8rem; }
-  .card {
-    border: 2px solid #38bdf8;
-    border-radius: 14px;
-    padding: 0.6em 0.75em;
-    background: #1f2937;
-  }
-  .card h4 { margin: 0 0 0.25em; color: #7dd3fc; }
-  .good { background:#173126; border-color:#66bb6a; }
-  .warn { background:#3a2818; border-color:#ffa726; }
-  .bad { background:#3a1f26; border-color:#ef5350; }
-  .accent { background:#30203a; border-color:#ba68c8; }
-  .pill {
-    display: inline-block;
-    background: #0288d1;
-    color: #fff;
-    border-radius: 999px;
-    padding: 0.18em 0.7em;
-    font-size: 0.75em;
-  }
-  .flow {
-    text-align: center;
-    font-family: monospace;
-    line-height: 1.5;
-  }
-  .arrow { color:#38bdf8; font-weight: 800; }
-  .source { font-size: 0.55em; color: #94a3b8; }
+  h4 { margin: 0 0 12px; font-size: 1em; color: var(--cyan); }
+  p { margin: 0.65em 0; }
+  a { color: var(--cyan); }
+  table { font-size: 0.82em; }
+  th, td { padding: 8px 12px; }
+  th { background: #30454c; color: var(--ink); }
+  td { background: #223238; color: var(--ink); }
+  code { font-size: 0.86em; }
+  pre { font-size: 19px; line-height: 1.4; padding: 16px 20px; }
+  pre code { font-size: inherit; }
+  .columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; }
+  .panel { border-left: 3px solid var(--cyan); padding-left: 20px; }
+  .panel.good { border-color: var(--green); }
+  .node { border: 2px solid var(--cyan); border-radius: 6px; padding: 16px; min-height: 104px; display: flex; flex-direction: column; justify-content: center; text-align: center; background: #223238; }
+  .node strong { font-size: 1em; }
+  .node small { display: block; margin-top: 8px; font-size: 0.78em; color: var(--muted); }
+  .node.good { border-color: var(--green); }
+  .node.warn { border-color: var(--amber); }
+  .node.bad { border-color: var(--red); }
+  .diagram { display: grid; gap: 8px; align-items: center; margin: 24px 0; }
+  .diagram.three { grid-template-columns: repeat(2, minmax(0, 1fr) 44px) minmax(0, 1fr); }
+  .diagram.four { grid-template-columns: repeat(3, minmax(0, 1fr) 40px) minmax(0, 1fr); }
+  .diagram.five { grid-template-columns: repeat(4, minmax(0, 1fr) 32px) minmax(0, 1fr); }
+  .arrow, .connector { color: var(--cyan); font-weight: 700; }
+  .connector { text-align: center; font-size: 36px; }
+  .return-path { color: var(--green); text-align: center; font-size: 20px; }
+  .minor { font-size: 0.8em; color: var(--muted); }
+  .route { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 20px; list-style: none; padding: 0; margin: 32px 0; }
+  .route li { border-top: 3px solid var(--cyan); padding-top: 12px; font-size: 23px; }
+  .route strong { display: block; font-size: 34px; color: var(--cyan); margin-bottom: 12px; }
+  .merge { display: grid; grid-template-columns: minmax(0, 1fr) 60px minmax(0, 1fr); gap: 20px; align-items: center; margin: 24px 0; }
+  .sources { display: grid; gap: 16px; }
 ---
 
 <!-- _class: lead invert -->
 
-# Spring Boot in 30 Minutes
+# Spring Boot Concepts
 
-## A visual guide to building Java services
+## How the pieces work together
 
-`HTTP` <span class="arrow">→</span> `Controller` <span class="arrow">→</span> `Service` <span class="arrow">→</span> `Repository` <span class="arrow">→</span> `Database`
+**Request** <span class="arrow">→</span> **Java code** <span class="arrow">→</span> **Response**
 
----
-
-## Our Route
-
-<div class="columns3">
-
-<div class="card">
-
-#### 1 · Why
-
-Spring vs Spring Boot<br>
-Build tools
-
-</div>
-
-<div class="card good">
-
-#### 2 · How
-
-IoC · dependency injection<br>
-Annotations · layers
-
-</div>
-
-<div class="card warn">
-
-#### 3 · Runtime
-
-Requests · validation<br>
-transactions · profiles
-
-</div>
-
-</div>
-
-<br>
-
-<div class="pill">Goal: read an unfamiliar Spring Boot service with confidence</div>
+<!--
+Assume basic Java knowledge, but no prior knowledge of Spring or an example app.
+All small code illustrations are independent teaching examples, with imports
+omitted. No application needs to be running to follow this presentation.
+Ask: what happens between a request reaching the server and JSON coming back?
+-->
 
 ---
 
-## Workshop Toolset
+## Five Questions We'll Answer
 
-<div class="columns3">
+<ol class="route">
+  <li><strong>1</strong>What does Boot do for me?</li>
+  <li><strong>2</strong>Who creates and connects objects?</li>
+  <li><strong>3</strong>What happens during an object's life?</li>
+  <li><strong>4</strong>How does a request get answered?</li>
+  <li><strong>5</strong>How do data, settings, and tests fit?</li>
+</ol>
 
-<div class="card">
+Start with what happens. Then give it a name.
 
-#### 🌐 Internet
-
-Clone the repository<br>
-Pull container images
-
-</div>
-
-<div class="card">
-
-#### 🧑‍💻 VS Code
-
-Editor<br>
-Dev Containers extension
-
-</div>
-
-<div class="card">
-
-#### 🐳 Docker Desktop
-
-Runs the application and database containers
-
-</div>
-
-</div>
-
-<br>
-
-<div class="card good flow">
-
-**Image pull provides:** Java 17 + Maven <span class="arrow">│</span> PostgreSQL 16
-
-</div>
-
-> No separate Java or PostgreSQL installation is required.
+<!--
+Do not open with an acronym glossary. Introduce dependency injection, DTO,
+IoC, JPA, and profiles after the audience has seen the problem each addresses.
+-->
 
 ---
 
-## Why Spring Boot?
+## Start with One Request
 
-<div class="columns3">
-
-<div class="card">
-
-#### Java
-
-Type safety<br>
-JVM performance<br>
-Mature ecosystem
-
+<div class="diagram three">
+  <div class="node"><strong>Ask for a greeting</strong><small><code>GET /hello</code></small></div>
+  <div class="connector">→</div>
+  <div class="node good"><strong>A Java method runs</strong><small><code>hello()</code></small></div>
+  <div class="connector">→</div>
+  <div class="node"><strong>Send back a reply</strong><small>Plain text: Hello!</small></div>
 </div>
 
-<div class="card good">
+```java
+@RestController
+class HelloController {
+  @GetMapping("/hello")
+  public String hello() {
+    return "Hello!";
+  }
+}
+```
+
+`@GetMapping` connects a URL to a method. Spring sends its return value back.
+
+<!--
+This standalone illustration supplies the entire endpoint logic; no existing
+API or stored data is assumed. Imports and an application entry point are
+omitted here. Put the controller under the application package when running
+it in a separate demo. A String returns text; a response object can become JSON.
+-->
+
+---
+
+## Spring Connects. Boot Sets Up.
+
+<div class="columns">
+<div class="panel">
 
 #### Spring
 
-Dependency injection<br>
-Web, data, security<br>
-Clear application layers
+Creates and connects the objects you ask it to manage.
+
+Provides support for web requests and transactions.
 
 </div>
-
-<div class="card warn">
-
-#### Boot
-
-Sensible defaults<br>
-Fast startup path<br>
-Production conventions
-
-</div>
-
-</div>
-
-<br>
-
-**AI can generate code. You still verify the design, boundaries, and behavior.**
-
-<p class="source">Node, Python, and Go have different strengths; choose for the workload and team.</p>
-
----
-
-## Spring Framework + Spring Boot
-
-<div class="columns">
-
-<div class="card">
-
-#### Spring Framework
-
-`DI` · `MVC` · `Data` · `Transactions`
-
-The programming model and infrastructure.
-
-</div>
-
-<div class="card good">
+<div class="panel good">
 
 #### Spring Boot
 
-`Starters` · `Defaults` · `Embedded Server` · `Operations`
+Sets up Spring based on your libraries and settings.
 
-The fast path to configuring and running Spring.
-
-</div>
+Starts a built-in server for a web application.
 
 </div>
-
-<br>
-
-<div class="flow">
-
-**Spring concepts** <span class="arrow">+</span> **Boot conventions**
-<span class="arrow">→</span> **Runnable application**
-
 </div>
+
+**Boot reduces setup. Your code still decides what the application does.**
+
+<!--
+Auto-configuration means conditional defaults, not code generation or magic.
+A starter bundles compatible dependencies for a task, such as building a web
+API. Spring Data is a related project, not something to conflate with Boot.
+-->
 
 ---
 
-## Build Tool = Repeatable Pipeline
-
-<div class="card flow">
-
-`source` <span class="arrow">→</span> `compile` <span class="arrow">→</span> `test` <span class="arrow">→</span> `package` <span class="arrow">→</span> `run`
-
-</div>
-
-<br>
-
-<div class="columns3">
-
-<div class="card good">
-
-#### Maven
-
-`pom.xml`<br>
-Convention-driven
-
-</div>
-
-<div class="card">
-
-#### Gradle
-
-`build.gradle(.kts)`<br>
-Programmable
-
-</div>
-
-<div class="card">
-
-#### Ant
-
-`build.xml`<br>
-Older, task-oriented
-
-</div>
-
-</div>
-
-<p class="source">The XML in pom.xml configures Maven, not the Spring application.</p>
-
----
-
-## Five Things Boot Gives You
-
-<div class="columns3">
-
-<div class="card">
-
-#### 📦 Starters
-
-Compatible dependency bundles
-
-</div>
-
-<div class="card">
-
-#### ⚙️ Auto-configuration
-
-Defaults based on libraries and settings
-
-</div>
-
-<div class="card">
-
-#### 🌐 Embedded server
-
-Run directly as an application
-
-</div>
-
-<div class="card">
-
-#### 🔧 External config
-
-Properties and environment variables
-
-</div>
-
-<div class="card">
-
-#### 🎛️ Profiles
-
-Different environments, same build
-
-</div>
-
-</div>
-
----
-
-## Who Should Create the Dependency?
-
-<div class="columns">
-
-<div class="card">
-
-#### Option A
+## From main() to a Running Server
 
 ```java
-class OrderService {
-  private final Repo repo =
-      new PostgresRepo();
+@SpringBootApplication
+public class Application {
+    public static void main(String[] args) {
+    SpringApplication.run(Application.class, args);
+    }
 }
 ```
 
+<div class="diagram three">
+  <div class="node"><strong>Read the setup</strong><small>Libraries + settings</small></div>
+  <div class="connector">→</div>
+  <div class="node good"><strong>Prepare the app</strong><small>Create and connect objects</small></div>
+  <div class="connector">→</div>
+  <div class="node"><strong>Accept requests</strong><small>Built-in Tomcat server</small></div>
 </div>
 
-<div class="card">
+No separate Tomcat installation. No manual server deployment.
 
-#### Option B
+<!--
+This is a mental model, not an exact list of internal startup callbacks.
+@SpringBootApplication combines configuration, auto-configuration, and scanning
+the application package and its subpackages. Object lifecycle comes next.
+Boot does not invent endpoints: a controller still has to declare them.
+-->
+
+---
+
+## Maven Builds. Boot Runs.
+
+<div class="diagram four">
+  <div class="node"><strong>Java source</strong></div>
+  <div class="connector">→</div>
+  <div class="node"><strong>Compile</strong></div>
+  <div class="connector">→</div>
+  <div class="node good"><strong>Test</strong></div>
+  <div class="connector">→</div>
+  <div class="node"><strong>Package</strong><small>Runnable JAR</small></div>
+</div>
+
+| I want to... | Command |
+|---|---|
+| Run the app | `./mvnw spring-boot:run` |
+| Run the tests | `./mvnw clean test` |
+| Build the JAR | `./mvnw package` |
+
+`pom.xml` lists libraries and build settings. It is not Spring application XML.
+
+<p class="minor">Windows PowerShell: replace <code>./mvnw</code> with <code>.\mvnw.cmd</code>.</p>
+
+<!--
+The Maven Wrapper selects Maven; a separate Maven install is unnecessary.
+The Boot Maven plugin packages the executable JAR. Skip comparisons with Ant
+and Gradle: the distinction that matters here is building versus running.
+-->
+
+---
+
+## IoC: Who Is in Control?
+
+<div class="columns">
+<div>
+
+#### You run the setup
+
+<div class="node"><strong>Your startup code</strong><small>Creates every object with <code>new</code><br>Connects the objects itself</small></div>
+<div class="connector">↓</div>
+<div class="node"><strong>Objects ready to use</strong><small>You also arrange their cleanup</small></div>
+
+</div>
+<div>
+
+#### Spring runs the setup
+
+<div class="node good"><strong>Spring's container</strong><small>Reads your class declarations<br>Creates and connects the objects</small></div>
+<div class="connector">↓</div>
+<div class="node good"><strong>Objects ready to use</strong><small>Spring manages their lifecycle</small></div>
+
+</div>
+</div>
+
+**Inversion of Control (IoC):** hand control of object setup to the framework.
+
+<!--
+The inversion is who drives setup, not reversing the direction of a data flow.
+Your classes declare what they need; Spring coordinates their creation and use.
+IoC is a broader framework idea. Here we focus on object creation, connection,
+and lifecycle. Business decisions still belong in your code.
+-->
+
+---
+
+## What Is a Bean?
+
+A **bean** is an ordinary Java object managed by Spring.
+
+<div class="columns">
+<div class="panel good">
+
+#### Inside Spring's container
+
+<div class="node good"><strong>A registered object</strong><small>Spring knows how to create it,<br>connect it, and manage its lifecycle.</small></div>
+
+It can be supplied to another bean.
+
+</div>
+<div class="panel">
+
+#### Outside the container
+
+<div class="node warn"><strong>An object you create yourself</strong><small><code>new Helper()</code><br>No automatic Spring management</small></div>
+
+It is not automatically a bean.
+
+</div>
+</div>
+
+**ApplicationContext** is the name of Spring's container, not a Docker container.
+
+<!--
+The container lives inside the Java application and tracks bean definitions
+and instances. A class is a blueprint; a bean is a managed object, not a file.
+A factory method can use new and return that object for Spring to manage.
+Do not say that any use of new prevents an object from becoming a bean.
+-->
+
+---
+
+## Two Ways to Register a Bean
+
+<div class="columns">
+<div class="panel">
+
+#### Mark a class you own
 
 ```java
-@Service
-class OrderService {
-  private final Repo repo;
+@Component
+class GreetingService {
+}
+```
 
-  OrderService(Repo repo) {
-    this.repo = repo;
+Spring finds the class while scanning your application package.
+
+</div>
+<div class="panel good">
+
+#### Describe how to create an object
+
+```java
+@Configuration
+class TimeConfig {
+  @Bean
+  Clock appClock() {
+    return Clock.systemUTC();
+  }
+}
+```
+
+Useful for a library class you cannot annotate.
+
+</div>
+</div>
+
+`@Component` marks a class. `@Bean` marks a factory method. Both register beans.
+
+<!--
+Clock is java.time.Clock from the Java standard library. These independent
+snippets omit package and import statements. @Service and @RestController
+are specialized component annotations. Keep configuration in the packages
+scanned by @SpringBootApplication, or register it explicitly.
+The next slide expands GreetingService to request the Clock bean.
+-->
+
+---
+
+## Dependency Injection: Pass In the Helper
+
+<div class="columns">
+<div>
+
+```java
+@Component
+class GreetingService {
+  private final Clock clock;
+
+  GreetingService(Clock clock) {
+    this.clock = clock;
   }
 }
 ```
 
 </div>
-
+<div>
+  <div class="node good"><strong>Spring finds the Clock bean</strong><small>Created by <code>appClock()</code></small></div>
+  <div class="connector">↓</div>
+  <div class="node"><strong>Passes it into the constructor</strong><small><code>GreetingService(clock)</code></small></div>
+</div>
 </div>
 
-<div class="pill">Which option is easier to test and change—and why?</div>
+**Dependency injection (DI)** = receiving the helper objects you need.
+
+IoC says **who runs the setup**. DI says **how the helpers arrive**.
+
+<!--
+A dependency is another object the class needs. The receiving class does not
+choose how to create the Clock. With one constructor, @Autowired is optional.
+This example assumes a single Clock bean; selection between several candidates
+can be a follow-up question. A test can pass a fixed Clock without Spring.
+-->
 
 ---
 
-## Answer: Invert Control
+## Bean Lifecycle: From Creation to Cleanup
 
-<div class="flow">
+**Lifecycle** = what happens to an object from creation until cleanup.
 
-`@Repository Repo` <span class="arrow">→</span> `OrderService(Repo)` <span class="arrow">→</span> `@RestController`
-
+<div class="diagram four">
+  <div class="node"><strong>Create + connect</strong><small>Constructor runs<br>Helpers are supplied</small></div>
+  <div class="connector">→</div>
+  <div class="node"><strong>Initialize</strong><small><code>@PostConstruct</code><br>Prepare for use</small></div>
+  <div class="connector">→</div>
+  <div class="node good"><strong>Use</strong><small>Ready to do work<br>Methods may run many times</small></div>
+  <div class="connector">→</div>
+  <div class="node warn"><strong>Clean up</strong><small><code>@PreDestroy</code><br>Release resources</small></div>
 </div>
 
 <div class="columns">
+<div class="panel">
 
-<div class="card good">
+#### At startup, by default
 
-#### Spring's job
-
-1. Discover components
-2. Create objects
-3. Connect dependencies
-4. Manage lifecycle
+Spring creates and initializes the bean.
 
 </div>
+<div class="panel good">
 
-<div class="card">
+#### When the container closes normally
 
-#### Your class's job
-
-* Declare required dependencies
-* Focus on business behavior
-* Accept a fake dependency in tests
+Spring calls its cleanup method.
 
 </div>
-
 </div>
 
-**Constructor injection makes required dependencies explicit and immutable.**
+Constructor injection happens during creation, **before** `@PostConstruct`.
+
+<!--
+This is the simplified lifecycle of a normal singleton bean, not a JPA entity.
+With field or setter injection, dependencies are populated after construction;
+initialization callbacks still run after injection. Omit post-processor and
+proxy internals from this first explanation. Lazy beans start at first use.
+Cleanup is not guaranteed on a forced process kill; Spring does not automatically
+run destruction callbacks for prototype-scoped objects.
+-->
 
 ---
 
-## Three Annotations, Three Responsibilities
+## Lifecycle Hooks Run at Specific Moments
 
-<div class="columns3">
+<div class="columns">
+<div>
 
-<div class="card">
+```java
+@Component
+class AppResources {
+  @PostConstruct
+  void prepare() {
+    System.out.println("Bean initialized");
+  }
 
-#### `@RestController`
-
-HTTP input/output<br>
-Validation<br>
-Status codes
-
-</div>
-
-<div class="card good">
-
-#### `@Service`
-
-Business rules<br>
-Transactions<br>
-DTO mapping
+  @PreDestroy
+  void cleanup() {
+    System.out.println("Bean cleaned up");
+  }
+}
+```
 
 </div>
-
-<div class="card bad">
-
-#### `@Repository`
-
-Persistence<br>
-Queries<br>
-Database abstraction
-
+<div class="sources">
+  <div class="node"><strong>After dependencies are supplied</strong><small><code>prepare()</code> runs once for this instance</small></div>
+  <div class="node good"><strong>While the application runs</strong><small>Normal methods handle the work<br>Initialization does not repeat for each request</small></div>
+  <div class="node warn"><strong>During normal shutdown</strong><small><code>cleanup()</code> runs once for this instance</small></div>
+</div>
 </div>
 
-</div>
-
-<br>
-
-<div class="flow">
-
-**Controller** <span class="arrow">→</span> **Service** <span class="arrow">→</span> **Repository**
-
-</div>
-
-> Keep API DTOs separate from database entities.
+<!--
+Use jakarta.annotation.PostConstruct and jakarta.annotation.PreDestroy.
+The printed messages make callback timing visible without extra infrastructure.
+In real code these hooks can prepare a resource and close it later. Do not
+claim that this illustrative class handles HTTP requests or opens a connection.
+If initialization fails, the bean is not ready for normal use.
+-->
 
 ---
 
-## One Request, End to End
+## One Shared Bean, Many Requests
 
-<div class="card flow">
-
-`JSON` <span class="arrow">→</span> **Route** <span class="arrow">→</span> **Validate** <span class="arrow">→</span> **Business logic** <span class="arrow">→</span> **JPA** <span class="arrow">→</span> **Database**
-
+<div class="merge">
+  <div class="sources">
+    <div class="node"><strong>Request A</strong><small>A method call</small></div>
+    <div class="node"><strong>Request B</strong><small>Another method call</small></div>
+  </div>
+  <div class="connector">→</div>
+  <div class="node good"><strong>The same service bean</strong><small>Created and initialized once<br>Reused for both requests</small></div>
 </div>
 
-<br>
+The default scope is **singleton**: one instance per bean definition, per container.
 
-| Stage | Spring concept |
+**Keep request-specific data out of shared fields.** Calls can arrive together.
+
+<!--
+Singleton here does not mean one object across all servers or across every
+ApplicationContext. There is no new service instance or @PostConstruct call
+for every HTTP request. Discuss request or prototype scope only if asked;
+their creation and cleanup rules differ from this default.
+-->
+
+---
+
+## When a Request Needs Stored Data
+
+<div class="diagram four">
+  <div class="node"><strong>Handle HTTP</strong><small>Controller<br><code>@RestController</code></small></div>
+  <div class="connector">→</div>
+  <div class="node good"><strong>Apply the rules</strong><small>Service<br><code>@Service</code></small></div>
+  <div class="connector">→</div>
+  <div class="node"><strong>Read or save</strong><small>Repository<br><code>JpaRepository</code></small></div>
+  <div class="connector">→</div>
+  <div class="node warn"><strong>Store rows</strong><small>Database<br>Persistent storage</small></div>
+</div>
+
+<p class="return-path">← The result comes back; Spring turns the response object into JSON.</p>
+
+Spring calls methods on ready beans. A request does not recreate those beans.
+
+**Each part has one job.** A simple greeting endpoint needs fewer parts.
+
+<!--
+Point along the arrows, then trace the result back. @GetMapping and @PostMapping
+connect HTTP methods and paths to controller methods. The framework handles
+routing and JSON conversion. Name DispatcherServlet only if someone asks.
+Contrast this request flow with the bean lifecycle: method calls can happen
+many times between initialization and cleanup. Do not add layers without need.
+-->
+
+---
+
+## Check Input Before Doing Work
+
+<div class="columns">
+<div>
+
+#### Declare the rules on the input class
+
+```java
+@NotBlank
+private String name;
+
+@Email
+private String email;
+```
+
+`@Valid` on the controller input activates these rules.
+
+</div>
+<div class="sources">
+  <div class="node bad"><strong>Blank name or malformed email</strong><small>400 Bad Request<br>The controller method does not run.</small></div>
+  <div class="node good"><strong>Valid input</strong><small>Continue with the requested operation</small></div>
+</div>
+</div>
+
+<!--
+This is an illustrative input-class field excerpt; accessors are omitted.
+The validation dependency must be present. @Valid beside @RequestBody activates
+these field rules. @Email checks a supplied value; add @NotBlank when the email
+must be present. A DTO describes data sent into or out of the API.
+Ask what happens if @Valid is removed, then return to the two outcomes.
+-->
+
+---
+
+## API Data and Database Data Have Different Jobs
+
+<div class="diagram three">
+  <div class="node"><strong>What the client sends</strong><small>A request DTO<br>For example: name and email</small></div>
+  <div class="connector">→</div>
+  <div class="node good"><strong>Copy the allowed fields</strong><small>Your service code</small></div>
+  <div class="connector">→</div>
+  <div class="node"><strong>What the database stores</strong><small>An entity<br>ID and saved fields</small></div>
+</div>
+
+<div class="columns">
+<div class="panel">
+
+#### DTO: the API's data shape
+
+Choose what callers may send and what they get back.
+
+</div>
+<div class="panel good">
+
+#### Entity: a Java object mapped to a table
+
+`@Entity` marks the class. `@Id` marks its key.
+
+</div>
+</div>
+
+Choose response fields deliberately. Keep internal database details private.
+
+<!--
+DTO expands to Data Transfer Object; the practical meaning matters more.
+Request and response DTOs can have different fields. A service maps those
+fields explicitly. A JPA entity is not a Spring-managed service bean; its
+persistence lifecycle is different from the bean lifecycle explained earlier.
+-->
+
+---
+
+## Let the Repository Handle Saving
+
+<div class="diagram four">
+  <div class="node good"><strong>Service</strong><small><code>save(entity)</code></small></div>
+  <div class="connector">→</div>
+  <div class="node"><strong>Repository</strong><small>Spring Data supplies it</small></div>
+  <div class="connector">→</div>
+  <div class="node"><strong>Hibernate</strong><small>Turns mapped objects into SQL</small></div>
+  <div class="connector">→</div>
+  <div class="node warn"><strong>Database</strong><small>Stores the row</small></div>
+</div>
+
+<div class="columns">
+<div class="panel">
+
+#### JPA: the mapping contract
+
+Defines how Java objects map to database tables.
+
+</div>
+<div class="panel good">
+
+#### Hibernate: an implementation
+
+Uses those mappings to perform database work.
+
+</div>
+</div>
+
+Spring Data JPA supplies methods such as `save`, `findById`, and `findAll`.
+
+<!--
+Spring Data JPA creates an implementation for a repository interface extending
+JpaRepository. Hibernate performs the database work; JPA is not a database.
+Avoid promising that every query needs no SQL knowledge, or that save always
+performs an INSERT immediately. A flush or commit may happen later.
+-->
+
+---
+
+## A Transaction: Save Together, or Undo Together
+
+`@Transactional` groups the database work in a service operation.
+
+<div class="diagram four">
+  <div class="node"><strong>Begin</strong></div>
+  <div class="connector">→</div>
+  <div class="node"><strong>Account A</strong><small>Subtract 100</small></div>
+  <div class="connector">→</div>
+  <div class="node"><strong>Account B</strong><small>Add 100</small></div>
+  <div class="connector">→</div>
+  <div class="node good"><strong>Commit</strong><small>Keep the changes</small></div>
+</div>
+
+<div class="diagram three">
+  <div class="node bad"><strong>A runtime exception escapes</strong><small>Before the operation completes</small></div>
+  <div class="connector">→</div>
+  <div class="node bad"><strong>Roll back</strong><small>Undo this transaction's database changes</small></div>
+  <div class="connector">→</div>
+  <div class="node"><strong>No partial update</strong></div>
+</div>
+
+A transfer between two database accounts must not stop halfway.
+
+<!--
+Default rollback applies to unchecked exceptions and errors that escape the
+transactional operation, not every checked or caught exception. Explain this
+qualification if asked. This does not undo HTTP calls or external payments.
+Skip persistence-context and proxy internals in the main talk.
+-->
+
+---
+
+## Turn Failures into Useful Responses
+
+| What happened? | What the caller receives |
 |---|---|
-| Route | `DispatcherServlet` + `@PostMapping` |
-| Validate | `@RequestBody` + `@Valid` |
-| Business | `@Service` + `@Transactional` |
-| Persist | `JpaRepository` + Hibernate |
-| Respond | DTO serialized as JSON |
+| A required field is blank | `400 Bad Request` with field messages |
+| The requested record does not exist | `404 Not Found` with an explanation |
+| An unexpected server failure occurs | `500 Internal Server Error` |
+
+<div class="diagram three">
+  <div class="node bad"><strong>Something fails</strong><small>Invalid input or missing data</small></div>
+  <div class="connector">→</div>
+  <div class="node"><strong>Shared error handler</strong><small><code>@RestControllerAdvice</code></small></div>
+  <div class="connector">→</div>
+  <div class="node good"><strong>Useful HTTP response</strong><small>Status + explanation</small></div>
+</div>
+
+Keep error formatting in one place instead of repeating it in every controller.
+
+<!--
+This is a design sketch for an API, not a demonstration of an existing error
+handler. Map a specific missing-record exception to 404, not every runtime
+exception. Keep internal details out of server-error responses. The status
+and useful explanation matter more here than memorizing annotation names.
+-->
 
 ---
 
-## Validation Happens at the Boundary
+## Same Code, Different Settings
+
+A **profile** is a named group of settings. Your Java code stays the same.
+
+<div class="diagram three">
+  <div class="node"><strong>Default settings</strong><small><code>application.properties</code><br>Example port: 8080</small></div>
+  <div class="connector">→</div>
+  <div class="node warn"><strong>Active profile overrides</strong><small><code>application-local.properties</code><br>Example port: 9090</small></div>
+  <div class="connector">→</div>
+  <div class="node good"><strong>Effective setting</strong><small>The app uses port 9090</small></div>
+</div>
+
+Select this example profile with `SPRING_PROFILES_ACTIVE=local`.
+
+Environment variables can override file settings. Keep secrets out of source code.
+
+<!--
+These are illustrative files, not prerequisites or changes to any existing
+application. The property in each file is server.port. When local is active,
+its value overrides the default. With no active profile in this illustration,
+the port remains 8080. Other sources, including environment variables and
+command-line arguments, can override configuration files.
+-->
+
+---
+
+## Test the Rules. Then Test the Request.
 
 <div class="columns">
+<div class="panel">
 
-<div class="card bad">
+#### Does the service behave correctly?
 
-#### Constraint metadata only
+Give it fake helpers. Check the returned data and decisions.
 
-```java
-create(@RequestBody
-       CreateRequest request)
-```
-
-Method still receives invalid data.
+<div class="node"><strong>Class under test + controlled helper</strong><small>A fixed <code>Clock</code> makes time predictable.</small></div>
 
 </div>
+<div class="panel good">
 
-<div class="card good">
+#### Does the HTTP endpoint behave correctly?
 
-#### Validation enforced
+Send a request through Spring. Check validation, status, and JSON.
 
-```java
-create(@Valid @RequestBody
-       CreateRequest request)
-```
-
-Invalid input returns `400` before the service runs.
+<div class="node good"><strong>Request → controller → response</strong><small><code>MockMvc</code> exercises the HTTP layer.</small></div>
 
 </div>
-
 </div>
 
-<br>
+`./mvnw clean test` · Windows: `.\mvnw.cmd clean test`
 
-`curl ... -d '{"name":""}'` <span class="arrow">→</span> `400 Bad Request`
+<!--
+Connect fake helpers back to constructor injection. A service unit test does
+not need to start Spring. The illustrated GreetingService can receive a fixed
+Clock in a test; Mockito can supply other kinds of fake helpers. MockMvc does
+not need a separately running server. Green tests cover the scenarios tested,
+not every possible failure. Choose a test database only when testing data access.
+-->
 
 ---
 
-## Transaction = One Business Operation
+## One Picture to Remember
 
-<div class="card flow">
-
-**begin** <span class="arrow">→</span> `load` <span class="arrow">→</span> `change` <span class="arrow">→</span> `save` <span class="arrow">→</span> **commit**
-
-<br>
-
-`runtime exception` <span class="arrow">→</span> **rollback**
-
+<div class="diagram four">
+  <div class="node"><strong>Create + connect</strong><small>Spring supplies the helpers</small></div>
+  <div class="connector">→</div>
+  <div class="node"><strong>Initialize</strong><small>Prepare the bean</small></div>
+  <div class="connector">→</div>
+  <div class="node good"><strong>Use</strong><small>Handle many calls</small></div>
+  <div class="connector">→</div>
+  <div class="node warn"><strong>Clean up</strong><small>Container closes</small></div>
 </div>
 
-```java
-@Transactional
-public Order updateOrder(...) {
-  // all repository work joins one transaction
-}
-```
+**IoC:** Spring runs the setup. **DI:** it passes in the required helpers.
 
-Spring opens a JPA persistence context for the method and obtains a database
-connection as needed. This is not a user login session.
+**Beans** are managed objects. **Lifecycle** is their creation, use, and cleanup.
 
----
+**Requests** call methods on ready beans; they do not restart that lifecycle.
 
-## Same Code, Different Database
+**Boot** configures Spring using your libraries and settings.
 
-<div class="columns">
-
-<div class="card">
-
-#### Default profile
-
-`H2`
-
-Fast local development<br>
-Zero setup
-
-</div>
-
-<div class="card good">
-
-#### Production profile
-
-`PostgreSQL`
-
-`POSTGRES_URL`<br>
-`POSTGRES_USER`<br>
-`POSTGRES_PASSWORD`
-
-</div>
-
-</div>
-
-<div class="flow">
-
-**profile configuration** <span class="arrow">→</span> **Repository** <span class="arrow">→</span> **unchanged Service**
-
-</div>
-
----
-
-## Two Lifecycles
-
-<div class="columns">
-
-<div class="card">
-
-#### Spring bean
-
-`construct + inject`
-
-<span class="arrow">↓</span>
-
-`@PostConstruct`
-
-<span class="arrow">↓</span>
-
-`ready`
-
-<span class="arrow">↓</span>
-
-`@PreDestroy`
-
-</div>
-
-<div class="card accent">
-
-#### JPA entity
-
-```java
-@PrePersist
-void setCreatedAt() {
-  createdAt = Instant.now();
-}
-```
-
-Runs immediately before an `INSERT`.
-
-</div>
-
-</div>
-
----
-
-## You Write Less Infrastructure
-
-<div class="columns">
-
-<div class="card">
-
-#### You write
-
-DTOs<br>
-Business rules<br>
-Entities and repositories<br>
-Configuration<br>
-Tests
-
-</div>
-
-<div class="card accent">
-
-#### Boot provides
-
-Server and routing<br>
-JSON conversion<br>
-Validation integration<br>
-Database plumbing<br>
-Transaction management
-
-</div>
-
-</div>
-
-<br>
-
-**Less setup does not mean less responsibility.**
-
----
-
-## Keep These Five Ideas
-
-<div class="columns3">
-
-<div class="card">
-
-#### 1
-
-Boot configures Spring; it does not replace Spring.
-
-</div>
-
-<div class="card">
-
-#### 2
-
-Constructors make dependencies visible.
-
-</div>
-
-<div class="card">
-
-#### 3
-
-Controllers, services, and repositories have distinct jobs.
-
-</div>
-
-<div class="card">
-
-#### 4
-
-Validation and transactions define boundaries.
-
-</div>
-
-<div class="card">
-
-#### 5
-
-Profiles change infrastructure without changing business code.
-
-</div>
-
-</div>
+<!--
+Ask the audience to explain the arrows in their own words. Who creates an
+object? How does its Clock arrive? Does a second request run @PostConstruct
+again? When can @PreDestroy run? Use the answers to find what needs another
+picture. This recap depicts the default singleton lifecycle.
+-->
 
 ---
 
 <!-- _class: lead invert -->
 
-# Step 5: Orders
+# Questions?
 
-`OrderEntity` uses `@ManyToOne` and `orders.product_id` references
-`products.id` because both records belong to this service and database.
+[Spring Boot documentation](https://docs.spring.io/spring-boot/)
 
-```text
-POST /api/orders { productId, quantity }
-  -> load ProductEntity
-  -> save OrderEntity with product foreign key
+[Spring's container and beans](https://docs.spring.io/spring-framework/reference/core/beans.html)
 
-GET /api/orders/{id}/summary
-  -> order + product name + description + unit price + calculated total
-```
+[Bean lifecycle callbacks](https://docs.spring.io/spring-framework/reference/core/beans/factory-nature.html)
 
-The entity stores a `ProductEntity` relationship, while the summary DTO exposes
-the useful product description instead of the relationship ID.
-
-Keep only a scalar product ID when Product and Order are owned by separate
-services with separate databases.
-
----
-
-<!-- _class: lead invert -->
-
-# Step 6: Dependency Inversion
-
-```text
-OrderController -> OrderService -> PaymentService
-             ^       ^
-             |       |
-           UpiService  CardService
-            @Primary
-```
-
-`OrderService` knows only the interface. Its constructor uses `@Autowired`;
-Spring sees both implementations and injects `UpiService` because it is marked
-`@Primary`.
-
-Move `@Primary` to `CardService` to change payment behavior without changing
-the order code.
-
----
-
-<!-- _class: lead invert -->
-
-# Continue Learning
-
-<div class="columns">
-
-<div class="card">
-
-#### Advanced topics
-
-* [Testing](https://docs.spring.io/spring-boot/reference/testing/)
-* [Security](https://docs.spring.io/spring-security/reference/)
-* [Transactions](https://docs.spring.io/spring-framework/reference/data-access/transaction.html)
-* [Spring Data JPA](https://docs.spring.io/spring-data/jpa/reference/)
-* [Observability and Actuator](https://docs.spring.io/spring-boot/reference/actuator/)
-
-</div>
-
-<div class="card good">
-
-#### Hands-on workshop
-
-REST · validation · H2 · PostgreSQL · profiles · outbound HTTP
-
-**github.com/neilghosh/springboot-workshop**
-
-[Open the workshop repository](https://github.com/neilghosh/springboot-workshop)
-
-</div>
-
-</div>
-
-<br>
-
-## Questions?
+<!--
+Revisit the picture that answers the question before introducing more terms.
+-->
