@@ -114,6 +114,7 @@ Work through the checkpoints in order. Each stage builds on the previous one:
 | `step-3-production` | PostgreSQL profile, tests, and global errors | H2 or PostgreSQL |
 | `step-4-outbound-enrichment` | External client and composed response | H2 or PostgreSQL |
 | `step-5-order-relationship` | Order creation, JPA relationship, and summary DTO | H2 or PostgreSQL |
+| `step-6-dependency-inversion` | Payment interface, `@Primary`, and order processing | H2 or PostgreSQL |
 
 For each stage:
 
@@ -465,9 +466,42 @@ curl http://localhost:8080/api/orders/1/summary
 
 The summary DTO returns a useful product description instead of exposing the
 entity relationship ID, illustrating that API DTOs do not need to mirror the
-database model. IDs may differ when PostgreSQL already contains data. An unknown product
-or order returns `404`; a missing or non-positive product ID or quantity returns
-`400`.
+database model. IDs may differ when PostgreSQL already contains data. An
+unknown product or order returns `404`; a missing or non-positive product ID or
+quantity returns `400`.
+
+## Step 6 — Dependency inversion
+
+**Do:**
+
+```bash
+git switch --detach refs/tags/step-6-dependency-inversion
+```
+
+`OrderService` depends on the `PaymentService` interface rather than a concrete
+payment implementation. Both `UpiService` and `CardService` implement that
+interface; constructor `@Autowired` requests a `PaymentService`, and `@Primary`
+tells Spring to inject `UpiService` for this example.
+
+```text
+OrderController -> OrderService -> PaymentService <- UpiService (@Primary)
+                                               <- CardService
+```
+
+Process an existing order:
+
+```bash
+curl -X POST http://localhost:8080/api/orders/1/process
+```
+
+```json
+{
+  "paymentMethod": "UPI"
+}
+```
+
+Moving `@Primary` from `UpiService` to `CardService` changes the selected
+implementation without changing `OrderService`. An unknown order returns `404`.
 
 ## Debug
 

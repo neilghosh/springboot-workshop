@@ -3,6 +3,7 @@ package com.example.ecommerce.controller;
 import com.example.ecommerce.dto.OrderRequestDTO;
 import com.example.ecommerce.dto.OrderResponseDTO;
 import com.example.ecommerce.dto.OrderSummaryDTO;
+import com.example.ecommerce.dto.ProcessOrderResponseDTO;
 import com.example.ecommerce.service.OrderService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -33,5 +34,10 @@ public class OrderController {
     @GetMapping("/{id}/summary")
     public ResponseEntity<OrderSummaryDTO> getOrderSummary(@PathVariable Long id) {
         return ResponseEntity.ok(orderService.getOrderSummary(id));
+    }
+
+    @PostMapping("/{id}/process")
+    public ResponseEntity<ProcessOrderResponseDTO> processOrder(@PathVariable Long id) {
+        return ResponseEntity.ok(orderService.processOrder(id));
     }
 }

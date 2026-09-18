@@ -3,10 +3,13 @@ package com.example.ecommerce.service;
 import com.example.ecommerce.dto.OrderRequestDTO;
 import com.example.ecommerce.dto.OrderResponseDTO;
 import com.example.ecommerce.dto.OrderSummaryDTO;
+import com.example.ecommerce.dto.ProcessOrderResponseDTO;
 import com.example.ecommerce.model.OrderEntity;
 import com.example.ecommerce.model.ProductEntity;
+import com.example.ecommerce.payment.PaymentService;
 import com.example.ecommerce.repository.OrderRepository;
 import com.example.ecommerce.repository.ProductRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,10 +21,13 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
+    private final PaymentService paymentService;
 
-    public OrderService(OrderRepository orderRepository, ProductRepository productRepository) {
+    @Autowired
+    public OrderService(OrderRepository orderRepository, ProductRepository productRepository, PaymentService paymentService) {
         this.orderRepository = orderRepository;
         this.productRepository = productRepository;
+        this.paymentService = paymentService;
     }
 
     @Transactional
@@ -48,11 +54,20 @@ public class OrderService {
 
         return new OrderSummaryDTO(
                 order.getId(),
-            product.getDescription(),
+                product.getDescription(),
                 product.getName(),
                 order.getQuantity(),
                 product.getPrice(),
                 totalPrice);
+    }
+
+    @Transactional(readOnly = true)
+    public ProcessOrderResponseDTO processOrder(Long id) {
+        if (!orderRepository.existsById(id)) {
+            throw new RuntimeException("Order not found with id: " + id);
+        }
+
+        return new ProcessOrderResponseDTO(paymentService.processPayment());
     }
 
     private OrderResponseDTO mapToResponseDTO(OrderEntity order) {

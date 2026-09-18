@@ -732,6 +732,27 @@ services with separate databases.
 
 <!-- _class: lead invert -->
 
+# Step 6: Dependency Inversion
+
+```text
+OrderController -> OrderService -> PaymentService
+             ^       ^
+             |       |
+           UpiService  CardService
+            @Primary
+```
+
+`OrderService` knows only the interface. Its constructor uses `@Autowired`;
+Spring sees both implementations and injects `UpiService` because it is marked
+`@Primary`.
+
+Move `@Primary` to `CardService` to change payment behavior without changing
+the order code.
+
+---
+
+<!-- _class: lead invert -->
+
 # Continue Learning
 
 <div class="columns">

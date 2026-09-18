@@ -42,7 +42,8 @@ present in all later stages.
 | `step-2-service-db` | Service layer, entity, repository, JPA, H2, full CRUD | PostgreSQL profile, outbound enrichment |
 | `step-3-production` | Global errors, tests, profiles, PostgreSQL | Outbound enrichment, orders |
 | `step-4-outbound-enrichment` | `RestTemplate`, proxy-ready external client, product summary | Orders and entity relationships |
-| `step-5-order-relationship` | Order creation, `ManyToOne` product relationship, order summary DTO | Nothing beyond the current workshop |
+| `step-5-order-relationship` | Order creation, `ManyToOne` product relationship, order summary DTO | Payment processing and dependency inversion |
+| `step-6-dependency-inversion` | Payment interface, fixed `@Primary` implementation, order processing | Nothing beyond the current workshop |
 | `main` | Maintained form of the latest completed stage | Unplanned concepts that bypass the workshop sequence |
 
 Pedagogical boundaries are requirements. Do not move an implementation into an
@@ -66,6 +67,7 @@ Examples:
 - error handling, tests, PostgreSQL, or profile changes affect `step-3` onward.
 - external client or product-summary changes affect `step-4`, `step-5`, and `main`.
 - order or product-relationship changes affect `step-5` and `main`.
+- payment or dependency-inversion changes affect `step-6` and `main`.
 - Java, Maven, Dev Container, or command changes may affect every stage.
 - wording changes affect only the documents unless they alter an instruction,
   command, expected response, or teaching sequence.

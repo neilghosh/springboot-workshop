@@ -76,6 +76,10 @@ class OrderControllerIntegrationTest {
                 .andExpect(jsonPath("$.quantity").value(2))
                 .andExpect(jsonPath("$.unitPrice").value(49.99))
                 .andExpect(jsonPath("$.totalPrice").value(99.98));
+
+            mockMvc.perform(post("/api/orders/{id}/process", savedOrder.getId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.paymentMethod").value("UPI"));
     }
 
     @Test
@@ -103,5 +107,9 @@ class OrderControllerIntegrationTest {
         mockMvc.perform(get("/api/orders/{id}/summary", 999L))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("Order not found with id: 999"));
+
+        mockMvc.perform(post("/api/orders/{id}/process", 999L))
+            .andExpect(status().isNotFound())
+            .andExpect(jsonPath("$.message").value("Order not found with id: 999"));
     }
 }
